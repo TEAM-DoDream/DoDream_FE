@@ -3,10 +3,9 @@ import stepQuestions from '@utils/data/onboard/onboardDummy';
 import { useOnboarding } from '@hook/useOnboarding';
 import Navigation from '@pages/onboard/components/Navigation';
 import Questions from '@pages/onboard/components/Questions';
-import { useNavigate } from 'react-router-dom';
+import { useSubmitOnboardAnswers } from '@hook/useOnbaordMutation.ts';
 
 const OnBoardingPage = () => {
-  const navigate = useNavigate();
   const {
     curStep,
     curQuestionIndex,
@@ -17,11 +16,11 @@ const OnBoardingPage = () => {
     handleNext,
     handlePrev,
     stepInfo,
+    buildPayload,
   } = useOnboarding(stepQuestions);
-
+  const { mutate } = useSubmitOnboardAnswers();
   const handleSubmit = () => {
-    // 임시로 네비게이션 처리
-    navigate('/jobrecommend');
+    mutate(buildPayload());
   };
 
   return (
