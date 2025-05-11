@@ -37,21 +37,22 @@ export function LinkPreview({ url }: { url: string }) {
       href={data.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-2 flex overflow-hidden rounded border transition hover:shadow-lg"
+      className="mt-1 flex w-full max-w-[180px] items-start overflow-hidden rounded-sm border border-gray-200 bg-white transition hover:shadow-sm"
     >
       {data.image?.url && (
         <img
           src={data.image.url}
           alt={data.title}
-          className="h-24 w-24 flex-shrink-0 object-cover"
+          className="h-12 w-12 flex-shrink-0 object-cover" // 48x48
         />
       )}
-      <div className="flex-1 p-2">
-        <h3 className="line-clamp-2 text-sm font-semibold">{data.title}</h3>
-        <p className="line-clamp-3 text-xs text-gray-600">{data.description}</p>
-        {/*<div className="mt-1 line-clamp-1 text-xs text-blue-600">*/}
-        {/*  {data.url}*/}
-        {/*</div>*/}
+      <div className="flex-1 px-2 py-1">
+        <h3 className="line-clamp-1 text-xs font-semibold text-gray-900">
+          {data.title}
+        </h3>
+        <p className="line-clamp-1 text-[10px] text-gray-600">
+          {data.description}
+        </p>
       </div>
     </a>
   );

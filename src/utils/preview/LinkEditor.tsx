@@ -16,12 +16,12 @@ export default function LinkEditor() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="min-h-[100px] w-full rounded border p-3 text-sm focus:outline-none"
+        className="min-h-[60px] w-full max-w-[300px] rounded-sm border border-gray-300 p-2 text-xs focus:outline-none"
         placeholder="링크를 입력해보세요"
         suppressContentEditableWarning
       />
