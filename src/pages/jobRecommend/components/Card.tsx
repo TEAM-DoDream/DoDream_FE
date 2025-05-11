@@ -51,7 +51,7 @@ const Card = ({
           </h3>
           <p
             data-testid="card-description"
-            className="mb-6 text-gray-500 font-B02-M"
+            className="mb-6 line-clamp-2 text-gray-500 font-B02-M"
           >
             {description}
           </p>
@@ -96,7 +96,9 @@ const Card = ({
             >
               조건
             </strong>
-            <p className="mt-2 text-gray-500 font-B03-M">{reason}</p>
+            <p className="mt-2 line-clamp-2 text-gray-500 font-B03-M">
+              {reason}
+            </p>
           </div>
         </div>
         <div className="mt-6 flex justify-center gap-6">
