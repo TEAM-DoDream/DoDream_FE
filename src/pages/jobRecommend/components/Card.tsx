@@ -4,7 +4,9 @@ interface CardProps {
   title: string;
   description: string;
   imageUrl: string;
-  reason: string;
+  personality?: string;
+  strong?: string;
+  condition?: string;
   onClick?: () => void;
   onHover?: () => void;
   onLeave?: () => void;
@@ -15,10 +17,11 @@ const Card = ({
   title,
   description,
   imageUrl,
-  reason,
+  personality,
+  condition,
   onHover,
   onLeave,
-  nickname,
+  strong,
 }: CardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -75,31 +78,26 @@ const Card = ({
           <div>추천 이유</div>
         </h4>
         <div className="space-y-4">
-          <div data-testid="card-trait">
-            <strong className="text-black font-B03-B">성향</strong>
-            <p className="mt-2 text-gray-500 font-B03-M">
-              사람을 직접 돕고 함께 일하는 걸 선호하는 ‘{nickname}’ 님과 잘
-              맞아요.
-            </p>
-          </div>
-          <div data-testid="card-strength">
-            <strong className="text-black font-B03-B">강점</strong>
-            <p className="mt-2 text-gray-500 font-B03-M">
-              주변에서 말을 잘한다는 칭찬을 자주 듣는 ‘{nickname}’ 님은 따뜻한
-              소통에 강점을 지녔어요.
-            </p>
-          </div>
-          <div>
-            <strong
-              data-testid="card-condition"
-              className="text-black font-B03-B"
-            >
-              조건
-            </strong>
-            <p className="mt-2 line-clamp-2 text-gray-500 font-B03-M">
-              {reason}
-            </p>
-          </div>
+          {personality && (
+            <div data-testid="card-trait">
+              <strong className="text-black font-B03-B">성향</strong>
+              <p className="mt-2 text-gray-500 font-B03-M">{personality}</p>
+            </div>
+          )}
+          {strong && (
+            <div data-testid="card-strength">
+              <strong className="text-black font-B03-B">강점</strong>
+              <p className="mt-2 text-gray-500 font-B03-M">{strong}</p>
+            </div>
+          )}
+          {condition && (
+            <div>
+              <strong className="text-black font-B03-B">조건</strong>
+              <p className="mt-2 line-clamp-2 text-gray-500 font-B03-M">
+                {condition}
+              </p>
+            </div>
+          )}
         </div>
         <div className="mt-6 flex justify-center gap-6">
           <button
