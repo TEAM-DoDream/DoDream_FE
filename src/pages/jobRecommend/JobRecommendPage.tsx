@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import AddJobModal from '@common/modal/AddJobModal.tsx';
 import Card from '@pages/jobRecommend/components/Card.tsx';
 import JobTitle from '@pages/jobRecommend/components/JobTitle.tsx';
 
@@ -18,6 +19,7 @@ const JobRecommendPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const nickname = localStorage.getItem('nickname');
 
   const jobResults: JobData[] = location.state;
@@ -28,6 +30,8 @@ const JobRecommendPage = () => {
       navigate('/');
     }
   }, [jobResults, navigate]);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <div className="flex flex-col items-center justify-center px-6 py-12">
@@ -45,10 +49,12 @@ const JobRecommendPage = () => {
             onHover={() => setHoveredIndex(index)}
             onLeave={() => setHoveredIndex(null)}
             nickname={nickname}
+            onClick={handleOpenModal}
           />
         ))}
       </div>
 
+      {isModalOpen && <AddJobModal onClose={handleCloseModal} />}
       <div className="mt-8 flex gap-2">
         {jobResults.map((_, index) => (
           <div

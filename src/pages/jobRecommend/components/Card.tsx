@@ -20,6 +20,7 @@ const Card = ({
   personality,
   condition,
   onHover,
+  onClick,
   onLeave,
   strong,
 }: CardProps) => {
@@ -113,6 +114,7 @@ const Card = ({
           <button
             data-testid="card-save-button"
             className="rounded-[12px] bg-purple-100 px-10 py-4 text-purple-500 font-B03-SB"
+            onClick={onClick}
           >
             담기
           </button>
