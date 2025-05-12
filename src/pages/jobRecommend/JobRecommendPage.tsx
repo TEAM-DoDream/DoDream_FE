@@ -3,17 +3,10 @@ import { useEffect, useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal.tsx';
 import Card from '@pages/jobRecommend/components/Card.tsx';
 import JobTitle from '@pages/jobRecommend/components/JobTitle.tsx';
-
-interface JobData {
-  jobTitle: string;
-  jobDescription: string;
-  imageUrl: string;
-  reasons: {
-    personality?: string;
-    condition?: string;
-    strong?: string;
-  };
-}
+import {
+  jobDataArraySchema,
+  JobData,
+} from '@validation/jobRecommend/jobDataSchema';
 
 const JobRecommendPage = () => {
   const location = useLocation();
@@ -22,14 +15,20 @@ const JobRecommendPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const nickname = localStorage.getItem('nickname');
 
-  const jobResults: JobData[] = location.state;
+  const parseResult = jobDataArraySchema.safeParse(location.state);
+  const jobResults: JobData[] = parseResult.success ? parseResult.data : [];
 
   useEffect(() => {
-    if (!jobResults || jobResults.length === 0) {
+    if (!parseResult.success || jobResults.length === 0) {
+      console.error(
+        'Invalid job data:',
+        parseResult.success ? 'Empty array' : parseResult.error
+      );
       alert('추천 결과가 존재하지 않습니다.');
       navigate('/');
     }
-  }, [jobResults, navigate]);
+  }, [parseResult, jobResults, navigate]);
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 

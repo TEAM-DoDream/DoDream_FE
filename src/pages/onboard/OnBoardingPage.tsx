@@ -3,7 +3,7 @@ import stepQuestions from '@utils/data/onboard/onboardDummy';
 import { useOnboarding } from '@hook/useOnboarding';
 import Navigation from '@pages/onboard/components/Navigation';
 import Questions from '@pages/onboard/components/Questions';
-import { useSubmitOnboardAnswers } from '@hook/useOnbaordMutation.ts';
+import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation.ts';
 
 const OnBoardingPage = () => {
   const {

@@ -44,7 +44,7 @@ const Card = ({
           data-testid="card-image"
           src={imageUrl}
           alt={title}
-          className="aspect-[3/2] w-full rounded-t-[30px] bg-amber-400 object-cover"
+          className="aspect-[3/2] w-full rounded-t-[30px] object-cover"
         />
         <div className="flex h-[180px] flex-col px-6 py-5">
           <h3
