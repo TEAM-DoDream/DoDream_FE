@@ -9,6 +9,7 @@ import JobRecommendPage from '@pages/jobRecommend/JobRecommendPage.tsx';
 import JobSearchPage from '@pages/jobSearch/JobSearchPage.tsx';
 import LearningPage from '@pages/learning/LearningPage.tsx';
 import JobFound from '@pages/jobfound/JobFound';
+import JobInfo from '@pages/jobDetail/JobInfo';
 
 const Router = () => {
   return (
@@ -26,6 +27,7 @@ const Router = () => {
           <Route path="/jobsearch" element={<JobSearchPage />} />
           <Route path="/learning" element={<LearningPage />} />
           <Route path="/jobfound" element={<JobFound />} />
+          <Route path="/jobinfo" element={<JobInfo />} />
         </Route>
       </Routes>
     </BrowserRouter>
