@@ -9,12 +9,13 @@ import LoadingSpinner from '@common/LoadingSpinner.tsx';
 const JobSearchPage = () => {
   const { data = [], isPending } = useRecruitListQuery();
 
-  if (isPending)
+  if (isPending) {
     return (
-      <div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
         <LoadingSpinner />
       </div>
     );
+  }
 
   return (
     <div className="flex flex-col">
