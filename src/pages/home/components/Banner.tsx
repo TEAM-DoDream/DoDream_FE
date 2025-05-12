@@ -1,7 +1,7 @@
 import { HomeBackImage, HomeCard } from './HomeImage';
 import MyDreamArrow from '@assets/icons/myDreamarrow.svg?react';
-// import Bell from '@assets/icons/Bell.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
+import Bell from '@assets/images/bell.webp';
 
 const Banner = () => {
   return (
@@ -34,7 +34,7 @@ const Banner = () => {
 
             <div className="flex h-[465px] w-[384px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] py-[40px]">
               <div className="flex w-full flex-row items-start justify-between">
-                {/* <Bell /> */}
+                <img src={Bell} alt="Bell" className="h-[76px] w-[76px]" />
                 <div className="flex flex-row items-center">
                   <div className="text-gray-500 font-B02-SB">더보기 </div>
                   <Arrow />
