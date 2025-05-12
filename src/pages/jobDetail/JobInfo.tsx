@@ -97,7 +97,11 @@ const JobInfo = () => {
             </div>
           </div>
         </div>
-        <DetailSideBar />
+
+        <div className="sticky top-[100px] h-fit w-[606px] pl-[102px]">
+          <DetailSideBar />
+        </div>
+
         {/* <NoDataSideBar /> */}
       </div>
 

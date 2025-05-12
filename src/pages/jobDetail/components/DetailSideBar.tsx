@@ -17,7 +17,7 @@ const DetailSideBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="flex h-[971px] w-[606px] items-start justify-center pl-[102px] pt-[66px]">
+    <div className="flex items-start justify-center pt-[66px]">
       <div className="flex w-full flex-col gap-[30px]">
         <Button
           text="요양보호사 담기"
@@ -40,7 +40,7 @@ const DetailSideBar = () => {
           {userList.map((user, index) => (
             <div
               key={index}
-              className="hover:shadow-shadow2 flex h-[62px] w-full cursor-pointer flex-col items-start justify-center gap-4 rounded-2xl bg-white px-4 py-3"
+              className="flex h-[62px] w-full cursor-pointer flex-col items-start justify-center gap-4 rounded-2xl bg-white px-4 py-3 hover:shadow-shadow2"
             >
               <div className="flex flex-row items-center gap-[10px]">
                 <img
