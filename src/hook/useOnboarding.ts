@@ -64,7 +64,6 @@ export function useOnboarding(steps: StepQuestion[]) {
     return { totalQuestions: total, progressPercent: percent };
   }, [steps, curStep, curQuestionIndex]);
 
-  // ← 새로 추가하는 부분
   const buildPayload = () => {
     const payloadAnswers: {
       questionNum: number;
@@ -98,7 +97,6 @@ export function useOnboarding(steps: StepQuestion[]) {
     handlePrev,
     stepInfo,
     totalQuestions,
-    // buildPayload 도 함께 반환
     buildPayload,
   } as const;
 }

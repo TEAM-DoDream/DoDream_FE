@@ -15,7 +15,7 @@ export const useSubmitOnboardAnswers = () => {
       api.post('/v1/job/recommend', payload),
     onSuccess: (res) => {
       if (res.data.success) {
-        navigate('/jobrecommend', { state: res.data.data.recommendedJobs }); // 추천 결과도 같이 넘기기 가능
+        navigate('/jobrecommend', { state: res.data.data.recommendedJobs });
       } else {
         alert('추천 결과 생성에 실패했습니다.');
       }
