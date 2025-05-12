@@ -1,11 +1,21 @@
 import Filter from '@pages/jobSearch/components/Filter.tsx';
 import MagnifyIcon from '@assets/images/job_search.webp';
 import RecruitCard from '@common/RecruitCard.tsx';
-import RecruitDummy, { RecruitItem } from '@utils/data/search/searchDummy.ts';
 import Img from '@assets/images/illustration_1.webp';
 import Footer from '@common/Footer.tsx';
+import { useRecruitListQuery } from '@hook/useRecruitListQuery.ts';
+import LoadingSpinner from '@common/LoadingSpinner.tsx';
 
 const JobSearchPage = () => {
+  const { data = [], isPending } = useRecruitListQuery();
+
+  if (isPending)
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
+
   return (
     <div className="flex flex-col">
       <div className="bg-purple-100">
@@ -32,14 +42,34 @@ const JobSearchPage = () => {
       <div
         className={'container mx-auto mb-4 mt-16 flex text-black font-T03-B'}
       >
-        <p className={'text-purple-500 font-T03-B'}>{'8'}개</p>의 일자리가 구인
-        중이에요
+        <p className={'text-purple-500 font-T03-B'}>{data.length}개</p>의
+        일자리가 구인 중이에요
       </div>
       <div className="container mx-auto mb-6 px-4 pt-8">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {RecruitDummy.map((item: RecruitItem) => (
-            <RecruitCard key={item.id} item={item} />
-          ))}
+          {data.map((item: any) => {
+            const hashtags = [
+              item.experienceLevel,
+              item.jobTypeName,
+              item.requiredEducationLevel,
+              item.salary,
+              item.locationName,
+            ].filter(Boolean);
+
+            return (
+              <RecruitCard
+                key={item.id}
+                item={{
+                  id: Number(item.id),
+                  company: item.locationName,
+                  title: item.title,
+                  hashtags: hashtags,
+                  endDate: item['expiration-date'],
+                  deadline: item.deadline,
+                }}
+              />
+            );
+          })}
         </div>
       </div>
       <Footer />

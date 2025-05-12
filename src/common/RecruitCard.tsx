@@ -6,18 +6,16 @@ export interface RecruitItem {
   title: string;
   hashtags: string[];
   endDate: string;
-  isDay?: boolean;
+  deadline: string;
 }
 
 const RecruitCard = ({ item }: { item: RecruitItem }) => {
   return (
     <div className="flex h-auto w-full flex-col rounded-[30px] border-2 border-gray-300 bg-white p-6">
       <div className="flex items-center justify-between">
-        {item.isDay && (
-          <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
-            D-day
-          </span>
-        )}
+        <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
+          {item.deadline === 'D-0' ? 'D-day' : item.deadline}
+        </span>
         <Like className="ml-auto flex h-6 w-6 justify-end" />
       </div>
 
