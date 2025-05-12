@@ -2,6 +2,8 @@ import Clap from '@assets/images/clap.webp';
 import Checker from '@assets/images/checker.png';
 import Arrow from '@assets/icons/arrow.svg?react';
 import Button from '@common/Button';
+import { useState } from 'react';
+import AddJobModal from '@common/modal/AddJobModal';
 
 const userList = [
   { name: '고라니고라니고라니고라', taskCount: 12 },
@@ -12,6 +14,8 @@ const userList = [
 ];
 
 const DetailSideBar = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="flex h-[971px] w-[606px] items-start justify-center pl-[102px] pt-[66px]">
       <div className="flex w-full flex-col gap-[30px]">
@@ -20,6 +24,7 @@ const DetailSideBar = () => {
           color="primary"
           type="button"
           className="flex h-[60px] w-full items-center justify-center rounded-2xl px-[60px] py-3"
+          onClick={() => setIsModalOpen(true)}
         />
 
         <div className="flex flex-col items-start justify-center gap-4 rounded-[30px] bg-gray-100 px-5 py-[30px]">
@@ -59,6 +64,7 @@ const DetailSideBar = () => {
           </div>
         </div>
       </div>
+      {isModalOpen && <AddJobModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };
