@@ -1,12 +1,13 @@
+// OnBoardingPage.tsx
 import Stepper from '@pages/onboard/components/Stepper';
 import stepQuestions from '@utils/data/onboard/onboardDummy';
 import { useOnboarding } from '@hook/useOnboarding';
 import Navigation from '@pages/onboard/components/Navigation';
 import Questions from '@pages/onboard/components/Questions';
-import { useNavigate } from 'react-router-dom';
+import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation.ts';
+import LoadingSpinner from '@common/LoadingSpinner'; // react-spinners 로 만든 스피너
 
 const OnBoardingPage = () => {
-  const navigate = useNavigate();
   const {
     curStep,
     curQuestionIndex,
@@ -17,15 +18,22 @@ const OnBoardingPage = () => {
     handleNext,
     handlePrev,
     stepInfo,
+    buildPayload,
   } = useOnboarding(stepQuestions);
 
+  const { mutate, isPending } = useSubmitOnboardAnswers();
   const handleSubmit = () => {
-    // 임시로 네비게이션 처리
-    navigate('/jobrecommend');
+    mutate(buildPayload());
   };
 
   return (
-    <div className="min-h-screen bg-white px-4 py-10">
+    <div className="relative min-h-screen bg-white px-4 py-10">
+      {isPending && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
+          <LoadingSpinner />
+        </div>
+      )}
+
       <div className="flex justify-center">
         <div className="w-full max-w-[1500px]">
           <Stepper
@@ -56,6 +64,7 @@ const OnBoardingPage = () => {
             }
             isLast={curStep === stepQuestions.length - 1}
             onSubmit={handleSubmit}
+            // 버튼 내부 스피너가 아니라 화면 로딩이기 때문에 여기선 넘길 필요 없습니다
           />
         </div>
       </div>
