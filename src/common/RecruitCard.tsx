@@ -23,7 +23,15 @@ const RecruitCard = ({ item }: { item: RecruitItem }) => {
           <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
             {item.deadline === 'D-0' ? 'D-day' : item.deadline}
           </span>
-          <Like className="ml-auto flex h-6 w-6 justify-end" />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Like
+              className="ml-auto flex h-6 w-6 cursor-pointer justify-end"
+              onClick={(e) => {
+                e.preventDefault();
+                // 좋아요 로직 추후 담기로 추가
+              }}
+            />
+          </div>
         </div>
 
         <div className="mt-2 text-gray-500 font-B03-M">{item.company}</div>
