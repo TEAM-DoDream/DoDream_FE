@@ -3,16 +3,13 @@ import FoundFilter from './components/FoundFilter';
 import ListFound from './components/ListFound';
 import FoundIller from '@assets/images/foundillust.webp';
 import Pagination from '@common/Pagination';
-import FoundJobs from '@utils/data/jobfound/JobFoundDummy';
-import usePagination from '@hook/usePagination';
 import Footer from '@common/Footer';
+import { useState } from 'react';
+import { useJobQuery } from '@hook/useJobQuery';
 
 const JobFound = () => {
-  const { currentItems, currentPage, setCurrentPage, totalPages } =
-    usePagination({
-      items: FoundJobs,
-      itemsPerPage: 9,
-    });
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data } = useJobQuery(currentPage - 1);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -43,11 +40,11 @@ const JobFound = () => {
       </div>
 
       <div className="mt-[182px] flex-grow px-[120px]">
-        <ListFound jobs={currentItems} />
+        <ListFound page={currentPage} />
 
         <div className="mb-[80px] mt-[30px]">
           <Pagination
-            totalPages={totalPages}
+            totalPages={data?.totalPages}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
