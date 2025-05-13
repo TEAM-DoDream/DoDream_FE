@@ -55,7 +55,9 @@ const JobInfo = () => {
               <div className="flex w-[384px] flex-col gap-5">
                 <span className="text-gray-900 font-T03-B"> 자격증 </span>
                 <span className="text-gray-900 font-B01-M">
-                  {jobDetail?.certification}
+                  {Array.isArray(jobDetail?.certification)
+                    ? jobDetail?.certification.join(', ')
+                    : jobDetail?.certification}
                 </span>
               </div>
 
