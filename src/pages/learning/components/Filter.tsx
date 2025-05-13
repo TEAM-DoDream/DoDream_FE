@@ -2,45 +2,16 @@ import { useMemo, useState, useRef } from 'react';
 import DropDown from '@common/DropDown';
 import DateInput from '@common/DateInput';
 import ResetButton from '@common/ResetButton';
+import {
+  jobOptions,
+  districtMap,
+  cityOptions,
+} from '@utils/data/job/filterOptions.ts';
 import { useFilterStore } from '@store/filterStore';
 
 type Tag = {
   label: string;
   type: 'job' | 'location' | 'date' | 'trainingCourse';
-};
-
-const jobOptions = [
-  '요양보호사',
-  '간병인',
-  '물리치료사',
-  '작업치료사',
-  '간호사',
-  '사회복지사',
-  '방문요양보호사',
-  '주간보호센터',
-  '요양원 요리사',
-  '청소원',
-];
-
-const cityOptions = ['서울', '부산', '인천', '대구', '광주', '대전', '울산'];
-
-const districtMap: Record<string, string[]> = {
-  서울: [
-    '강남구',
-    '강동구',
-    '강북구',
-    '강서구',
-    '관악구',
-    '광진구',
-    '구로구',
-    '금천구',
-  ],
-  부산: ['해운대구', '수영구', '동래구', '남구', '북구'],
-  인천: ['연수구', '남동구', '부평구', '계양구', '서구'],
-  대구: ['수성구', '달서구', '중구', '동구'],
-  광주: ['북구', '서구', '동구', '남구'],
-  대전: ['유성구', '서구', '중구', '동구'],
-  울산: ['남구', '중구', '동구', '북구'],
 };
 
 const trainingOptions = ['이론 위주', '실습 위주'];
