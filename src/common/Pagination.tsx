@@ -37,7 +37,7 @@ const Pagination = ({
         pages.push(i);
       }
 
-      if (currentPage < totalPages - (left + 0)) pages.push('...');
+      if (currentPage < totalPages - left) pages.push('...');
       pages.push(totalPages);
     }
 
