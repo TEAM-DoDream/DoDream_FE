@@ -1,54 +1,59 @@
 import { useState } from 'react';
-import PlusIcon from '@assets/icons/plus.svg?react';
+// import PlusIcon from '@assets/icons/plus.svg?react';
+import Checker from '@assets/images/checker.png';
 import Button from '@common/Button';
 import AddJobModal from '@common/modal/AddJobModal';
-import type { FoundJob } from '@utils/data/jobfound/JobFoundDummy';
+import { JobRequest, useJobQuery } from '@hook/useJobQuery';
+import LoadingSpinner from '@common/LoadingSpinner';
 
 interface ListFoundProps {
-  jobs: FoundJob[];
+  page: number;
 }
 
-const ListFound = ({ jobs }: ListFoundProps) => {
+const ListFound = ({ page }: ListFoundProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<FoundJob | null>(null);
+  const [selectedJob, setSelectedJob] = useState<number | null>(null);
+  const { data, isLoading, error } = useJobQuery(page);
+  const jobs: JobRequest[] = data?.content ?? [];
 
-  const handleOpenModal = (job: FoundJob) => {
-    setSelectedJob(job);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedJob(null);
-  };
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  if (error) return <div>에러가 발생했어요.</div>;
 
   return (
     <div className="grid grid-cols-3 gap-6 px-9 py-[60px]">
-      {jobs.map((item) => {
-        const users = item.userProfiles;
-        const userCount = users.length;
-        const maxUsers = 3;
+      {jobs.map((item: JobRequest) => {
+        // const users = item.userProfiles;
+        // const userCount = users.length;
+        // const maxUsers = 3;
 
         return (
-          <div key={item.id} className="flex flex-col items-start">
+          <div key={item.jobId} className="flex flex-col items-start">
             <img
-              src={item.imageUrl}
-              alt={item.title}
+              src={item.imageUrl || Checker}
+              alt={item.jobName}
               className="h-[240px] w-[360px] rounded-2xl object-cover"
             />
 
             <div className="mt-[14px] w-[360px]">
-              <div className="text-purple-500 font-B02-SB">{item.tags}</div>
+              <div className="flex flex-row text-purple-500 font-B02-SB">
+                {item.requiredCertification},{item.workTimeInfo},
+                {item.physicalInfo}
+              </div>
               <span className="mt-[6px] text-gray-900 font-T04-SB">
-                {item.title}
+                {item.jobName}
               </span>
               <div className="mt-[10px] truncate text-gray-500 font-B02-M">
-                {item.description}
+                {item.jobDescription}
               </div>
 
               <div className="mt-[18px] flex w-full items-center justify-between">
                 <div className="flex max-w-[126px] items-center -space-x-2">
-                  {users.slice(0, maxUsers).map((user) => (
+                  {/* {users.slice(0, maxUsers).map((user) => (
                     <img
                       key={user.id}
                       src={user.avatar}
@@ -65,7 +70,7 @@ const ListFound = ({ jobs }: ListFoundProps) => {
                         <PlusIcon />
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 <Button
@@ -73,7 +78,10 @@ const ListFound = ({ jobs }: ListFoundProps) => {
                   color="primary"
                   type="submit"
                   className="h-[42px] w-[116px] rounded-[10px] font-B03-SB"
-                  onClick={() => handleOpenModal(item)}
+                  onClick={() => {
+                    setSelectedJob(item.jobId);
+                    setIsModalOpen(true);
+                  }}
                 />
               </div>
             </div>
@@ -81,7 +89,9 @@ const ListFound = ({ jobs }: ListFoundProps) => {
         );
       })}
 
-      {isModalOpen && selectedJob && <AddJobModal onClose={handleCloseModal} />}
+      {isModalOpen && selectedJob && (
+        <AddJobModal onClose={() => setIsModalOpen(false)} />
+      )}
     </div>
   );
 };
