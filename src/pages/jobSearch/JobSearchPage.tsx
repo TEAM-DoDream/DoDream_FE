@@ -54,7 +54,7 @@ const JobSearchPage = () => {
         일자리가 구인 중이에요
       </div>
       <div className="container mx-auto mb-6 px-4 pt-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 lg:grid-cols-3">
           {jobs.map((item: any) => {
             const hashtags = [
               item.experienceLevel,

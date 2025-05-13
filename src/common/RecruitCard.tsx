@@ -16,9 +16,9 @@ const RecruitCard = ({ item }: { item: RecruitItem }) => {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block transition-shadow hover:shadow-lg"
+      className="block"
     >
-      <div className="flex h-auto w-full flex-col rounded-[30px] border-2 border-gray-300 bg-white p-6">
+      <div className="flex h-full w-full flex-col rounded-[30px] border-2 border-gray-300 bg-white p-6">
         <div className="flex items-center justify-between">
           <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
             {item.deadline === 'D-0' ? 'D-day' : item.deadline}
