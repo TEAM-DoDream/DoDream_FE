@@ -8,7 +8,7 @@ import LoadingSpinner from '@common/LoadingSpinner.tsx';
 
 const JobSearchPage = () => {
   const { data = [], isPending } = useRecruitListQuery();
-
+  console.log(data);
   if (isPending) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
@@ -62,7 +62,7 @@ const JobSearchPage = () => {
                 key={item.id}
                 item={{
                   id: Number(item.id),
-                  company: item.locationName,
+                  company: item.companyName,
                   title: item.title,
                   hashtags: hashtags,
                   endDate: item['expiration-date'],
