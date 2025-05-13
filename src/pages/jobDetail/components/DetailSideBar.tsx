@@ -51,7 +51,7 @@ const DetailSideBar = () => {
                 <div className="truncate text-gray-900 font-B01-M">
                   {user.name}
                 </div>
-                <div className="flex h-[34px] w-[71px] items-center justify-center rounded-[10px] bg-gray-100 p-2 text-gray-500 font-B03-SB">
+                <div className="flex h-[34px] w-[71px] items-center justify-center text-nowrap rounded-[10px] bg-gray-100 p-2 text-gray-500 font-B03-SB">
                   할일 {user.taskCount}개
                 </div>
               </div>
