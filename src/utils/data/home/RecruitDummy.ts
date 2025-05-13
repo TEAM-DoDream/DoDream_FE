@@ -6,6 +6,8 @@ const Recruit = [
     time: '2',
     recruit: '이아소실버케어 (요양원) 요양 보호사 선생님을 모십니다',
     interest: '4',
+    locationName: '대전 서구',
+    deadline: 'D-6',
   },
   {
     id: 2,
@@ -14,6 +16,8 @@ const Recruit = [
     time: '0',
     recruit: '이아소실버케어 (요양원) 간호조무사 선생님을 모집합니다',
     interest: '4',
+    locationName: '충남 천안',
+    deadline: 'D-7',
   },
   {
     id: 3,
@@ -22,6 +26,8 @@ const Recruit = [
     time: '3',
     recruit: '사랑요양원에서 노인 전문 물리치료사를 모집합니다.',
     interest: '5',
+    locationName: '대전 서구',
+    deadline: 'D-1',
   },
   {
     id: 4,
@@ -30,6 +36,8 @@ const Recruit = [
     time: '5',
     recruit: '푸른빛재가센터에서 재가 요양보호사 구인중입니다.',
     interest: '3',
+    locationName: '대전 서구',
+    deadline: 'D-10',
   },
   {
     id: 5,
@@ -38,6 +46,8 @@ const Recruit = [
     time: '4',
     recruit: '어르신의 건강을 책임질 영양사 선생님을 모십니다.',
     interest: '2',
+    locationName: '충남 서산',
+    deadline: 'D-5',
   },
   {
     id: 6,
@@ -46,6 +56,8 @@ const Recruit = [
     time: '1',
     recruit: '사회복지사 자격증 보유자 모집합니다. 따뜻한 마음 필수!',
     interest: '5',
+    locationName: '대전 서구',
+    deadline: 'D-6',
   },
 ];
 
