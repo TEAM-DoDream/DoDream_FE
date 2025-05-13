@@ -3,14 +3,20 @@ import Divider from '@common/Divider';
 import Info from '@assets/icons/info.svg?react';
 import DetailSideBar from './components/DetailSideBar';
 import JobView from './components/JobView';
+import { useNavigate } from 'react-router-dom';
 // import NoDataSideBar from './components/NoDataSideBar';
 
 const JobInfo = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col px-[120px] pb-[100px]">
       <div className="mt-10 flex w-full flex-row gap-4">
         <div className="flex w-full max-w-[690px] flex-col items-start">
-          <Arrow className="h-9 w-9 rotate-180" />
+          <Arrow
+            className="h-9 w-9 rotate-180 cursor-pointer"
+            onClick={() => navigate('/jobfound')}
+          />
 
           <div className="mb-5 mt-[10px] text-gray-900 font-T01-B">
             {' '}
