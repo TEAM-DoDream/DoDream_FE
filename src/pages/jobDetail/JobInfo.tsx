@@ -134,7 +134,7 @@ const JobInfo = () => {
         {/* <NoDataSideBar /> */}
       </div>
 
-      <JobView job="요양보호사" />
+      <JobView jobName={jobDetail?.jobName || ''} />
     </div>
   );
 };
