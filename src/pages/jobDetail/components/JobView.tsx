@@ -8,7 +8,12 @@ interface JobViewProps {
   company: string;
   deadline: string;
 }
-const JobView = ({ job }: { job: string }) => {
+
+interface JobViewComponentProps {
+  job: string;
+}
+
+const JobView = ({ job }: JobViewComponentProps) => {
   return (
     <div className="mt-[70px] flex w-full flex-col items-start gap-[50px]">
       <div className="flex w-full flex-row items-center justify-between">
@@ -23,7 +28,7 @@ const JobView = ({ job }: { job: string }) => {
         {[...Recruit].slice(0, 3).map((item: JobViewProps) => (
           <div
             key={item.id}
-            className="hover:shadow-shadow2 flex h-auto w-full cursor-pointer flex-col items-start rounded-[30px] border-2 border-gray-200 p-[30px]"
+            className="flex h-auto w-full cursor-pointer flex-col items-start rounded-[30px] border-2 border-gray-200 p-[30px] hover:shadow-shadow2"
           >
             <div className="self-end rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
               {item.deadline}
