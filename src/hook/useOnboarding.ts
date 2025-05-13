@@ -12,16 +12,14 @@ export function useOnboarding(steps: StepQuestion[]) {
 
   const currentStepData = steps[curStep];
   const currentQuestionData = currentStepData.questions?.[curQuestionIndex];
-  const stepInfo = steps.map((s) => ({
-    title: s.step,
-    questionCount: s.questions?.length ?? 1,
-  }));
+
   const handleOptionChange = (value: string) => {
     const stepName = currentStepData.step;
-    const prev = answers[stepName] || [];
-    const updated = [...prev];
-    updated[curQuestionIndex] = value;
-    setAnswers({ ...answers, [stepName]: updated });
+    setAnswers((prev) => {
+      const arr = [...(prev[stepName] || [])];
+      arr[curQuestionIndex] = value;
+      return { ...prev, [stepName]: arr };
+    });
   };
 
   const handleNext = () => {
@@ -37,12 +35,20 @@ export function useOnboarding(steps: StepQuestion[]) {
     if (curQuestionIndex > 0) {
       setCurQuestionIndex((q) => q - 1);
     } else if (curStep > 0) {
-      const prevStep = steps[curStep - 1];
-      const prevLen = prevStep.questions?.length ?? 1;
+      const prevLen = steps[curStep - 1].questions?.length ?? 1;
       setCurStep((s) => s - 1);
       setCurQuestionIndex(prevLen - 1);
     }
   };
+
+  const stepInfo = useMemo(
+    () =>
+      steps.map((s) => ({
+        title: s.step,
+        questionCount: s.questions?.length ?? 1,
+      })),
+    [steps]
+  );
 
   const totalQuestions = useMemo(() => {
     const total = steps.reduce(
@@ -58,6 +64,28 @@ export function useOnboarding(steps: StepQuestion[]) {
     return { totalQuestions: total, progressPercent: percent };
   }, [steps, curStep, curQuestionIndex]);
 
+  const buildPayload = () => {
+    const payloadAnswers: {
+      questionNum: number;
+      responses: string[];
+    }[] = [];
+    let questionNum = 1;
+
+    for (const step of steps) {
+      const respArr = answers[step.step] || [];
+      const qCount = step.questions?.length ?? 1;
+      for (let i = 0; i < qCount; i++) {
+        payloadAnswers.push({
+          questionNum,
+          responses: respArr[i] ? [respArr[i]] : [],
+        });
+        questionNum++;
+      }
+    }
+
+    return { answers: payloadAnswers };
+  };
+
   return {
     curStep,
     curQuestionIndex,
@@ -67,7 +95,8 @@ export function useOnboarding(steps: StepQuestion[]) {
     handleOptionChange,
     handleNext,
     handlePrev,
-    totalQuestions,
     stepInfo,
+    totalQuestions,
+    buildPayload,
   } as const;
 }
