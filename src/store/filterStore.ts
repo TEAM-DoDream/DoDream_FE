@@ -36,7 +36,7 @@ type FilterActions = {
 };
 
 export const useFilterStore = create<FilterState & FilterActions>((set) => ({
-  job: '',
+  job: '요양보호사',
   location: '',
   startDate: '',
   endDate: '',
@@ -67,7 +67,7 @@ export const useFilterStore = create<FilterState & FilterActions>((set) => ({
 
   reset: () =>
     set({
-      job: '',
+      job: '요양보호사',
       location: '',
       startDate: '',
       endDate: '',
