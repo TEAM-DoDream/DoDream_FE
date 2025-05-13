@@ -1,10 +1,12 @@
 import { useState } from 'react';
-// import PlusIcon from '@assets/icons/plus.svg?react';
+import PlusIcon from '@assets/icons/plus.svg?react';
 import Checker from '@assets/images/checker.png';
 import Button from '@common/Button';
 import AddJobModal from '@common/modal/AddJobModal';
 import { JobRequest, useJobQuery } from '@hook/useJobQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
+import FoundJobs from '@utils/data/jobfound/JobFoundDummy';
+import { useNavigate } from 'react-router-dom';
 
 interface ListFoundProps {
   page: number;
@@ -15,6 +17,7 @@ const ListFound = ({ page }: ListFoundProps) => {
   const [selectedJob, setSelectedJob] = useState<number | null>(null);
   const { data, isLoading, error } = useJobQuery(page);
   const jobs: JobRequest[] = data?.content ?? [];
+  const navigate = useNavigate();
 
   if (isLoading)
     return (
@@ -27,12 +30,17 @@ const ListFound = ({ page }: ListFoundProps) => {
   return (
     <div className="grid grid-cols-3 gap-6 px-9 py-[60px]">
       {jobs.map((item: JobRequest) => {
-        // const users = item.userProfiles;
-        // const userCount = users.length;
-        // const maxUsers = 3;
+        const dummy = FoundJobs.find((f) => f.id === item.jobId);
+        const users = dummy?.userProfiles ?? [];
+        const userCount = users.length;
+        const maxUsers = 3;
 
         return (
-          <div key={item.jobId} className="flex flex-col items-start">
+          <div
+            key={item.jobId}
+            className="flex cursor-pointer flex-col items-start"
+            onClick={() => navigate(`/jobinfo/${item.jobId}`)}
+          >
             <img
               src={item.imageUrl || Checker}
               alt={item.jobName}
@@ -53,7 +61,7 @@ const ListFound = ({ page }: ListFoundProps) => {
 
               <div className="mt-[18px] flex w-full items-center justify-between">
                 <div className="flex max-w-[126px] items-center -space-x-2">
-                  {/* {users.slice(0, maxUsers).map((user) => (
+                  {users.slice(0, maxUsers).map((user) => (
                     <img
                       key={user.id}
                       src={user.avatar}
@@ -64,13 +72,13 @@ const ListFound = ({ page }: ListFoundProps) => {
                   {userCount > maxUsers && (
                     <div className="my-[5px] flex h-7 w-9 items-center justify-center rounded-full bg-black p-[6px]">
                       <div className="flex flex-row items-center justify-center gap-[2px]">
-                        <div className="text-white font-C01-M">
+                        <div className="mt-[2px] text-white font-C01-M">
                           {userCount - maxUsers}
                         </div>
                         <PlusIcon />
                       </div>
                     </div>
-                  )} */}
+                  )}
                 </div>
 
                 <Button

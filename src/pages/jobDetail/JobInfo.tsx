@@ -3,11 +3,27 @@ import Divider from '@common/Divider';
 import Info from '@assets/icons/info.svg?react';
 import DetailSideBar from './components/DetailSideBar';
 import JobView from './components/JobView';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useJobDetailQuery } from '@hook/useJobQuery';
+import LoadingSpinner from '@common/LoadingSpinner';
 // import NoDataSideBar from './components/NoDataSideBar';
 
 const JobInfo = () => {
   const navigate = useNavigate();
+  const { jobId } = useParams<{ jobId: string }>();
+  const {
+    data: jobDetail,
+    isLoading,
+    error,
+  } = useJobDetailQuery(Number(jobId));
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  if (error) return <div>에러가 발생했어요.</div>;
 
   return (
     <div className="flex flex-col px-[120px] pb-[100px]">
@@ -20,7 +36,7 @@ const JobInfo = () => {
 
           <div className="mb-5 mt-[10px] text-gray-900 font-T01-B">
             {' '}
-            요양보호사
+            {jobDetail?.jobName}
           </div>
 
           <Divider />
@@ -31,10 +47,7 @@ const JobInfo = () => {
                 직업 소개
               </div>
               <div className="h-[80px] text-gray-900 font-B01-M">
-                요양보호사는 노인이나 장애인 등 일상생활이 어려운 분들을
-                지원하는 직업입니다. 요양보호사는 노인이나 장애인 등 일상생활이
-                어려운 분들을 지원하는 직업입니다. 요양보호사는 노인이나 장애인
-                등 일상생활이 어려운 분들을 지원하는 직업입니다.
+                {jobDetail?.jobDescription}
               </div>
             </div>
 
@@ -42,8 +55,7 @@ const JobInfo = () => {
               <div className="flex w-[384px] flex-col gap-5">
                 <span className="text-gray-900 font-T03-B"> 자격증 </span>
                 <span className="text-gray-900 font-B01-M">
-                  {' '}
-                  요양보호사 자격증, 요양보호사 자격증{' '}
+                  {jobDetail?.certification}
                 </span>
               </div>
 
@@ -52,7 +64,9 @@ const JobInfo = () => {
                   {' '}
                   자격증 준비기간{' '}
                 </span>
-                <span className="text-gray-900 font-B01-M">약 1개월</span>
+                <span className="text-gray-900 font-B01-M">
+                  {jobDetail?.certificationPeriod}
+                </span>
               </div>
             </div>
 
@@ -60,9 +74,12 @@ const JobInfo = () => {
               <span className="text-gray-900 font-T03-B"> 급여 </span>
               <div className="flex w-full flex-row items-center gap-[10px]">
                 <div className="flex w-[41px] rounded-[10px] bg-purple-100 p-2 text-purple-500 font-B03-SB">
-                  월급
+                  {jobDetail?.salaryType}
                 </div>
-                <div className="text-gray-900 font-B01-M"> 약 220만원</div>
+                <div className="text-gray-900 font-B01-M">
+                  {' '}
+                  {jobDetail?.salaryCost}
+                </div>
               </div>
             </div>
 
@@ -77,7 +94,7 @@ const JobInfo = () => {
                   <Info />
                 </div>
                 <div className="mt-[6px] text-gray-900 font-B01-M">
-                  움직임이 많은 활동
+                  {jobDetail?.strong.physical}
                 </div>
               </div>
 
@@ -88,7 +105,9 @@ const JobInfo = () => {
                   </span>
                   <Info />
                 </div>
-                <div className="mt-[6px] text-gray-900 font-B01-M">높음</div>
+                <div className="mt-[6px] text-gray-900 font-B01-M">
+                  {jobDetail?.strong.stress}
+                </div>
               </div>
 
               <div>
@@ -98,7 +117,9 @@ const JobInfo = () => {
                   </span>
                   <Info />
                 </div>
-                <div className="mt-[6px] text-gray-900 font-B01-M">높음</div>
+                <div className="mt-[6px] text-gray-900 font-B01-M">
+                  {jobDetail?.strong.relationship}
+                </div>
               </div>
             </div>
           </div>
