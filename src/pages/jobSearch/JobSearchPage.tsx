@@ -8,10 +8,32 @@ import Pagination from '@common/Pagination.tsx';
 import LoadingSpinner from '@common/LoadingSpinner.tsx';
 import { useState } from 'react';
 
+interface JobItem {
+  id: string;
+  companyName: string;
+  title: string;
+  experienceLevel?: string;
+  jobTypeName?: string;
+  requiredEducationLevel?: string;
+  salary?: string;
+  locationName?: string;
+  'expiration-date': string;
+  deadline: string;
+  url: string;
+}
+
+interface JobListResponse {
+  job: JobItem[];
+  count: number;
+  total: number;
+  start: number;
+}
+
 const JobSearchPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
-  const { data = [], isPending } = useRecruitListQuery(currentPage);
+  const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
+    useRecruitListQuery<JobListResponse>(currentPage);
   console.log(data);
   if (isPending) {
     return (
@@ -55,14 +77,14 @@ const JobSearchPage = () => {
       </div>
       <div className="container mx-auto mb-6 px-4 pt-8">
         <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {jobs.map((item: any) => {
+          {jobs.map((item: JobItem) => {
             const hashtags = [
               item.experienceLevel,
               item.jobTypeName,
               item.requiredEducationLevel,
               item.salary,
               item.locationName,
-            ].filter(Boolean);
+            ].filter((tag): tag is string => Boolean(tag));
 
             return (
               <RecruitCard
