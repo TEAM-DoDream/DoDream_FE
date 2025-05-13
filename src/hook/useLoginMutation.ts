@@ -19,6 +19,7 @@ export const useLoginMutation = () => {
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
         localStorage.setItem('nickname', res.data.nickname);
+        localStorage.setItem('memberId', res.data.memberId);
         navigate('/');
       } else {
         alert('로그인에 실패했습니다. 다시 시도해주세요.');
