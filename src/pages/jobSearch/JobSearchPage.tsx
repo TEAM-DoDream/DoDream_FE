@@ -4,10 +4,14 @@ import RecruitCard from '@common/RecruitCard.tsx';
 import Img from '@assets/images/illustration_1.webp';
 import Footer from '@common/Footer.tsx';
 import { useRecruitListQuery } from '@hook/useRecruitListQuery.ts';
+import Pagination from '@common/Pagination.tsx';
 import LoadingSpinner from '@common/LoadingSpinner.tsx';
+import { useState } from 'react';
 
 const JobSearchPage = () => {
-  const { data = [], isPending } = useRecruitListQuery();
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const { data = [], isPending } = useRecruitListQuery(currentPage);
   console.log(data);
   if (isPending) {
     return (
@@ -16,7 +20,10 @@ const JobSearchPage = () => {
       </div>
     );
   }
-
+  const totalPages = Math.ceil(Number(data?.total || 0) / (data?.count || 10));
+  console.log(totalPages);
+  const jobs = data?.job || [];
+  console.log('jobs', jobs);
   return (
     <div className="flex flex-col">
       <div className="bg-purple-100">
@@ -43,12 +50,12 @@ const JobSearchPage = () => {
       <div
         className={'container mx-auto mb-4 mt-16 flex text-black font-T03-B'}
       >
-        <p className={'text-purple-500 font-T03-B'}>{data.length}개</p>의
+        <p className="text-purple-500 font-T03-B">{data?.total ?? 0}개</p>의
         일자리가 구인 중이에요
       </div>
       <div className="container mx-auto mb-6 px-4 pt-8">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {data.map((item: any) => {
+          {jobs.map((item: any) => {
             const hashtags = [
               item.experienceLevel,
               item.jobTypeName,
@@ -67,10 +74,20 @@ const JobSearchPage = () => {
                   hashtags: hashtags,
                   endDate: item['expiration-date'],
                   deadline: item.deadline,
+                  url: item.url,
                 }}
               />
             );
           })}
+        </div>
+        <div className="mx-auto mb-[80px] mt-[30px] w-fit">
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+          )}
         </div>
       </div>
       <Footer />
