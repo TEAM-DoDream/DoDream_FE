@@ -36,27 +36,32 @@ const DetailSideBar = () => {
               함께 준비해요{' '}
             </div>
           </div>
-
-          {userList.map((user, index) => (
-            <div
-              key={index}
-              className="flex h-[62px] w-full cursor-pointer flex-col items-start justify-center gap-4 rounded-2xl bg-white px-4 py-3 hover:shadow-shadow2"
-            >
-              <div className="flex flex-row items-center gap-[10px]">
-                <img
-                  src={Checker}
-                  alt="사용자이미지"
-                  className="h-[38px] w-[38px] rounded-full"
-                />
-                <div className="truncate text-gray-900 font-B01-M">
-                  {user.name}
-                </div>
-                <div className="flex h-[34px] w-[71px] items-center justify-center text-nowrap rounded-[10px] bg-gray-100 p-2 text-gray-500 font-B03-SB">
-                  할일 {user.taskCount}개
+          {userList.length > 0 ? (
+            userList.map((user, index) => (
+              <div
+                key={`user-${index}`}
+                className="flex h-[62px] w-full cursor-pointer flex-col items-start justify-center gap-4 rounded-2xl bg-white px-4 py-3 hover:shadow-shadow2"
+              >
+                <div className="flex flex-row items-center gap-[10px]">
+                  <img
+                    src={Checker}
+                    alt="사용자이미지"
+                    className="h-[38px] w-[38px] rounded-full"
+                  />
+                  <div className="truncate text-gray-900 font-B01-M">
+                    {user.name}
+                  </div>
+                  <div className="flex h-[34px] w-[71px] items-center justify-center text-nowrap rounded-[10px] bg-gray-100 p-2 text-gray-500 font-B03-SB">
+                    할일 {user.taskCount}개
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="py-4 text-center text-gray-500 font-B02-M">
+              아직 함께 준비하는 사용자가 없습니다.
             </div>
-          ))}
+          )}
 
           <div className="flex w-full cursor-pointer flex-row items-center justify-end">
             <div className="text-gray-500 font-B02-SB"> 더 보러가기 </div>
