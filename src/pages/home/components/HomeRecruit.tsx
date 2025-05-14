@@ -2,6 +2,7 @@ import Arrow from '@assets/icons/arrow.svg?react';
 import Recruit from '@utils/data/home/RecruitDummy';
 import Like from '@assets/icons/like.svg?react';
 import Eye from '@assets/icons/purpleeye.svg?react';
+import { useUserStore } from '@store/useUserStore';
 
 interface RecruitItem {
   id: number;
@@ -13,6 +14,7 @@ interface RecruitItem {
 }
 
 const HomeRecruit = () => {
+  const regionName = useUserStore((state) => state.regionName);
   const sortByTime = (a: RecruitItem, b: RecruitItem): number => {
     const timeA = Number(a.time) || 0;
     const timeB = Number(b.time) || 0;
@@ -22,7 +24,7 @@ const HomeRecruit = () => {
     <div>
       <div className="mb-[50px] flex items-center justify-between">
         <div className="text-gray-900 font-T02-B">
-          대전 서구에 새로 올라온 구인글이에요!
+          {regionName}에 새로 올라온 구인글이에요!
         </div>
         <div className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB">
           더 보러가기
@@ -34,7 +36,7 @@ const HomeRecruit = () => {
         {[...Recruit].sort(sortByTime).map((item: RecruitItem) => (
           <div
             key={item.id}
-            className="shadow-shadow2 flex h-auto w-[384px] flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px]"
+            className="flex h-auto w-[384px] flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] shadow-shadow2"
           >
             <div className="flex w-full flex-col items-end">
               <Like />
