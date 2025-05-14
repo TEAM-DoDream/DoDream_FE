@@ -21,10 +21,12 @@ const LoginBanner = () => {
   const setSelection = useFilterStore((state) => state.setSelection);
 
   if (isLoading) {
-    <LoadingSpinner />;
+    return <LoadingSpinner />;
   }
   if (isError) {
-    <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>;
+    return (
+      <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>
+    );
   }
 
   const renderTabContent = () => {
