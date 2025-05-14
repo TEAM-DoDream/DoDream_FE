@@ -43,12 +43,12 @@ const ListFound = ({ page }: ListFoundProps) => {
           <div
             key={item.jobId}
             className="flex cursor-pointer flex-col items-start"
-            onClick={() => navigate(`/jobinfo/${item.jobId}`)}
           >
             <img
               src={item.imageUrl || Checker}
               alt={item.jobName}
               className="h-[240px] w-[360px] rounded-2xl object-cover"
+              onClick={() => navigate(`/jobinfo/${item.jobId}`)}
             />
 
             <div className="mt-[14px] w-[360px]">
@@ -56,7 +56,10 @@ const ListFound = ({ page }: ListFoundProps) => {
                 {item.requiredCertification},{item.workTimeInfo},
                 {item.physicalInfo}
               </div>
-              <div className="mt-[6px] text-gray-900 font-T04-SB">
+              <div
+                className="mt-[6px] text-gray-900 font-T04-SB"
+                onClick={() => navigate(`/jobinfo/${item.jobId}`)}
+              >
                 {item.jobName}
               </div>
               <div className="mt-[10px] truncate text-gray-500 font-B02-M">
