@@ -39,8 +39,8 @@ export interface JobViewRequest {
   closeType: string;
   salary: string;
   deadline: string;
-  expirationTimestamp: string;
-  expirationDate: string;
+  'expiration-timestamp': string;
+  'expiration-date': string;
   count: number;
 }
 
