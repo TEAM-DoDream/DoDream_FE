@@ -52,7 +52,7 @@ export default function DropDown<T extends string>({
           </div>
         </div>
         {isOpen && (
-          <ul className="absolute left-0 top-full z-10 mt-2 max-h-60 w-full overflow-y-auto rounded-2xl border bg-white shadow-shadow4">
+          <ul className="absolute left-0 top-full z-10 mt-2 max-h-60 w-full overflow-y-auto rounded-2xl border bg-white shadow-shadow4 no-scrollbar">
             {backButton && (
               <li
                 onClick={backButton.onClick}
@@ -70,7 +70,7 @@ export default function DropDown<T extends string>({
                   onSelect(opt);
                   if (!keepOpenOnSelect) toggle();
                 }}
-                className={`cursor-pointer px-8 py-3 font-B01-M hover:text-purple-500 ${
+                className={`cursor-pointer px-5 py-6 font-B01-M hover:text-purple-500 ${
                   value === opt ? 'text-purple-500' : 'text-gray-400'
                 }`}
               >

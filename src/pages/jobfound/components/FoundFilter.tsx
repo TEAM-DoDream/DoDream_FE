@@ -6,7 +6,7 @@ import Cancel from '@assets/icons/purplecancel.svg?react';
 
 type Tag = { label: string; type: 'require' | 'workTime' | 'bodyActivity' };
 
-const needOptions = ['필요함', '불필요함'];
+const needOptions = ['필요함', '불필요함', '선택 사항'];
 const workTimeOptions = [
   '평일 오전',
   '평일 오후',
@@ -38,7 +38,7 @@ const FoundFilter = () => {
   };
 
   return (
-    <div className="shadow-shadow2 mt-[60px] flex min-h-[242px] w-full flex-col items-start rounded-[30px] bg-white p-[30px]">
+    <div className="mt-[60px] flex min-h-[242px] w-full flex-col items-start rounded-[30px] bg-white p-[30px] shadow-shadow2">
       <div className="flex w-full flex-col">
         <div className="flex justify-end">
           <ResetButton onClick={handleResetAll} />
