@@ -9,12 +9,21 @@ export interface HomeProps {
 const HomeBanner = async () => {
   const token = localStorage.getItem('accessToken');
 
-  const response = await api.get(`/v1/recruit/popular`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.data;
+  if (!token) {
+    throw new Error('토큰이 없습니다.');
+  }
+
+  try {
+    const response = await api.get(`/v1/recruit/popular`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('인기 채용 정보를 가져오는 중 오류 발생:', error);
+    throw error;
+  }
 };
 
 export const useBannerQuery = () => {
