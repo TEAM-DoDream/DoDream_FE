@@ -7,10 +7,9 @@ import Footer from '@common/Footer.tsx';
 
 // 샘플 데이터 (배열 20개)
 const dummyDreamers = Array.from({ length: 20 }, (_, i) => ({
-  todo: `할 일 ${i + 1}`,
-  day: `${i + 1}일`,
+  todo: `${i + 1}`,
+  day: `${i + 1}`,
   nickname: `사용자${i + 1}`,
-  job: '요양보호사',
   doneList: [i % 2 === 0, i % 3 === 0],
   profile: '/path/to/profile.png',
   regionName: '서울 강남구',
@@ -34,7 +33,7 @@ const OtherTodoPage = () => {
 
   return (
     <>
-      <div className="mx-auto w-full max-w-screen-xl px-10 py-8">
+      <div className="mt-8 flex min-h-screen w-full flex-col px-4 sm:px-6 md:px-24 lg:px-24">
         <div className="mb-6">
           <BackIcon />
         </div>
@@ -58,7 +57,9 @@ const OtherTodoPage = () => {
           />
         </div>
       </div>
-      <Footer />
+      <div className={'mt-8'}>
+        <Footer />
+      </div>
     </>
   );
 };
