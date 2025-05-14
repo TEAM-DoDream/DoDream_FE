@@ -12,15 +12,18 @@ const userList = [
   { name: '고라니고라니고라니고라', taskCount: 12 },
   { name: '고라니고라니고라니고라', taskCount: 12 },
 ];
+interface JobViewComponentProps {
+  jobName: string;
+}
 
-const DetailSideBar = () => {
+const DetailSideBar = ({ jobName }: JobViewComponentProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="flex items-start justify-center pt-[66px]">
       <div className="flex w-full flex-col gap-[30px]">
         <Button
-          text="요양보호사 담기"
+          text={`${jobName} 담기`}
           color="primary"
           type="button"
           className="flex h-[60px] w-full items-center justify-center rounded-2xl px-[60px] py-3"
@@ -32,7 +35,7 @@ const DetailSideBar = () => {
             <img src={Clap} alt="박수아이콘" className="h-[76px] w-[76px]" />
             <div className="text-gray-900 font-T03-B">
               {' '}
-              요양보호사 <br />
+              {jobName} <br />
               함께 준비해요{' '}
             </div>
           </div>
