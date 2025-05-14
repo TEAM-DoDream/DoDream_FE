@@ -29,11 +29,14 @@ const HomeRecruit = () => {
       [id]: !prev[id],
     }));
   };
+  const isLoggedIn = localStorage.getItem('accessToken');
   return (
     <div>
       <div className="mb-[50px] flex items-center justify-between">
         <div className="text-gray-900 font-T02-B">
-          {regionName}에 새로 올라온 구인글이에요!
+          {isLoggedIn
+            ? `${regionName}에 새로 올라온 구인글이에요!`
+            : '두드림에 새로 올라온 구인글이에요!'}
         </div>
         <div className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB">
           더 보러가기
