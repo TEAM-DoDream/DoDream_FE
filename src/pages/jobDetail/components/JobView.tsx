@@ -33,7 +33,8 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
       </div>
 
       <div className="grid grid-cols-3 gap-5">
-        {jobView?.slice(0, 3).map((view) => (
+        +{' '}
+        {(jobView ?? []).slice(0, 3).map((view) => (
           <div
             key={view.id}
             onClick={() => setSelectedItem(view)}
