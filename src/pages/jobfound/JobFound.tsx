@@ -44,7 +44,7 @@ const JobFound = () => {
 
         <div className="mb-[80px] mt-[30px]">
           <Pagination
-            totalPages={data?.totalPages}
+            totalPages={data?.totalPages || 1}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
