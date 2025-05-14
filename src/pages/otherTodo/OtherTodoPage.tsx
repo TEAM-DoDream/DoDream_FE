@@ -33,7 +33,7 @@ const OtherTodoPage = () => {
 
   return (
     <>
-      <div className="mt-8 flex min-h-screen w-full flex-col px-4 sm:px-6 md:px-24 lg:px-24">
+      <div className="mx-auto w-full max-w-screen-xl px-10 py-8">
         <div className="mb-6">
           <BackIcon />
         </div>
@@ -43,7 +43,7 @@ const OtherTodoPage = () => {
           <h2 className="mt-4 font-T01-B">요양보호사 함께 준비해요</h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {currentItems.map((item, idx) => (
             <ProfileCard key={idx} {...item} />
           ))}
