@@ -81,7 +81,7 @@ const LoginBanner = () => {
                     </button>
                   ))}
                 </div>
-                <div className="ml-[29px] mt-[30px]">{renderTabContent()}</div>
+                <div className="ml-[20px] mt-[30px]">{renderTabContent()}</div>
               </div>
             </div>
 
