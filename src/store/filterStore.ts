@@ -5,7 +5,7 @@ type FilterState = {
   startDate: string;
   endDate: string;
   trainingCourse: string;
-  require: string; //자격증 필요여부
+  require: string;
   workTime: string;
   bodyActivity: string;
 };
