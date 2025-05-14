@@ -1,12 +1,15 @@
 import Arrow from '@assets/icons/arrow.svg?react';
-import { useJobViewQuery } from '@hook/useJobQuery';
+import { JobViewRequest, useJobViewQuery } from '@hook/useJobQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
+import { useState } from 'react';
+import SelectModal from '@common/modal/SelectModal';
 
 interface JobViewComponentProps {
   jobName: string;
 }
 
 const JobView = ({ jobName }: JobViewComponentProps) => {
+  const [selectedItem, setSelectedItem] = useState<JobViewRequest | null>(null);
   const { data: jobView, isLoading, error } = useJobViewQuery(jobName);
   if (isLoading)
     return (
@@ -32,7 +35,8 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
       <div className="grid grid-cols-3 gap-5">
         {jobView?.slice(0, 3).map((view) => (
           <div
-            key={view.active}
+            key={view.id}
+            onClick={() => setSelectedItem(view)}
             className="flex h-auto w-full cursor-pointer flex-col items-start rounded-[30px] border-2 border-gray-200 p-[30px] hover:shadow-shadow2"
           >
             <div className="self-end rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
@@ -49,6 +53,12 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
           </div>
         ))}
       </div>
+      {selectedItem && (
+        <SelectModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+        />
+      )}
     </div>
   );
 };
