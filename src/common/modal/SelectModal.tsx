@@ -14,7 +14,7 @@ const SelectModal = <
     locationName: string;
     jobTypeName: string;
     deadline: string;
-    expirationTimestamp: string;
+    'expiration-date': string;
   },
 >({
   item,
@@ -42,7 +42,7 @@ const SelectModal = <
           <div className="flex flex-row gap-7">
             <span className="text-gray-500 font-B01-M">마감일</span>
             <span className="text-purple-500 font-B01-SB">
-              {item.expirationTimestamp}
+              {item['expiration-date']}
             </span>
           </div>
 
