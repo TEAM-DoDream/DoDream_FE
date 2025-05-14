@@ -45,13 +45,18 @@ export interface JobViewRequest {
 }
 
 const jobFoundList = async (pageNum: number) => {
-  const response = await api.get(`/v1/job/list`, {
-    params: { pageNum: pageNum - 1 },
-  });
-  return {
-    content: response.data.data.content,
-    totalPages: response.data.data.totalPages,
-  };
+  try {
+    const response = await api.get(`/v1/job/list`, {
+      params: { pageNum: pageNum - 1 },
+    });
+    return {
+      content: response.data.data.content,
+      totalPages: response.data.data.totalPages,
+    };
+  } catch (error) {
+    console.error('직업 목록 API 호출 실패:', error);
+    throw new Error('직업 목록을 불러오는데 실패했습니다');
+  }
 };
 
 export const useJobQuery = (pageNum: number) => {
@@ -63,8 +68,13 @@ export const useJobQuery = (pageNum: number) => {
 
 //직업 상세
 const jobDetail = async (id: number): Promise<JobDetailRequest> => {
-  const response = await api.get(`/v1/job/detail/${id}`);
-  return response.data.data;
+  try {
+    const response = await api.get(`/v1/job/detail/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error('직업 상세 API 호출 실패:', error);
+    throw new Error('직업 상세 목록을 불러오는데 실패했습니다');
+  }
 };
 
 export const useJobDetailQuery = (id: number) => {
