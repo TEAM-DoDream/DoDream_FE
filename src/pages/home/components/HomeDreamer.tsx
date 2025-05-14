@@ -1,8 +1,10 @@
 import Arrow from '@assets/icons/arrow.svg?react';
 import DreamerCard from './DreamerCard';
 import Dreamer from '@utils/data/home/DreamerDummy';
+import { useNavigate } from 'react-router-dom';
 
 const HomeDreamer = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <div className="mb-[50px] flex items-center justify-between">
@@ -11,7 +13,7 @@ const HomeDreamer = () => {
         </div>
         <div
           className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB"
-          onClick={() => '/'}
+          onClick={() => navigate('/jobfound')}
         >
           더 보러가기
           <Arrow />

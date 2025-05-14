@@ -9,12 +9,16 @@ import Bell from '@assets/images/bell.webp';
 import { useBannerQuery } from '@hook/useHomeQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useUserStore } from '@store/useUserStore';
+import { useNavigate } from 'react-router-dom';
+import { useFilterStore } from '@store/filterStore';
 
 const LoginBanner = () => {
   const [activeTab, setActiveTab] = useState('준비하기');
   const tabs = ['준비하기', '시작하기', '도전하기'];
   const { data: jobList, isLoading, isError } = useBannerQuery();
   const regionName = useUserStore((state) => state.regionName);
+  const navigate = useNavigate();
+  const setSelection = useFilterStore((state) => state.setSelection);
 
   if (isLoading) {
     <LoadingSpinner />;
@@ -84,8 +88,14 @@ const LoginBanner = () => {
             <div className="flex h-[465px] w-[384px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] py-[40px]">
               <div className="flex w-full flex-row items-start justify-between">
                 <img src={Bell} alt="Bell" className="h-[76px] w-[76px]" />
-                <div className="flex cursor-pointer flex-row items-center">
-                  <div className="text-gray-500 font-B02-SB">더보기 </div>
+                <div
+                  className="flex cursor-pointer flex-row items-center"
+                  onClick={() => {
+                    setSelection('location', regionName);
+                    navigate('/jobsearch');
+                  }}
+                >
+                  <div className="text-gray-500 font-B02-SB"> 더보기 </div>
                   <Arrow />
                 </div>
               </div>
