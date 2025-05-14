@@ -44,10 +44,20 @@ export interface JobViewRequest {
   count: number;
 }
 
-const jobFoundList = async (pageNum: number) => {
+const jobFoundList = async (
+  pageNum: number,
+  require: string,
+  workTime: string,
+  bodyActivity: string
+) => {
   try {
     const response = await api.get(`/v1/job/list`, {
-      params: { pageNum: pageNum - 1 },
+      params: {
+        pageNum: pageNum - 1,
+        require: require || undefined,
+        workTime: workTime || undefined,
+        physical: bodyActivity || undefined,
+      },
     });
     return {
       content: response.data.data.content,
@@ -58,23 +68,22 @@ const jobFoundList = async (pageNum: number) => {
     throw new Error('직업 목록을 불러오는데 실패했습니다');
   }
 };
-
-export const useJobQuery = (pageNum: number) => {
+export const useJobQuery = (
+  pageNum: number,
+  require: string,
+  workTime: string,
+  bodyActivity: string
+) => {
   return useQuery({
-    queryKey: ['jobList', pageNum],
-    queryFn: () => jobFoundList(pageNum),
+    queryKey: ['jobList', pageNum, require, workTime, bodyActivity],
+    queryFn: () => jobFoundList(pageNum, require, workTime, bodyActivity),
   });
 };
 
 //직업 상세
 const jobDetail = async (id: number): Promise<JobDetailRequest> => {
-  try {
-    const response = await api.get(`/v1/job/detail/${id}`);
-    return response.data.data;
-  } catch (error) {
-    console.error('직업 상세 API 호출 실패:', error);
-    throw new Error('직업 상세 목록을 불러오는데 실패했습니다');
-  }
+  const response = await api.get(`/v1/job/detail/${id}`);
+  return response.data.data;
 };
 
 export const useJobDetailQuery = (id: number) => {

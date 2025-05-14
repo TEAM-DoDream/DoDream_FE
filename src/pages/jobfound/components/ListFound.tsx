@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PlusIcon from '@assets/icons/plus.svg?react';
 import Checker from '@assets/images/checker.png';
 import Button from '@common/Button';
@@ -7,17 +7,32 @@ import { JobRequest, useJobQuery } from '@hook/useJobQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
 import FoundJobs from '@utils/data/jobfound/JobFoundDummy';
 import { useNavigate } from 'react-router-dom';
+import { useFilterStore } from '@store/filterStore';
 
 interface ListFoundProps {
   page: number;
+  setTotalPages: (total: number) => void;
 }
 
-const ListFound = ({ page }: ListFoundProps) => {
+const ListFound = ({ page, setTotalPages }: ListFoundProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<number | null>(null);
-  const { data, isLoading, error } = useJobQuery(page);
+  const { require, workTime, bodyActivity } = useFilterStore();
+
+  const { data, isLoading, error } = useJobQuery(
+    page,
+    require,
+    workTime,
+    bodyActivity
+  );
   const jobs: JobRequest[] = data?.content ?? [];
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (data?.totalPages) {
+      setTotalPages(data.totalPages);
+    }
+  }, [data?.totalPages]);
 
   if (isLoading)
     return (
