@@ -7,7 +7,6 @@ import StartTab from './tab/StartTab';
 import ChallengeTab from './tab/ChallengeTab';
 import Bell from '@assets/images/bell.webp';
 import { useBannerQuery } from '@hook/useHomeQuery';
-import LoadingSpinner from '@common/LoadingSpinner';
 import { useUserStore } from '@store/useUserStore';
 import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
@@ -15,19 +14,10 @@ import { useFilterStore } from '@store/filterStore';
 const LoginBanner = () => {
   const [activeTab, setActiveTab] = useState('준비하기');
   const tabs = ['준비하기', '시작하기', '도전하기'];
-  const { data: jobList, isLoading, isError } = useBannerQuery();
+  const { data: jobList } = useBannerQuery();
   const regionName = useUserStore((state) => state.regionName);
   const navigate = useNavigate();
   const setSelection = useFilterStore((state) => state.setSelection);
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-  if (isError) {
-    return (
-      <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>
-    );
-  }
 
   const renderTabContent = () => {
     switch (activeTab) {

@@ -3,18 +3,10 @@ import MyDreamArrow from '@assets/icons/myDreamarrow.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
 import Bell from '@assets/images/bell.webp';
 import { useNoBannerQuery } from '@hook/useHomeQuery';
-import LoadingSpinner from '@common/LoadingSpinner';
 
 const Banner = () => {
-  const { data: jobList, isLoading, isError } = useNoBannerQuery();
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-  if (isError) {
-    return (
-      <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>
-    );
-  }
+  const { data: jobList } = useNoBannerQuery();
+
   return (
     <div className="flex flex-row gap-6">
       <div className="relative w-full">

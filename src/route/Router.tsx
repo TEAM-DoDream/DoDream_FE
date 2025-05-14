@@ -27,7 +27,7 @@ const Router = () => {
           <Route path="/jobsearch" element={<JobSearchPage />} />
           <Route path="/learning" element={<LearningPage />} />
           <Route path="/jobfound" element={<JobFound />} />
-          <Route path="/jobinfo" element={<JobInfo />} />
+          <Route path="/jobinfo/:jobId" element={<JobInfo />} />
         </Route>
       </Routes>
     </BrowserRouter>
