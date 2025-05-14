@@ -8,10 +8,12 @@ import LoadingSpinner from '@common/LoadingSpinner';
 const Banner = () => {
   const { data: jobList, isLoading, isError } = useNoBannerQuery();
   if (isLoading) {
-    <LoadingSpinner />;
+    return <LoadingSpinner />;
   }
   if (isError) {
-    <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>;
+    return (
+      <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>
+    );
   }
   return (
     <div className="flex flex-row gap-6">
