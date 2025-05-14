@@ -1,8 +1,10 @@
 import Arrow from '@assets/icons/arrow.svg?react';
 import Recruit from '@utils/data/home/RecruitDummy';
 import Like from '@assets/icons/like.svg?react';
+import FullLike from '@assets/icons/fullheart.svg?react';
 import Eye from '@assets/icons/purpleeye.svg?react';
 import { useUserStore } from '@store/useUserStore';
+import { useState } from 'react';
 
 interface RecruitItem {
   id: number;
@@ -19,6 +21,13 @@ const HomeRecruit = () => {
     const timeA = Number(a.time) || 0;
     const timeB = Number(b.time) || 0;
     return timeA - timeB;
+  };
+  const [likedItems, setLikedItems] = useState<{ [key: number]: boolean }>({});
+  const toggleLike = (id: number) => {
+    setLikedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
   return (
     <div>
@@ -38,8 +47,11 @@ const HomeRecruit = () => {
             key={item.id}
             className="flex h-auto w-[384px] cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] hover:shadow-shadow2"
           >
-            <div className="flex w-full flex-col items-end">
-              <Like />
+            <div
+              className="flex w-full flex-col items-end"
+              onClick={() => toggleLike(item.id)}
+            >
+              {likedItems[item.id] ? <FullLike /> : <Like />}
             </div>
             <div className="mt-3 text-gray-500 font-B03-M">{item.company}</div>
             <div className="mt-4 flex h-10 items-center justify-center rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
