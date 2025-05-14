@@ -7,7 +7,7 @@ import {
   districtMap,
   cityOptions,
 } from '@utils/data/job/filterOptions.ts';
-import { useFilterStore } from '@store/filterStore';
+import { LearningFilterStore } from '@store/learningFilterStore';
 
 type Tag = {
   label: string;
@@ -27,7 +27,7 @@ const Filter = () => {
     updateDate,
     removeTag,
     reset,
-  } = useFilterStore();
+  } = LearningFilterStore();
 
   const [locStep, setLocStep] = useState<'city' | 'district'>('city');
   const [tempCity, setTempCity] = useState('');
