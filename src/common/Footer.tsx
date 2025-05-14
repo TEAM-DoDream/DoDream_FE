@@ -1,8 +1,8 @@
 import Divider from '@assets/icons/shortDivider.svg?react';
 const Footer = () => {
   return (
-    <div className="bottom-0 flex h-[130px] flex-col items-center justify-center border-t border-gray-300 bg-white">
-      <div className="mt-[23px] flex flex-row items-center gap-[9px] text-gray-500 font-B02-SB">
+    <div className="bottom-0 flex h-[130px] flex-col items-center justify-center border-t border-gray-300 bg-white py-6">
+      <div className="flex flex-row items-center gap-[9px] text-gray-500 font-B02-SB">
         <span> 공지사항 </span>
         <Divider />
         <span> 이용약관 </span>

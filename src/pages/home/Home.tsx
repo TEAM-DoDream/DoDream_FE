@@ -8,7 +8,7 @@ const Home = () => {
   const isLoggedIn = !!localStorage.getItem('accessToken');
   return (
     <div>
-      {isLoggedIn ? <LoginBanner regionName="대전 서구" /> : <Banner />}
+      {isLoggedIn ? <LoginBanner /> : <Banner />}
 
       <div className="mb-[160px] mt-[420px] px-[120px]">
         <HomeDreamer />
