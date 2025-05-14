@@ -82,8 +82,13 @@ export const useJobQuery = (
 
 //직업 상세
 const jobDetail = async (id: number): Promise<JobDetailRequest> => {
-  const response = await api.get(`/v1/job/detail/${id}`);
-  return response.data.data;
+  try {
+    const response = await api.get(`/v1/job/detail/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error('직업 상세 정보 API 호출 실패:', error);
+    throw error;
+  }
 };
 
 export const useJobDetailQuery = (id: number) => {
