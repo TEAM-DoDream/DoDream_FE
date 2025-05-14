@@ -36,7 +36,7 @@ const HomeRecruit = () => {
         {[...Recruit].sort(sortByTime).map((item: RecruitItem) => (
           <div
             key={item.id}
-            className="flex h-auto w-[384px] flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] shadow-shadow2"
+            className="flex h-auto w-[384px] cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] hover:shadow-shadow2"
           >
             <div className="flex w-full flex-col items-end">
               <Like />
