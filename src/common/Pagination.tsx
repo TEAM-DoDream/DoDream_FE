@@ -46,17 +46,18 @@ const Pagination = ({
 
   return (
     <div className="flex items-center justify-center space-x-2">
-      {getPages().map((p, i) =>
-        p === '...' ? (
+      {getPages().map((p, i) => {
+        const key = typeof p === 'number' ? `page-${p}` : `dots-${i}`;
+        return p === '...' ? (
           <span
-            key={`dots-${i}`}
+            key={key}
             className="flex h-9 w-9 items-center justify-center text-gray-300 font-B02-SB"
           >
             …
           </span>
         ) : (
           <button
-            key={p}
+            key={key}
             onClick={() => handleClick(p as number)}
             className={clsx(
               'flex h-9 w-9 cursor-pointer flex-row items-center justify-center transition font-B02-SB',
@@ -67,8 +68,8 @@ const Pagination = ({
           >
             {p}
           </button>
-        )
-      )}
+        );
+      })}
 
       <button
         onClick={() => handleClick(currentPage + 1)}
