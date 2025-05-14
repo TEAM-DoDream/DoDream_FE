@@ -32,7 +32,7 @@ const ListFound = ({ page }: ListFoundProps) => {
   );
 
   return (
-    <div className="grid grid-cols-3 gap-6 px-9 py-[60px]">
+    <div className="grid grid-cols-3 gap-[50px] px-9 py-[60px]">
       {sortedJobs.map((item: JobRequest) => {
         const dummy = FoundJobs.find((f) => f.id === item.jobId);
         const users = dummy?.userProfiles ?? [];
@@ -56,9 +56,9 @@ const ListFound = ({ page }: ListFoundProps) => {
                 {item.requiredCertification},{item.workTimeInfo},
                 {item.physicalInfo}
               </div>
-              <span className="mt-[6px] text-gray-900 font-T04-SB">
+              <div className="mt-[6px] text-gray-900 font-T04-SB">
                 {item.jobName}
-              </span>
+              </div>
               <div className="mt-[10px] truncate text-gray-500 font-B02-M">
                 {item.jobDescription}
               </div>
