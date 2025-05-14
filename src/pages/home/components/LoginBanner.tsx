@@ -6,14 +6,28 @@ import ReadyTab from './tab/ReadyTab';
 import StartTab from './tab/StartTab';
 import ChallengeTab from './tab/ChallengeTab';
 import Bell from '@assets/images/bell.webp';
+import { useBannerQuery } from '@hook/useHomeQuery';
+import LoadingSpinner from '@common/LoadingSpinner';
+import { useUserStore } from '@store/useUserStore';
+import { useNavigate } from 'react-router-dom';
+import { useFilterStore } from '@store/filterStore';
 
-interface LoginBannerProps {
-  regionName: string;
-}
-
-const LoginBanner = ({ regionName = '대전 서구' }: LoginBannerProps) => {
+const LoginBanner = () => {
   const [activeTab, setActiveTab] = useState('준비하기');
   const tabs = ['준비하기', '시작하기', '도전하기'];
+  const { data: jobList, isLoading, isError } = useBannerQuery();
+  const regionName = useUserStore((state) => state.regionName);
+  const navigate = useNavigate();
+  const setSelection = useFilterStore((state) => state.setSelection);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+  if (isError) {
+    return (
+      <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>
+    );
+  }
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -53,7 +67,7 @@ const LoginBanner = ({ regionName = '대전 서구' }: LoginBannerProps) => {
                 </div>
               </div>
 
-              <div className="shadow-shadow2 absolute bottom-2 left-[7.4px] flex h-[258px] w-[772.4px] rounded-b-[30px] bg-white">
+              <div className="absolute bottom-2 left-[7.4px] flex h-[258px] w-[772.4px] rounded-b-[30px] bg-white stroke-gray-300 stroke-2">
                 <div className="absolute -top-[33px] left-[30px] flex items-center justify-center border-b-[3px] border-white">
                   {tabs.map((tab) => (
                     <button
@@ -69,15 +83,21 @@ const LoginBanner = ({ regionName = '대전 서구' }: LoginBannerProps) => {
                     </button>
                   ))}
                 </div>
-                <div className="ml-[29px] mt-[30px]">{renderTabContent()}</div>
+                <div className="ml-[20px] mt-[30px]">{renderTabContent()}</div>
               </div>
             </div>
 
             <div className="flex h-[465px] w-[384px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] py-[40px]">
               <div className="flex w-full flex-row items-start justify-between">
                 <img src={Bell} alt="Bell" className="h-[76px] w-[76px]" />
-                <div className="flex flex-row items-center">
-                  <div className="text-gray-500 font-B02-SB">더보기 </div>
+                <div
+                  className="flex cursor-pointer flex-row items-center"
+                  onClick={() => {
+                    setSelection('location', regionName);
+                    navigate('/jobsearch');
+                  }}
+                >
+                  <div className="text-gray-500 font-B02-SB"> 더보기 </div>
                   <Arrow />
                 </div>
               </div>
@@ -89,26 +109,20 @@ const LoginBanner = ({ regionName = '대전 서구' }: LoginBannerProps) => {
 
               <div className="mt-[27px] flex flex-col items-center justify-center">
                 <div className="flex flex-col gap-4">
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                      요양보호사
-                    </div>
-                    <div className="text-gray-900 font-T05-SB">23건</div>
-                  </div>
-
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                      요양보호사
-                    </div>
-                    <div className="text-gray-900 font-T05-SB">13건</div>
-                  </div>
-
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                      요양보호사
-                    </div>
-                    <div className="text-gray-900 font-T05-SB">32건</div>
-                  </div>
+                  {jobList &&
+                    jobList.map((job) => (
+                      <div
+                        key={job['job-name']}
+                        className="flex flex-row items-center gap-4"
+                      >
+                        <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
+                          {job['job-name']}
+                        </div>
+                        <div className="text-gray-900 font-T05-SB">
+                          {job.count}건
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
