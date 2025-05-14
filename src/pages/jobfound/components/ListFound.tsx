@@ -27,9 +27,13 @@ const ListFound = ({ page }: ListFoundProps) => {
     );
   if (error) return <div>에러가 발생했어요.</div>;
 
+  const sortedJobs = [...jobs].sort((a, b) =>
+    a.jobName.localeCompare(b.jobName, 'ko')
+  );
+
   return (
     <div className="grid grid-cols-3 gap-6 px-9 py-[60px]">
-      {jobs.map((item: JobRequest) => {
+      {sortedJobs.map((item: JobRequest) => {
         const dummy = FoundJobs.find((f) => f.id === item.jobId);
         const users = dummy?.userProfiles ?? [];
         const userCount = users.length;
