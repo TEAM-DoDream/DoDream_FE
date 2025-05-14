@@ -23,3 +23,15 @@ export const useBannerQuery = () => {
     queryFn: HomeBanner,
   });
 };
+
+const HomeNoLoginBanner = async () => {
+  const response = await api.get(`/v1/recruit/popular`);
+  return response.data.data;
+};
+
+export const useNoBannerQuery = () => {
+  return useQuery<HomeProps[]>({
+    queryKey: ['HomeNoLoginBanner'],
+    queryFn: HomeNoLoginBanner,
+  });
+};

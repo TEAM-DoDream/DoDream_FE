@@ -2,8 +2,17 @@ import { HomeBackImage, HomeCard } from './HomeImage';
 import MyDreamArrow from '@assets/icons/myDreamarrow.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
 import Bell from '@assets/images/bell.webp';
+import { useNoBannerQuery } from '@hook/useHomeQuery';
+import LoadingSpinner from '@common/LoadingSpinner';
 
 const Banner = () => {
+  const { data: jobList, isLoading, isError } = useNoBannerQuery();
+  if (isLoading) {
+    <LoadingSpinner />;
+  }
+  if (isError) {
+    <div className="text-gray-900"> 구인현황을 불러오지 못했습니다.</div>;
+  }
   return (
     <div className="flex flex-row gap-6">
       <div className="relative w-full">
@@ -48,26 +57,20 @@ const Banner = () => {
 
               <div className="mt-[27px] flex flex-col items-center justify-center">
                 <div className="flex flex-col gap-4">
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                      요양보호사
-                    </div>
-                    <div className="text-gray-900 font-T05-SB">23건</div>
-                  </div>
-
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                      요양보호사
-                    </div>
-                    <div className="text-gray-900 font-T05-SB">13건</div>
-                  </div>
-
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                      요양보호사
-                    </div>
-                    <div className="text-gray-900 font-T05-SB">32건</div>
-                  </div>
+                  {jobList &&
+                    jobList.map((job) => (
+                      <div
+                        key={job['job-name']}
+                        className="flex flex-row items-center gap-4"
+                      >
+                        <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
+                          {job['job-name']}
+                        </div>
+                        <div className="text-gray-900 font-T05-SB">
+                          {job.count}건
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
