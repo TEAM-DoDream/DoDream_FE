@@ -4,6 +4,7 @@ import clapIcon from '@assets/images/clap.webp';
 import Pagination from '@common/Pagination.tsx';
 import ProfileCard from '@pages/otherTodo/components/ProfileCard.tsx';
 import Footer from '@common/Footer.tsx';
+import { useNavigate } from 'react-router-dom';
 
 // 샘플 데이터 (배열 20개)
 const dummyDreamers = Array.from({ length: 20 }, (_, i) => ({
@@ -23,6 +24,7 @@ const dummyDreamers = Array.from({ length: 20 }, (_, i) => ({
 const ITEMS_PER_PAGE = 10;
 
 const OtherTodoPage = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
 
   const startIndex = currentPage * ITEMS_PER_PAGE;
@@ -30,6 +32,9 @@ const OtherTodoPage = () => {
   const currentItems = dummyDreamers.slice(startIndex, endIndex);
 
   const totalPages = Math.ceil(dummyDreamers.length / ITEMS_PER_PAGE);
+  const handleCardClick = () => {
+    navigate('/otherslist'); // ✅ 경로는 라우팅에 맞게 조정
+  };
 
   return (
     <>
@@ -45,7 +50,9 @@ const OtherTodoPage = () => {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {currentItems.map((item, idx) => (
-            <ProfileCard key={idx} {...item} />
+            <div key={idx} className="cursor-pointer" onClick={handleCardClick}>
+              <ProfileCard {...item} />
+            </div>
           ))}
         </div>
 
