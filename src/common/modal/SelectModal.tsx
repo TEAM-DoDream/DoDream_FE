@@ -29,7 +29,7 @@ const SelectModal = <
 
         <div className="mt-1">
           <span className="flex rounded-[10px] bg-purple-100 px-3 py-2.5 text-purple-500 font-T04-SB">
-            {item.deadline}
+            {item.deadline || '마감일 정보 없음'}
           </span>
         </div>
 
