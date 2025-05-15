@@ -93,7 +93,7 @@ const JobInfo = () => {
                     {' '}
                     신체활동 정도
                   </span>
-                  <Info />
+                  <Info className="text-[#A1A6B5]" />
                 </div>
                 <div className="mt-[6px] text-gray-900 font-B01-M">
                   {jobDetail?.strong.physical}
@@ -105,7 +105,7 @@ const JobInfo = () => {
                   <span className="text-gray-900 font-T05-SB">
                     정신적 스트레스
                   </span>
-                  <Info />
+                  <Info className="text-[#A1A6B5]" />
                 </div>
                 <div className="mt-[6px] text-gray-900 font-B01-M">
                   {jobDetail?.strong.stress}
@@ -117,7 +117,7 @@ const JobInfo = () => {
                   <span className="text-gray-900 font-T05-SB">
                     대인관계 빈도
                   </span>
-                  <Info />
+                  <Info className="text-[#A1A6B5]" />
                 </div>
                 <div className="mt-[6px] text-gray-900 font-B01-M">
                   {jobDetail?.strong.relationship}
