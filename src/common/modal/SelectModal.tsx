@@ -1,5 +1,7 @@
 import Cancel from '@assets/icons/bigcancel.svg?react';
 import Like from '@assets/icons/purplelike.svg?react';
+import { useState } from 'react';
+import ToastModal from './ToastModal';
 
 interface SelectModalProps<T> {
   item: T;
@@ -15,11 +17,22 @@ const SelectModal = <
     jobTypeName: string;
     deadline: string;
     'expiration-date': string;
+    url: string;
   },
 >({
   item,
   onClose,
 }: SelectModalProps<T>) => {
+  const [showToast, setShowToast] = useState<boolean>(false);
+
+  const HandleAddClick = () => {
+    setShowToast(true);
+
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2500);
+  };
+
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
       <div className="flex w-full max-w-[778px] flex-col items-start justify-center rounded-[30px] bg-white p-[30px]">
@@ -69,14 +82,34 @@ const SelectModal = <
         </div>
 
         <div className="mt-[30px] flex flex-row items-end justify-end gap-4 self-stretch">
-          <button className="flex items-center gap-3 rounded-[14px] border-[1.4px] border-purple-500 bg-white px-7 py-[18px] text-purple-500 font-T05-SB hover:bg-purple-100">
+          <button
+            className="flex items-center gap-3 rounded-[14px] border-[1.4px] border-purple-500 bg-white px-7 py-[18px] text-purple-500 font-T05-SB hover:bg-purple-100"
+            onClick={HandleAddClick}
+          >
             <Like />
             담기
           </button>
-          <button className="flex items-center justify-center rounded-[14px] bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600">
+          <button
+            className="flex items-center justify-center rounded-[14px] bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600"
+            onClick={() => window.open(item.url, '_blank')}
+          >
             사람인에서 자세히 보기
           </button>
         </div>
+
+        {showToast && (
+          <div className="fixed bottom-5 right-[404px] z-50">
+            <ToastModal
+              text={
+                <>
+                  내 스크랩에 담기에 성공했어요!{' '}
+                  <span className="text-gray-300">[마이드림&gt;스크랩]</span>
+                  에서 확인할 수 있어요
+                </>
+              }
+            />
+          </div>
+        )}
       </div>
     </div>
   );

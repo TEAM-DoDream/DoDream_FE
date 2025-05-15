@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 interface ToastProps {
-  text: string;
+  text: string | ReactNode;
   icon?: ReactNode;
 }
 
