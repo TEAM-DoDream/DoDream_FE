@@ -11,7 +11,12 @@ const NavItems = [
   { label: '마이드림', path: '/' },
   { label: '일자리 찾기', path: '/jobsearch' },
   { label: '배움터 찾기', path: '/learning' },
-  { label: '직업 탐색', path: '/jobfound' },
+  {
+    label: '직업 탐색',
+    path: '/jobfound',
+    match: (pathname: string) =>
+      pathname.startsWith('/job') && pathname !== '/jobsearch',
+  },
 ];
 
 const Header = ({ type }: ShowProps) => {
@@ -27,8 +32,8 @@ const Header = ({ type }: ShowProps) => {
     <div className="fixed left-0 top-0 z-[9999] flex h-20 w-full items-center justify-between border-b border-gray-200 bg-white px-[120px] py-5">
       <div className="flex flex-row items-center gap-5">
         <Logo onClick={() => navigate('/')} className="cursor-pointer" />
-        {NavItems.map(({ label, path }) => {
-          const isActive = pathname === path;
+        {NavItems.map(({ label, path, match }) => {
+          const isActive = match ? match(pathname) : pathname === path;
           return (
             <Link
               key={label}
