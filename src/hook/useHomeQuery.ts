@@ -56,7 +56,7 @@ interface RecruitProps {
   jobName: string;
   postDate: string;
 }
-const NewRecruit = async (pageNum: number) => {
+const NewRecruit = async (pageNum: number, postDate: string) => {
   const token = localStorage.getItem('accessToken');
 
   if (!token) {
@@ -70,6 +70,7 @@ const NewRecruit = async (pageNum: number) => {
       },
       params: {
         pageNum: pageNum - 1,
+        sortBy: postDate,
       },
     });
     return response.data.data.job;
@@ -79,22 +80,14 @@ const NewRecruit = async (pageNum: number) => {
   }
 };
 
-export const useNewRecruitQuery = (pageNum: number) => {
-  return useQuery<RecruitProps[]>({
-    queryKey: ['NewRecruit', pageNum],
-    queryFn: () => NewRecruit(pageNum),
-  });
-};
-
-const NoLoginNewRecruit = async (pageNum: number) => {
+const NoLoginNewRecruit = async (pageNum: number, postDate: string) => {
   try {
     const response = await api.get(`/v1/recruit/list`, {
       params: {
         pageNum: pageNum - 1,
+        sortBy: postDate,
       },
     });
-    console.log('data', response.data);
-    console.log('data2', response.data.data);
     return response.data.data.job;
   } catch (error) {
     console.error('새로 올라온 구인글 오류 발생:', error);
@@ -102,9 +95,24 @@ const NoLoginNewRecruit = async (pageNum: number) => {
   }
 };
 
-export const useNoNewRecruitQuery = (pageNum: number) => {
-  return useQuery<RecruitProps[]>({
-    queryKey: ['NoLoginNewRecruit', pageNum],
-    queryFn: () => NoLoginNewRecruit(pageNum),
+export const useRecruitQuery = (pageNum: number, postDate: string) => {
+  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
+
+  const loginQuery = useQuery<RecruitProps[]>({
+    queryKey: ['NewRecruit', pageNum, postDate],
+    queryFn: () => NewRecruit(pageNum, postDate),
+    enabled: isLoggedIn,
   });
+
+  const noLoginQuery = useQuery<RecruitProps[]>({
+    queryKey: ['NoLoginNewRecruit', pageNum, postDate],
+    queryFn: () => NoLoginNewRecruit(pageNum, postDate),
+    enabled: !isLoggedIn,
+  });
+
+  const data = isLoggedIn ? loginQuery.data : noLoginQuery.data;
+  const isLoading = isLoggedIn ? loginQuery.isLoading : noLoginQuery.isLoading;
+  const error = isLoggedIn ? loginQuery.error : noLoginQuery.error;
+
+  return { data, isLoading, error };
 };
