@@ -33,13 +33,13 @@ const OtherTodoPage = () => {
 
   const totalPages = Math.ceil(dummyDreamers.length / ITEMS_PER_PAGE);
   const handleCardClick = () => {
-    navigate('/otherslist'); // ✅ 경로는 라우팅에 맞게 조정
+    navigate('/otherslist');
   };
 
   return (
     <>
       <div className="mx-auto w-full max-w-screen-xl px-10 py-8">
-        <div className="mb-6">
+        <div className="mb-6" onClick={() => navigate(-1)}>
           <BackIcon />
         </div>
 
