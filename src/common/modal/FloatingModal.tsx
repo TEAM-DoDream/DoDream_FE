@@ -21,13 +21,13 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   };
 
   return (
-    <div className="shadow-shadow4 fixed bottom-[162px] right-[60px] z-50 w-full max-w-[344px] rounded-[30px] bg-white px-5 pb-5 pt-[30px]">
+    <div className="fixed bottom-[162px] right-[60px] z-50 w-full max-w-[344px] rounded-[30px] bg-white px-5 pb-5 pt-[30px] shadow-shadow4">
       <div className="flex flex-col">
         <div className="text-lg text-black font-T05-SB">
           할 일을 <br /> 작성해보세요
         </div>
 
-        <div className="no-scrollbar mt-6 flex flex-nowrap gap-2 overflow-x-auto">
+        <div className="mt-6 flex flex-nowrap gap-2 overflow-x-auto pb-4 no-scrollbar">
           {categories.map((label, idx) => (
             <div
               key={idx}
@@ -45,7 +45,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
 
         <textarea
           placeholder="입력해주세요"
-          className="mt-4 h-[262px] w-full resize-none rounded-[20px] border border-transparent bg-gray-100 p-5 text-gray-900 font-B03-M placeholder:text-gray-400 focus:border-purple-500 focus:outline-none"
+          className="h-[262px] w-full resize-none rounded-[20px] border border-transparent bg-gray-100 p-5 text-gray-900 font-B03-M placeholder:text-gray-400 focus:border-purple-500 focus:outline-none"
           value={taskText}
           onChange={(e) => setTaskText(e.target.value)}
         />
