@@ -7,6 +7,8 @@ import {
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useState } from 'react';
 import SelectModal from '@common/modal/SelectModal';
+import { useFilterStore } from '@store/filterStore';
+import { useNavigate } from 'react-router-dom';
 
 interface JobViewComponentProps {
   jobName: string;
@@ -17,6 +19,8 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
   const isLoggedIn = !!localStorage.getItem('accessToken');
   const query = isLoggedIn ? useJobViewQuery : useNoJobViewQuery;
   const { data: jobView, isLoading, error } = query(jobName);
+  const setSelection = useFilterStore((state) => state.setSelection);
+  const navigate = useNavigate();
 
   if (isLoading)
     return (
@@ -33,7 +37,13 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
           {' '}
           {jobName}의 일자리 둘러보기
         </div>
-        <div className="flex cursor-pointer flex-row items-center">
+        <div
+          className="flex cursor-pointer flex-row items-center"
+          onClick={() => {
+            setSelection('job', jobName);
+            navigate('/jobsearch');
+          }}
+        >
           <div className="text-gray-500 font-B02-SB"> 더 보러가기 </div>
           <Arrow className="h-9 w-9" />
         </div>
