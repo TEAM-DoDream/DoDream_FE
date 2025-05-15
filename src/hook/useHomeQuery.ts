@@ -53,8 +53,8 @@ interface RecruitProps {
   companyName: string;
   id: number;
   active: number;
-  'job-name': string;
-  'expiration-date': string;
+  jobName: string;
+  postDate: string;
 }
 const NewRecruit = async (pageNum: number) => {
   const token = localStorage.getItem('accessToken');

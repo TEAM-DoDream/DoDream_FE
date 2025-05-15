@@ -57,16 +57,14 @@ const HomeRecruit = () => {
                 {data.companyName}
               </div>
               <div className="mt-4 flex h-10 items-center justify-center rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
-                {data['job-name']}
+                {data.jobName}
               </div>
               <div className="mt-2 self-stretch text-gray-900 font-T05-SB">
                 {data.title}
               </div>
 
               <div className="mt-[61px] flex w-full items-center justify-between">
-                <div className="text-gray-500 font-B03-M">
-                  {data['expiration-date']}시간 전
-                </div>
+                <div className="text-gray-500 font-B03-M">{data.postDate}</div>
                 <div className="flex flex-row items-center justify-center gap-[6px]">
                   <Eye />
                   <span className="text-purple-500 font-B03-M">
