@@ -4,6 +4,7 @@ import Arrow from '@assets/icons/arrow.svg?react';
 import Button from '@common/Button';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
+import { useNavigate } from 'react-router-dom';
 
 const userList = [
   { name: '고라니고라니고라니고라', taskCount: 12 },
@@ -18,7 +19,7 @@ interface JobViewComponentProps {
 
 const DetailSideBar = ({ jobName }: JobViewComponentProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const navigation = useNavigate();
   return (
     <div className="flex items-start justify-center pt-[66px]">
       <div className="flex w-full flex-col gap-[30px]">
@@ -66,7 +67,12 @@ const DetailSideBar = ({ jobName }: JobViewComponentProps) => {
             </div>
           )}
 
-          <div className="flex w-full cursor-pointer flex-row items-center justify-end">
+          <div
+            className="flex w-full cursor-pointer flex-row items-center justify-end"
+            onClick={() => {
+              navigation('/others');
+            }}
+          >
             <div className="text-gray-500 font-B02-SB"> 더 보러가기 </div>
             <Arrow className="h-9 w-9" />
           </div>
