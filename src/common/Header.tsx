@@ -15,7 +15,8 @@ const NavItems = [
     label: '직업 탐색',
     path: '/jobfound',
     match: (pathname: string) =>
-      pathname.startsWith('/job') && pathname !== '/jobsearch',
+      (pathname.startsWith('/job') && pathname !== '/jobsearch') ||
+      pathname.startsWith('/others'),
   },
 ];
 
