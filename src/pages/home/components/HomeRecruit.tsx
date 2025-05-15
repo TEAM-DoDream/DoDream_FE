@@ -4,15 +4,11 @@ import FullLike from '@assets/icons/fullheart.svg?react';
 import Eye from '@assets/icons/purpleeye.svg?react';
 import { useUserStore } from '@store/useUserStore';
 import { useState } from 'react';
-import { useNewRecruitQuery, useNoNewRecruitQuery } from '@hook/useHomeQuery';
+import { useRecruitQuery } from '@hook/useHomeQuery';
+import LoadingSpinner from '@common/LoadingSpinner';
 
 const HomeRecruit = () => {
   const regionName = useUserStore((state) => state.regionName);
-  // const sortByTime = (a: RecruitItem, b: RecruitItem): number => {
-  //   const timeA = Number(a.time) || 0;
-  //   const timeB = Number(b.time) || 0;
-  //   return timeA - timeB;
-  // };
   const [likedItems, setLikedItems] = useState<{ [key: number]: boolean }>({});
   const toggleLike = (id: number) => {
     setLikedItems((prev) => ({
@@ -22,9 +18,19 @@ const HomeRecruit = () => {
   };
   const isLoggedIn = localStorage.getItem('accessToken');
 
-  const { data: recruitData } = isLoggedIn
-    ? useNewRecruitQuery(1)
-    : useNoNewRecruitQuery(1);
+  const {
+    data: recruitData,
+    isLoading,
+    error,
+  } = useRecruitQuery(1, 'postDate');
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  if (error) return <div> 데이터를 불러오지 못했습니다. </div>;
 
   return (
     <div>
