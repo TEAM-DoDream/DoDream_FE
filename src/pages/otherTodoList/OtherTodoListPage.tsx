@@ -2,8 +2,10 @@ import BackIcon from '@assets/icons/back.svg?react';
 import ViewIcon from '@assets/icons/show_pw.svg?react';
 import TodoCard from '@pages/otherTodoList/components/TodoCard.tsx';
 import Footer from '@common/Footer.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const OtherTodoListPage = () => {
+  const navigate = useNavigate();
   const sections = ['준비하기', '시작하기', '도전하기'];
   const sampleTodos = [
     { text: '고용24에서 인근 요양보호사 과정 검색하기', checked: true },
@@ -16,7 +18,10 @@ const OtherTodoListPage = () => {
       <div className="mx-auto w-full max-w-screen-xl px-4 py-6">
         <div className="pb-4">
           <div className="flex items-center justify-between">
-            <button className="rounded-full p-2 hover:bg-gray-100">
+            <button
+              className="ml-4 rounded-full p-2 hover:bg-gray-100"
+              onClick={() => navigate(-1)}
+            >
               <BackIcon className="h-5 w-5 text-gray-500" />
             </button>
           </div>
