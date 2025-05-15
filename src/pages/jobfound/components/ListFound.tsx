@@ -89,6 +89,7 @@ const ListFound = ({ page, setTotalPages }: ListFoundProps) => {
                       src={user.avatar}
                       alt={`${user.id}`}
                       className="h-[38px] w-[38px] rounded-full border-2 border-white object-cover"
+                      onClick={() => navigate('/others')}
                     />
                   ))}
                   {userCount > maxUsers && (
