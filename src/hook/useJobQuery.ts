@@ -100,22 +100,50 @@ export const useJobDetailQuery = (id: number) => {
 
 //직업탐색-일자리 둘러보기
 const jobView = async (keyWord: string) => {
-  const token = localStorage.getItem('accessToken');
-  const response = await api.get(`/v1/recruit/list`, {
-    params: {
-      pageNum: 0,
-      keyWord,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.data.job;
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await api.get(`/v1/recruit/list`, {
+      params: {
+        pageNum: 0,
+        keyWord,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data.job;
+  } catch (error) {
+    console.error('직업 상세 정보를 불러오는데 실패했습니다', error);
+    throw error;
+  }
 };
 
 export const useJobViewQuery = (keyWord: string) => {
   return useQuery<JobViewRequest[]>({
     queryKey: ['jobView', keyWord],
     queryFn: () => jobView(keyWord),
+  });
+};
+
+//로그인 안했을때 일자리 둘러보기
+const NoLoginjobView = async (keyWord: string) => {
+  try {
+    const response = await api.get(`/v1/recruit/list`, {
+      params: {
+        pageNum: 0,
+        keyWord,
+      },
+    });
+    return response.data.data.job;
+  } catch (error) {
+    console.error('직업 상세 정보를 불러오는데 실패했습니다', error);
+    throw error;
+  }
+};
+
+export const useNoJobViewQuery = (keyWord: string) => {
+  return useQuery<JobViewRequest[]>({
+    queryKey: ['NoLoginjobView', keyWord],
+    queryFn: () => NoLoginjobView(keyWord),
   });
 };

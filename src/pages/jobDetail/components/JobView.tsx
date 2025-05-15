@@ -1,5 +1,9 @@
 import Arrow from '@assets/icons/arrow.svg?react';
-import { JobViewRequest, useJobViewQuery } from '@hook/useJobQuery';
+import {
+  JobViewRequest,
+  useJobViewQuery,
+  useNoJobViewQuery,
+} from '@hook/useJobQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useState } from 'react';
 import SelectModal from '@common/modal/SelectModal';
@@ -10,7 +14,10 @@ interface JobViewComponentProps {
 
 const JobView = ({ jobName }: JobViewComponentProps) => {
   const [selectedItem, setSelectedItem] = useState<JobViewRequest | null>(null);
-  const { data: jobView, isLoading, error } = useJobViewQuery(jobName);
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+  const query = isLoggedIn ? useJobViewQuery : useNoJobViewQuery;
+  const { data: jobView, isLoading, error } = query(jobName);
+
   if (isLoading)
     return (
       <div className="flex items-center justify-center">
@@ -33,25 +40,28 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
       </div>
 
       <div className="grid grid-cols-3 gap-5">
-        {(jobView ?? []).slice(0, 3).map((view) => (
-          <div
-            key={view.id}
-            onClick={() => setSelectedItem(view)}
-            className="flex h-auto w-full cursor-pointer flex-col items-start rounded-[30px] border-2 border-gray-200 p-[30px] hover:shadow-shadow2"
-          >
-            <div className="self-end rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
-              {view.deadline}
+        {jobView && jobView.length > 0 ? (
+          jobView.slice(0, 3).map((view) => (
+            <div
+              key={view.id}
+              onClick={() => setSelectedItem(view)}
+              className="flex h-auto w-full cursor-pointer flex-col items-start rounded-[30px] border-2 border-gray-200 p-[30px] hover:shadow-shadow2"
+            >
+              <div className="self-end rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
+                {view.deadline}
+              </div>
+              <div className="text-gray-500 font-B03-M">{view.companyName}</div>
+              <div className="mt-3 text-black font-T04-SB">{view.title}</div>
+              <div className="mt-4 text-gray-500 font-B03-M">
+                {view.locationName}
+              </div>
             </div>
-
-            <div className="text-gray-500 font-B03-M">{view.companyName}</div>
-
-            <div className="mt-3 text-black font-T04-SB">{view.title}</div>
-
-            <div className="mt-4 text-gray-500 font-B03-M">
-              {view.locationName}
-            </div>
+          ))
+        ) : (
+          <div className="col-span-3 text-center text-gray-500 font-B02-M">
+            해당 직업에 대한 일자리가 없습니다.
           </div>
-        ))}
+        )}
       </div>
       {selectedItem && (
         <SelectModal
