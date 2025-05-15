@@ -38,7 +38,7 @@ const TodoCard = ({
       <h3 className="border-gray-200 pb-3 text-purple-500 font-T05-SB">
         {title}
       </h3>
-      <Divider className="-mx-6 mb-4" />
+      <Divider className="relative left-[-24px] mb-4 w-[calc(100%+48px)]" />
       <ul className="flex-grow space-y-4">
         {todoList.map((item, index) => (
           <li
