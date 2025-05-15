@@ -10,6 +10,8 @@ import JobSearchPage from '@pages/jobSearch/JobSearchPage.tsx';
 import LearningPage from '@pages/learning/LearningPage.tsx';
 import JobFound from '@pages/jobfound/JobFound';
 import JobInfo from '@pages/jobDetail/JobInfo';
+import OtherTodoPage from '@pages/otherTodo/OtherTodoPage';
+import OtherTodoListPage from '@pages/otherTodoList/OtherTodoListPage.tsx';
 
 const Router = () => {
   return (
@@ -28,6 +30,8 @@ const Router = () => {
           <Route path="/learning" element={<LearningPage />} />
           <Route path="/jobfound" element={<JobFound />} />
           <Route path="/jobinfo/:jobId" element={<JobInfo />} />
+          <Route path="/others" element={<OtherTodoPage />} />
+          <Route path="/otherslist" element={<OtherTodoListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
