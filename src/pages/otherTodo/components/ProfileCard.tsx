@@ -1,5 +1,6 @@
 import Divider from '@common/Divider';
 import CheckList from '@common/CheckList';
+import CheckImg from '@assets/images/checker.png';
 
 interface ProfileCardProps {
   regionName: string;
@@ -24,10 +25,9 @@ const ProfileCard = ({
   return (
     <div className="flex h-auto w-full flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 bg-white p-[30px] transition-shadow hover:shadow-shadow2">
       <div className="flex w-full items-start justify-between">
-        {/* 왼쪽: 프로필 이미지 + 정보 */}
         <div className="flex flex-row gap-5">
           <img
-            src={profile}
+            src={profile || CheckImg}
             alt="프로필이미지"
             className="h-[90px] w-[90px] rounded-full"
           />
@@ -45,7 +45,6 @@ const ProfileCard = ({
           </div>
         </div>
 
-        {/* 오른쪽: 방문하기 버튼 */}
         <button className="h-auto rounded-[12px] bg-purple-500 px-8 py-3 text-white font-B03-SB hover:bg-purple-600">
           방문하기
         </button>
