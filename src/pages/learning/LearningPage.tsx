@@ -16,8 +16,8 @@ const LearningPage = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-[#36369A]">
-        <div className="container mx-auto mb-16 flex flex-col items-start gap-4 py-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative h-[450px] bg-[#36369A] px-[120px]">
+        <div className="flex items-center justify-between">
           <div className="flex flex-col gap-4">
             <img className="h-12 w-12" src={PencilIcon} alt="연필" />
             <p className="text-white font-B03-M">배움터 찾기</p>
@@ -32,28 +32,30 @@ const LearningPage = () => {
             alt="일자리 이미지"
           />
         </div>
+
+        <div className="z-1 absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2">
+          <Filter />
+        </div>
       </div>
 
-      <div className="container mx-auto -mt-32">
-        <Filter />
-      </div>
+      <div className="mt-[182px] px-[120px]">
+        <div className="mb-4 mt-8 flex text-black font-T03-B">
+          <p className="text-purple-500 font-T03-B">8개</p>의 훈련과정이 모집
+          중이에요
+        </div>
 
-      <div className="container mx-auto mb-4 mt-16 flex text-black font-T03-B">
-        <p className="text-purple-500 font-T03-B">8개</p>의 훈련과정이 모집
-        중이에요
-      </div>
-
-      <div className="container mx-auto mb-6 px-4 pt-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {LearningDummy.map((item: LearningItem) => (
-            <div
-              key={item.id}
-              onClick={() => setSelectedCardId(item.id)}
-              className="cursor-pointer"
-            >
-              <LearningCard item={item} />
-            </div>
-          ))}
+        <div className="mb-6">
+          <div className="grid grid-cols-1 items-stretch justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {LearningDummy.map((item: LearningItem) => (
+              <div
+                key={item.id}
+                onClick={() => setSelectedCardId(item.id)}
+                className="cursor-pointer"
+              >
+                <LearningCard item={item} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
