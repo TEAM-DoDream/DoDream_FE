@@ -6,9 +6,12 @@ import { useUserStore } from '@store/useUserStore';
 import { useState } from 'react';
 import { useRecruitQuery } from '@hook/useHomeQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
+import { useFilterStore } from '@store/filterStore';
+import { useNavigate } from 'react-router-dom';
 
 const HomeRecruit = () => {
   const regionName = useUserStore((state) => state.regionName);
+  const setSelection = useFilterStore((state) => state.setSelection);
   const [likedItems, setLikedItems] = useState<{ [key: number]: boolean }>({});
   const toggleLike = (id: number) => {
     setLikedItems((prev) => ({
@@ -17,6 +20,7 @@ const HomeRecruit = () => {
     }));
   };
   const isLoggedIn = localStorage.getItem('accessToken');
+  const navigate = useNavigate();
 
   const {
     data: recruitData,
@@ -40,7 +44,14 @@ const HomeRecruit = () => {
             ? `${regionName}에 새로 올라온 구인글이에요!`
             : '두드림에 새로 올라온 구인글이에요!'}
         </div>
-        <div className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB">
+        <div
+          className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB"
+          onClick={() => {
+            setSelection('location', regionName);
+            setSelection('job', '');
+            navigate('/jobsearch');
+          }}
+        >
           더 보러가기
           <Arrow />
         </div>
