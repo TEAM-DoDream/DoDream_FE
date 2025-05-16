@@ -9,7 +9,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const [taskText, setTaskText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('요양보호사');
 
-  const categories = ['요양보호사', '간호조무사', '물리치료사', '사회복지사'];
+  const categories = ['요양보호사', '수의테크니션', '심리상담사', '사회복지사'];
 
   const handleSubmit = () => {
     if (taskText.trim()) {
