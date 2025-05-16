@@ -53,7 +53,7 @@ const JobSearchPage = () => {
           />
         </div>
 
-        <div className="absolute left-1/2 top-full z-10 w-[calc(100%-240px)] -translate-x-1/2 -translate-y-1/2">
+        <div className="z-1 absolute left-1/2 top-full w-[calc(100%-240px)] -translate-x-1/2 -translate-y-1/2">
           <Filter />
         </div>
       </div>
