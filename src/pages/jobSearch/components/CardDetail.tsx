@@ -30,7 +30,7 @@ const CardDetail = ({ id, onClose }: CardDetailProps) => {
   return (
     <div className="relative w-full max-w-2xl rounded-2xl bg-white px-6 py-8">
       <button
-        className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+        className="absolute right-4 top-4 rounded-[10px] hover:bg-gray-200"
         aria-label="닫기"
         onClick={onClose}
       >
@@ -56,7 +56,7 @@ const CardDetail = ({ id, onClose }: CardDetailProps) => {
       </div>
 
       <div className="mt-8 flex justify-end gap-4">
-        <button className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-4 py-3 text-purple-500 font-T05-SB hover:bg-purple-50">
+        <button className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50">
           <HeartIcon className="h-5 w-5" />
           담기
         </button>
@@ -64,7 +64,7 @@ const CardDetail = ({ id, onClose }: CardDetailProps) => {
           href={data.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center rounded-xl bg-purple-500 px-5 py-3 text-white font-T05-SB hover:bg-purple-600"
+          className="flex items-center justify-center rounded-xl bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600"
         >
           사람인에서 자세히 보기
         </a>
