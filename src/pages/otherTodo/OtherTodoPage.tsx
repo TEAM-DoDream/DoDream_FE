@@ -48,10 +48,15 @@ const simriGroups = [
 
 const OtherTodoPage = () => {
   const navigate = useNavigate();
-  const { jobId } = useParams<{ jobId: string }>();
+  const { jobId } = useParams<{ jobId?: string }>();
+  if (!jobId || Number.isNaN(Number(jobId))) {
+    navigate(-1); // 또는 에러 페이지
+    return null;
+  }
+  const numericJobId = Number(jobId);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const { data: jobDetail, isPending } = useJobDetailQuery(Number(jobId));
+  const { data: jobDetail, isPending } = useJobDetailQuery(numericJobId);
   if (isPending || !jobDetail) {
     return (
       <div className="flex h-[300px] items-center justify-center">
