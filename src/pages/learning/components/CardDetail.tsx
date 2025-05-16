@@ -23,18 +23,12 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
       aria-labelledby="modal-title"
     >
       <button
-        className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+        className="absolute right-4 top-4 rounded-[10px] hover:bg-gray-200"
         aria-label="닫기"
         onClick={onClose}
       >
         <CancelIcon className="h-8 w-8" />
       </button>
-
-      <div className="mt-2">
-        <span className="rounded-md bg-purple-100 px-3 py-2.5 text-purple-500 font-T04-SB">
-          D-day
-        </span>
-      </div>
 
       <p className="mt-8 text-gray-500 font-B01-SB">{item.company}</p>
       <h2 className="mt-2 text-gray-900 font-T02-B" id="modal-title">
@@ -53,11 +47,11 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
       </div>
 
       <div className="mt-8 flex justify-end gap-4">
-        <button className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-4 py-3 text-purple-500 font-T05-SB hover:bg-purple-50">
+        <button className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50">
           <HeartIcon className="h-5 w-5" />
           담기
         </button>
-        <button className="flex items-center justify-center rounded-xl bg-purple-500 px-5 py-3 text-white font-T05-SB hover:bg-purple-600">
+        <button className="flex items-center justify-center rounded-xl bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600">
           사람인에서 자세히 보기
         </button>
       </div>
