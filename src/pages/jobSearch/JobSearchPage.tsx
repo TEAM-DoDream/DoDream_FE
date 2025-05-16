@@ -26,7 +26,6 @@ const JobSearchPage = () => {
 
   const totalPages = Math.ceil(Number(data.total || 0) / (data.count || 10));
   const jobs = data.job || [];
-  console.log(jobs);
 
   if (isPending) {
     return (
@@ -38,8 +37,8 @@ const JobSearchPage = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="bg-purple-100">
-        <div className="container mx-auto mb-16 flex flex-col items-start gap-4 py-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative h-[450px] bg-purple-100 px-[120px]">
+        <div className="flex items-center justify-between">
           <div className="flex flex-col gap-4">
             <img className="h-12 w-12" src={MagnifyIcon} alt="돋보기" />
             <p className="text-gray-500 font-B03-M">일자리 찾기</p>
@@ -53,40 +52,42 @@ const JobSearchPage = () => {
             alt="일자리 이미지"
           />
         </div>
+
+        <div className="absolute left-1/2 top-full z-10 w-[calc(100%-240px)] -translate-x-1/2 -translate-y-1/2">
+          <Filter />
+        </div>
       </div>
 
-      <div className="container mx-auto -mt-32">
-        <Filter />
-      </div>
+      <div className="mt-[182px] px-[120px]">
+        <div className="mb-4 mt-8 flex text-black font-T03-B">
+          <p className="text-purple-500 font-T03-B">{data.total ?? 0}개</p>의
+          일자리가 구인 중이에요
+        </div>
 
-      <div className="container mx-auto mb-4 mt-16 flex text-black font-T03-B">
-        <p className="text-purple-500 font-T03-B">{data.total ?? 0}개</p>의
-        일자리가 구인 중이에요
-      </div>
-
-      <div className="container mx-auto mb-6 px-4 pt-8">
-        <div className="grid grid-cols-1 items-stretch justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {jobs.map((job) => (
-            <RecruitCard
-              key={job.id}
-              item={{
-                id: Number(job.id),
-                company: job.companyName,
-                title: job.title,
-                hashtags: [
-                  job.experienceLevel,
-                  job.jobTypeName,
-                  job.requiredEducationLevel,
-                  job.salary,
-                  job.locationName,
-                ].filter((tag): tag is string => Boolean(tag)),
-                endDate: job['expiration-date'],
-                deadline: job.deadline,
-                url: job.url,
-              }}
-              onClick={() => setSelectedCardId(job.id)}
-            />
-          ))}
+        <div className="mb-6">
+          <div className="grid grid-cols-1 items-stretch justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {jobs.map((job) => (
+              <RecruitCard
+                key={job.id}
+                item={{
+                  id: Number(job.id),
+                  company: job.companyName,
+                  title: job.title,
+                  hashtags: [
+                    job.experienceLevel,
+                    job.jobTypeName,
+                    job.requiredEducationLevel,
+                    job.salary,
+                    job.locationName,
+                  ].filter((tag): tag is string => Boolean(tag)),
+                  endDate: job['expiration-date'],
+                  deadline: job.deadline,
+                  url: job.url,
+                }}
+                onClick={() => setSelectedCardId(job.id)}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="mx-auto mb-[80px] mt-[30px] w-fit">
