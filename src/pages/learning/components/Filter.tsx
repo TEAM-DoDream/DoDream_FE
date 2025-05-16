@@ -67,13 +67,13 @@ const Filter = () => {
   };
 
   return (
-    <div className="w-full rounded-xl bg-white p-6 shadow-lg">
+    <div className="w-full rounded-[30px] bg-white p-6 shadow-lg">
       <div className="mb-4 flex justify-end">
         <ResetButton onClick={handleResetAll} />
       </div>
 
       <div className="mt-2 flex flex-col gap-4 md:flex-row">
-        <div className="basis-1/6">
+        <div className="w-[192px]">
           <DropDown
             title={'직업'}
             placeholder="직업 선택"
@@ -83,7 +83,7 @@ const Filter = () => {
           />
         </div>
 
-        <div className="basis-1/6">
+        <div className="w-[296px]">
           <DropDown
             title="지역"
             placeholder={'지역 선택'}
@@ -106,7 +106,8 @@ const Filter = () => {
             keepOpenOnSelect={locStep === 'city'}
           />
         </div>
-        <div className="basis-1/6">
+
+        <div className="w-[192px]">
           <DropDown
             title={'훈련과정'}
             placeholder="과정 선택"
@@ -116,8 +117,8 @@ const Filter = () => {
           />
         </div>
 
-        <div className="flex flex-1 items-end gap-2">
-          <div className="basis-1/2">
+        <div className="flex items-end gap-2">
+          <div className="w-[232px]">
             <DateInput
               title={'훈련기간'}
               label="공고 시작일"
@@ -127,8 +128,9 @@ const Filter = () => {
               autoFocusTo={endDateRef}
             />
           </div>
-          <span className="pb-2 text-gray-400">~</span>
-          <div className="basis-1/2">
+          <span className="my-6 text-gray-400 font-B01-M">~</span>
+
+          <div className="w-[232px]">
             <div className="h-6" />
             <DateInput
               ref={endDateRef}
