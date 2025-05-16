@@ -15,9 +15,10 @@ const userList = [
 ];
 interface JobViewComponentProps {
   jobName: string;
+  jobId: string;
 }
 
-const DetailSideBar = ({ jobName }: JobViewComponentProps) => {
+const DetailSideBar = ({ jobName, jobId }: JobViewComponentProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigation = useNavigate();
   return (
@@ -71,7 +72,7 @@ const DetailSideBar = ({ jobName }: JobViewComponentProps) => {
           <div
             className="flex w-full cursor-pointer flex-row items-center justify-end"
             onClick={() => {
-              navigation('/others');
+              navigation(`/others/${jobId}`);
             }}
           >
             <div className="text-gray-500 font-B02-SB"> 더 보러가기 </div>
