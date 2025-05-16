@@ -18,7 +18,7 @@ const RecruitCard = ({ item, onClick }: RecruitCardProps) => {
   return (
     <div
       onClick={onClick}
-      className="flex h-[340px] w-[402px] cursor-pointer flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-[24px] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+      className="flex h-[330px] w-[388px] cursor-pointer flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-[24px] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
     >
       <div className="flex items-start justify-between">
         <span className="ml-[10px] mt-[8px] rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
