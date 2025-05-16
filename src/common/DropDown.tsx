@@ -38,7 +38,7 @@ export default function DropDown<T extends string>({
           onClick={toggle}
           className={clsx(
             'flex cursor-pointer items-center justify-between rounded-2xl border px-4 py-5 text-gray-500 transition-colors duration-200',
-            isOpen ? 'border-purple-500' : 'border-gray-300'
+            isOpen ? 'border-purple-500' : 'border-gray-200'
           )}
         >
           <span>{placeholder}</span>

@@ -59,7 +59,7 @@ const Filter = () => {
   };
 
   return (
-    <div className="w-full rounded-xl bg-white p-6 shadow-lg">
+    <div className="w-full rounded-[30px] bg-white p-6 shadow-lg">
       <div className="mb-4 flex justify-end">
         <ResetButton onClick={handleResetAll} />
       </div>
@@ -75,30 +75,31 @@ const Filter = () => {
           />
         </div>
 
-        <DropDown
-          title="지역"
-          placeholder={'지역 선택'}
-          options={
-            locStep === 'city' ? cityOptions : (districtMap[tempCity] ?? [])
-          }
-          value={locStep === 'city' ? selectedCity : selectedDistrict}
-          onSelect={(v) => {
-            if (locStep === 'city') handleCitySelect(v);
-            else handleDistrictSelect(v);
-          }}
-          backButton={
-            locStep === 'district'
-              ? {
-                  label: `${tempCity}`,
-                  onClick: () => setLocStep('city'),
-                }
-              : undefined
-          }
-          keepOpenOnSelect={locStep === 'city'}
-        />
-
-        <div className="flex flex-1 items-end gap-2">
-          <div className="basis-1/2">
+        <div className="basis-1/4">
+          <DropDown
+            title="지역"
+            placeholder={'지역 선택'}
+            options={
+              locStep === 'city' ? cityOptions : (districtMap[tempCity] ?? [])
+            }
+            value={locStep === 'city' ? selectedCity : selectedDistrict}
+            onSelect={(v) => {
+              if (locStep === 'city') handleCitySelect(v);
+              else handleDistrictSelect(v);
+            }}
+            backButton={
+              locStep === 'district'
+                ? {
+                    label: `${tempCity}`,
+                    onClick: () => setLocStep('city'),
+                  }
+                : undefined
+            }
+            keepOpenOnSelect={locStep === 'city'}
+          />
+        </div>
+        <div className="flex flex-1 items-end justify-center gap-2">
+          <div className="basis-[43%]">
             <DateInput
               title={'공고 날짜'}
               label="공고 시작일"
@@ -108,8 +109,8 @@ const Filter = () => {
               autoFocusTo={endDateRef}
             />
           </div>
-          <span className="pb-2 text-gray-400">~</span>
-          <div className="basis-1/2">
+          <span className="my-6 text-gray-400 font-B01-M">~</span>
+          <div className="shrink-0 basis-[43%]">
             <div className="h-6" />
             <DateInput
               ref={endDateRef}
@@ -126,7 +127,7 @@ const Filter = () => {
         {tags.map((tag) => (
           <span
             key={tag.label}
-            className="flex items-center gap-1 rounded-full border border-purple-300 px-3 py-1 text-sm text-purple-500"
+            className="flex items-center gap-1 rounded-full border border-purple-300 bg-purple-100 px-3 py-1 text-sm text-purple-500"
           >
             {tag.label}
             <button onClick={() => removeTag(tag.type)} className="text-xs">
