@@ -44,8 +44,8 @@ const LearningPage = () => {
           중이에요
         </div>
 
-        <div className="mb-6">
-          <div className="grid grid-cols-1 items-stretch justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-6 flex justify-center">
+          <div className="grid grid-cols-3 gap-4">
             {LearningDummy.map((item: LearningItem) => (
               <div
                 key={item.id}

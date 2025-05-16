@@ -3,7 +3,7 @@ import { LearningItem } from '@utils/data/learn/learnDummy.ts';
 
 const LearningCard = ({ item }: { item: LearningItem }) => {
   return (
-    <div className="flex h-[340px] w-[402px] flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-6 transition-shadow hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
+    <div className="flex h-[330px] w-[388px] flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-6 transition-shadow hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
       <div>
         <div className="flex items-start justify-between">
           {item.isDay && (
