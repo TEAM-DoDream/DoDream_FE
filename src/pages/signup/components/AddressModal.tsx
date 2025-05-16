@@ -63,7 +63,7 @@ const AddressModal = ({ onClose }: ModalProps) => {
         );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50">
       <div className="flex h-[700px] w-[600px] flex-col items-center overflow-hidden rounded-3xl bg-white">
         <div className="relative w-full items-center justify-center border-b border-gray-300 py-[22px]">
           <div className="text-center text-gray-900 font-T03-B">
