@@ -24,7 +24,7 @@ const AddJobModal = ({ onClose }: AddJobModalProps) => {
         <img
           src={Heart}
           alt="heart"
-          className="mt-[30px] aspect-[75/61] h-[152px] w-[152px]"
+          className="mt-[30px] aspect-[75/61] h-[150px] w-[122px]"
         />
 
         <div className="flex w-full flex-row gap-3">
