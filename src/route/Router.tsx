@@ -30,8 +30,8 @@ const Router = () => {
           <Route path="/learning" element={<LearningPage />} />
           <Route path="/jobfound" element={<JobFound />} />
           <Route path="/jobinfo/:jobId" element={<JobInfo />} />
-          <Route path="/others" element={<OtherTodoPage />} />
-          <Route path="/otherslist" element={<OtherTodoListPage />} />
+          <Route path="/others/:jobId" element={<OtherTodoPage />} />
+          <Route path="/otherslist/:jobId" element={<OtherTodoListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
