@@ -128,7 +128,7 @@ const JobInfo = () => {
         </div>
 
         <div className="top-[100px] h-fit w-[606px] pl-[102px]">
-          <DetailSideBar jobName={jobDetail?.jobName || ''} />
+          <DetailSideBar jobName={jobDetail?.jobName || ''} jobId={jobId!} />
         </div>
 
         {/* <NoDataSideBar /> */}
