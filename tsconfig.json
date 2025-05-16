@@ -1,0 +1,30 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["src/assets/*"],
+      "@common/*": ["src/common/*"],
+      "@hook/*": ["src/hook/*"],
+      "@outlet/*": ["src/outlet/*"],
+      "@pages/*": ["src/pages/*"],
+      "@route/*": ["src/route/*"],
+      "@store/*": ["src/store/*"],
+      "@type/*": ["src/type/*"],
+      "@utils/*": ["src/utils/*"],
+      "@validation/*": ["src/validation/*"]
+    },
+    "types": ["vite-plugin-svgr/client","jest", "@testing-library/jest-dom"]
+  },
+   "include": ["jest.setup.ts"]
+}
