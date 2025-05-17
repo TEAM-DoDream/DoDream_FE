@@ -3,12 +3,13 @@ import { LinkPreview } from './LinkPreview';
 const urlRegex = /(https?:\/\/[^\sㄱ-ㅎㅏ-ㅣ가-힣]+)/g;
 
 export default function LinkConverter({ text }: { text: string }) {
-  const parts = text.split(urlRegex);
-
+  const urlRegexClone = new RegExp(urlRegex.source, urlRegex.flags);
+  const parts = text.split(urlRegexClone);
   return (
     <div className="space-y-4">
       {parts.map((part, i) => {
-        if (urlRegex.test(part)) {
+        const testRegex = new RegExp(urlRegex.source, 'i');
+        if (testRegex.test(part)) {
           return (
             <div key={i}>
               <a
