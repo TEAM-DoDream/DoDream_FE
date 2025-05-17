@@ -11,7 +11,6 @@ export default function LinkConverter({ text }: { text: string }) {
         if (urlRegex.test(part)) {
           return (
             <div key={i}>
-              {/* 1) 클릭 가능한 원본 URL */}
               <a
                 href={part}
                 target="_blank"
@@ -20,7 +19,7 @@ export default function LinkConverter({ text }: { text: string }) {
               >
                 {part}
               </a>
-              {/* 2) 그리고 미리보기 카드 */}
+
               <LinkPreview url={part} />
             </div>
           );
