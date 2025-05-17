@@ -18,10 +18,10 @@ export function LinkPreview({ url }: { url: string }) {
       .then((json) => {
         const d = json.data;
         setData({
-          title: d.title,
-          description: d.description,
+          title: d.title || '제목 없음',
+          description: d.description || '설명 없음',
           image: d.image,
-          url: d.url,
+          url: d.url || url,
         });
       })
       .catch(() => setData(null))
