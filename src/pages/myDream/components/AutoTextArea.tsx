@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import OutLinkIcon from '@assets/icons/OutLink.svg?raw';
+import TrashIcon from '@assets/icons/delete-trash.svg?raw';
 
 interface Props {
   value: string;
@@ -8,18 +10,6 @@ interface Props {
 
 const youtubeRegex =
   /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
-
-const TRASH_SVG = `
-  <svg class="h-6 w-6 inline-block" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3 6h18v2H3V6zm2 3h14l-1.5 12.5a1 1 0 0 1-1 0L5 9z"/>
-  </svg>
-`;
-const OUTLINK_SVG = `
-  <svg class="h-6 w-6 inline-block" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3z"/>
-    <path d="M5 5h5V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5h-2v5H5V5z"/>
-  </svg>
-`;
 
 export default function AutoTextArea({
   value,
@@ -77,7 +67,7 @@ export default function AutoTextArea({
 
     const openBtn = document.createElement('button');
     openBtn.type = 'button';
-    openBtn.innerHTML = `${OUTLINK_SVG}<span class="ml-1">브라우저에서 열기</span>`;
+    openBtn.innerHTML = `${OutLinkIcon}<span class="ml-1">브라우저에서 열기</span>`;
     openBtn.className =
       'flex items-center gap-1 bg-white px-4 py-2 rounded-[10px] font-B03-SB text-gray-500 hover:bg-gray-200';
     openBtn.onclick = () =>
@@ -86,7 +76,7 @@ export default function AutoTextArea({
 
     const delBtn = document.createElement('button');
     delBtn.type = 'button';
-    delBtn.innerHTML = `${TRASH_SVG}<span class="ml-1">삭제</span>`;
+    delBtn.innerHTML = `${TrashIcon}<span class="ml-1">삭제</span>`;
     delBtn.className =
       'flex items-center gap-1 bg-white px-4 py-2 rounded-[10px] font-B03-SB text-gray-500 hover:bg-gray-200';
     delBtn.onclick = removeVideo;
