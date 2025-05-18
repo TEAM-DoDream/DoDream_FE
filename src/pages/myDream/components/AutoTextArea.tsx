@@ -25,7 +25,6 @@ const AutoTextArea = ({ value, onChange, maxLength = 5000 }: Props) => {
     if (!editorRef.current) return;
     const txt = editorRef.current.innerText;
 
-    // Only update if within character limit
     if (txt.length <= maxLength) {
       onChange(txt);
     }
