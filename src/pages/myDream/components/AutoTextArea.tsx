@@ -11,11 +11,7 @@ interface Props {
 const youtubeRegex =
   /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
 
-export default function AutoTextArea({
-  value,
-  onChange,
-  maxLength = 5000,
-}: Props) {
+const AutoTextArea = ({ value, onChange, maxLength = 5000 }: Props) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
 
@@ -28,9 +24,14 @@ export default function AutoTextArea({
   const handleInput = () => {
     if (!editorRef.current) return;
     const txt = editorRef.current.innerText;
-    if (txt.length <= maxLength) onChange(txt);
-    const m = txt.match(youtubeRegex);
-    setVideoId(m ? m[1] : null);
+
+    // Only update if within character limit
+    if (txt.length <= maxLength) {
+      onChange(txt);
+    }
+
+    const match = txt.match(youtubeRegex);
+    setVideoId(match ? match[1] : null);
   };
 
   const removeVideo = () => {
@@ -40,6 +41,7 @@ export default function AutoTextArea({
     editorRef.current
       .querySelectorAll('div[data-youtube-wrapper]')
       .forEach((el) => el.remove());
+
     onChange(editorRef.current.innerText.trim());
   };
 
@@ -63,7 +65,7 @@ export default function AutoTextArea({
     wrapper.appendChild(iframe);
 
     const overlay = document.createElement('div');
-    overlay.className = 'absolute top-2 right-2 flex gap-2  ';
+    overlay.className = 'absolute top-2 right-2 flex gap-2';
 
     const openBtn = document.createElement('button');
     openBtn.type = 'button';
@@ -89,12 +91,12 @@ export default function AutoTextArea({
 
     editorRef.current.appendChild(wrapper);
 
-    const sel = window.getSelection();
-    const rng = document.createRange();
-    rng.selectNodeContents(editorRef.current);
-    rng.collapse(false);
-    sel?.removeAllRanges();
-    sel?.addRange(rng);
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(editorRef.current);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
   }, [videoId]);
 
   return (
@@ -103,11 +105,12 @@ export default function AutoTextArea({
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="min-h-[48px] w-full rounded-lg border border-gray-300 p-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
         suppressContentEditableWarning
-        style={{ whiteSpace: 'pre-wrap', overflowY: 'auto' }}
         data-placeholder="자유롭게 메모를 입력하세요"
+        className={`max-h-[520px] min-h-[48px] w-full overflow-y-auto whitespace-pre-wrap rounded-lg border border-gray-300 p-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400`}
       />
     </div>
   );
-}
+};
+
+export default AutoTextArea;
