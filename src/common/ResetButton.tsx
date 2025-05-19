@@ -13,7 +13,7 @@ export default function ResetButton({
     <div className="mb-4 flex justify-end">
       <button
         onClick={onClick}
-        className="flex items-center gap-1 rounded-full bg-black px-4 py-2 text-sm text-white"
+        className="flex items-center gap-1 rounded-full bg-gray-500 px-4 py-2 text-sm text-white"
       >
         {label} <RefreshIcon />
       </button>
