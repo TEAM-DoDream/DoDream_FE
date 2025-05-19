@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import LinkEditor from '@utils/preview/LinkEditor.tsx';
 import CautionIcon from '@assets/icons/caution.svg?react';
-import AutoTextArea from '@pages/myDream/components/AutoTextArea.tsx';
+import AutoTextArea from '@pages/myTodo/components/AutoTextArea.tsx';
 
 const MAX_LENGTH = 5000;
 

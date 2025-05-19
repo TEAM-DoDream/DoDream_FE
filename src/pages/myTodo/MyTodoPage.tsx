@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-const MyDreamPage = () => {
+const MyTodoPage = () => {
   const { pathname } = useLocation();
 
   return (
@@ -43,4 +43,4 @@ const MyDreamPage = () => {
   );
 };
 
-export default MyDreamPage;
+export default MyTodoPage;
