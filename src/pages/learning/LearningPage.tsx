@@ -20,9 +20,9 @@ const LearningPage = () => {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-4">
             <img className="h-12 w-12" src={PencilIcon} alt="연필" />
-            <p className="text-white font-B03-M">배움터 찾기</p>
+            <p className="text-white font-B03-M">학원 정보</p>
             <h1 className="text-white font-T01-B">
-              꿈을 향한 도약, 배움터를 찾아보세요
+              배움의 시작, 국비 지원 학원부터 알아보세요
             </h1>
           </div>
 
