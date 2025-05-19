@@ -1,5 +1,5 @@
-import MyEditor from '@pages/myDream/components/MyEditor.tsx';
-import ImgUpload from '@pages/myDream/components/ImgUpload.tsx';
+import MyEditor from '@pages/myTodo/components/MyEditor.tsx';
+import ImgUpload from '@pages/myTodo/components/ImgUpload.tsx';
 
 const Container = () => {
   return (
