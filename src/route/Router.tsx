@@ -12,7 +12,9 @@ import JobFound from '@pages/jobfound/JobFound';
 import JobInfo from '@pages/jobDetail/JobInfo';
 import OtherTodoPage from '@pages/otherTodo/OtherTodoPage';
 import OtherTodoListPage from '@pages/otherTodoList/OtherTodoListPage.tsx';
-import Mydream from '@pages/mydream/Mydream';
+import MyDreamPage from '@pages/mydream/MyDreamPage.tsx';
+import TodoListPage from '@pages/mydream/tabs/TodoListPage.tsx';
+import ScrapPage from '@pages/mydream/tabs/ScrapPage.tsx';
 
 const Router = () => {
   return (
@@ -33,7 +35,10 @@ const Router = () => {
           <Route path="/jobinfo/:jobId" element={<JobInfo />} />
           <Route path="/others/:jobId" element={<OtherTodoPage />} />
           <Route path="/otherslist/:jobId" element={<OtherTodoListPage />} />
-          <Route path="/mydream" element={<Mydream />} />
+          <Route path="/mydream" element={<MyDreamPage />}>
+            <Route path="list" element={<TodoListPage />} />
+            <Route path="scrap" element={<ScrapPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
