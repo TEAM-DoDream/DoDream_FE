@@ -9,6 +9,9 @@ const ToggleButton = () => {
       className={`flex h-[24px] w-[46px] items-center rounded-full p-1 duration-300 ${
         isOn ? 'bg-purple-200' : 'bg-gray-200'
       }`}
+      aria-pressed={isOn}
+      role="switch"
+      aria-label="토글 스위치"
     >
       <div
         className={`h-4 w-4 transform rounded-full bg-white shadow-md duration-300 ${
