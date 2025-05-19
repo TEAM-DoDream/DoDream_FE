@@ -21,7 +21,7 @@ export default function LinkEditor() {
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="min-h-[60px] w-full max-w-[300px] rounded-sm border border-gray-300 p-2 text-xs focus:outline-none"
+        className="min-h-[40px] w-full max-w-[562px] rounded-[10px] border border-gray-300 p-2 text-xs focus:outline-none"
         placeholder="링크를 입력해보세요"
         suppressContentEditableWarning
       />

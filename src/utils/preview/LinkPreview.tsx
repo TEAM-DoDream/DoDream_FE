@@ -37,7 +37,7 @@ export function LinkPreview({ url }: { url: string }) {
       href={data.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-1 flex w-full max-w-[180px] items-start overflow-hidden rounded-sm border border-gray-200 bg-white transition hover:shadow-sm"
+      className="mt-1 flex w-full max-w-[562px] items-start overflow-hidden rounded-sm border border-gray-200 bg-white transition hover:shadow-sm"
     >
       {data.image?.url && (
         <img
