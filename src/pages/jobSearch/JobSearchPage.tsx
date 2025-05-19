@@ -43,7 +43,7 @@ const JobSearchPage = () => {
             <img className="h-12 w-12" src={MagnifyIcon} alt="돋보기" />
             <p className="text-gray-500 font-B03-M">일자리 찾기</p>
             <h1 className="text-gray-900 font-T01-B">
-              우리 집 근처, 일자리를 찾아보세요
+              우리 동네에 채용 중인 일자리를 찾아보세요
             </h1>
           </div>
           <img
