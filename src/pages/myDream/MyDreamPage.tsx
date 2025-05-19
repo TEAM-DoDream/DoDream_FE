@@ -5,7 +5,6 @@ const MyDreamPage = () => {
 
   return (
     <div className="flex">
-      {/* 왼쪽 사이드바 */}
       <aside className="fixed left-0 h-screen w-[200px] bg-white">
         <nav className="gap-[10px] py-10">
           <ul className="flex flex-col gap-[10px] px-[10px] py-2">
@@ -37,8 +36,7 @@ const MyDreamPage = () => {
         </nav>
       </aside>
 
-      {/* 오른쪽 콘텐츠 */}
-      <main className="ml-[200px] h-screen flex-1 bg-gray-100 p-6">
+      <main className="ml-[200px] flex-1 bg-gray-50 p-6">
         <Outlet />
       </main>
     </div>
