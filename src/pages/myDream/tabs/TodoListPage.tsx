@@ -5,13 +5,13 @@ import ToggleButton from '@common/Toggle.tsx';
 
 const TodoListPage = () => {
   return (
-    <div className="mx-auto px-5 py-4">
+    <div className="mx-auto bg-gray-50 px-5 py-4">
       <div className="mb-4 flex max-w-[1010px] flex-col gap-2">
         <div className="flex items-center gap-2 self-start">
           <BackIcon />
           <input
             placeholder="할일을 입력해주세요"
-            className="text-xl font-T05-SB focus:outline-none"
+            className="w-[934px] rounded-[10px] border border-gray-200 bg-white px-[20px] py-[10px] text-gray-300 font-T05-SB"
           />
         </div>
 
