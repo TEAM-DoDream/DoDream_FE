@@ -11,8 +11,8 @@ const HomeDreamer = () => {
       <div className="mb-[50px] flex items-center justify-between">
         <div className="text-gray-900 font-T02-B">
           {isLoggedIn
-            ? '나와 같은 꿈을 꾸는 드리머예요!'
-            : '인기 급상승 드리머 모아보기'}
+            ? '나와 같은 꿈을 꾸는 드리머'
+            : '가장 열심히 도전 중인 드리머'}
         </div>
         <div
           className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB"
