@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CustomSortDropdown from '@pages/mydream/components/CustomSortDropdown.tsx';
+import CustomSortDropdown from '@pages/myDream/components/CustomSortDropdown.tsx';
 import AddressModal from '@pages/signup/components/AddressModal.tsx';
 import Pagination from '@common/Pagination.tsx';
 import RecruitCard from '@common/RecruitCard.tsx';
