@@ -87,15 +87,9 @@ const ScrapPage = () => {
         {renderRegion(activeTab)}
       </div>
 
-      {/* 콘텐츠 */}
       <div className="mt-6 text-sm text-gray-600">
         {activeTab === 'job' ? (
           <>
-            <div className="mb-4 text-sm">
-              스크랩한 일자리 공고 (정렬: {jobSort}, 지역: {jobRegion}, 페이지:{' '}
-              {jobPage})
-            </div>
-
             <div className="mb-6 flex justify-center">
               <div className="grid grid-cols-3 gap-4">
                 {dummyJobs.map((job) => (
