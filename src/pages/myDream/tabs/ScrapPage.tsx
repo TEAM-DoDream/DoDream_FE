@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import CustomSortDropdown from '@pages/myDream/components/CustomSortDropdown.tsx';
+import CustomSortDropdown from '@pages/mydream/components/CustomSortDropdown.tsx';
 import AddressModal from '@pages/signup/components/AddressModal.tsx';
 
-const ScrabPage = () => {
+const ScrapPage = () => {
   const [activeTab, setActiveTab] = useState<'job' | 'edu'>('job');
 
   const [jobSort, setJobSort] = useState('최신순');
@@ -86,4 +86,4 @@ const ScrabPage = () => {
   );
 };
 
-export default ScrabPage;
+export default ScrapPage;
