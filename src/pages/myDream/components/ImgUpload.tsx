@@ -31,7 +31,7 @@ const ImgUpload = () => {
   };
 
   return (
-    <div className="h-[725px] w-[328px] rounded-2xl bg-white p-[20px]">
+    <div className="h-[725px] w-[348px] rounded-2xl bg-white p-[20px]">
       <div className="flex w-full items-center justify-between">
         <h2 className="font-T05-SB">이미지</h2>
         <div

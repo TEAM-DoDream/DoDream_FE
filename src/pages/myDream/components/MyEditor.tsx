@@ -9,7 +9,7 @@ const MyEditor = () => {
   const [value, setValue] = useState('');
 
   return (
-    <div className="flex h-[725px] w-[582px] flex-col rounded-2xl border border-gray-200 bg-white p-6">
+    <div className="flex h-[725px] w-[602px] flex-col rounded-2xl border border-gray-200 bg-white p-6">
       <div>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">메모하기</h2>

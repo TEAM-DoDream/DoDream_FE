@@ -11,7 +11,7 @@ const TodoListPage = () => {
           <BackIcon />
           <input
             placeholder="할일을 입력해주세요"
-            className="w-[934px] rounded-[10px] border border-gray-200 bg-white px-[20px] py-[10px] text-gray-300 font-T05-SB"
+            className="w-[974px] rounded-[10px] border border-gray-200 bg-white px-[20px] py-[10px] text-gray-300 font-T05-SB"
           />
         </div>
 

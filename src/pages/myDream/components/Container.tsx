@@ -10,7 +10,7 @@ const Container = () => {
       </div>
 
       <div className="flex h-12 w-[960px] items-center justify-center">
-        <button className="flex h-12 w-[940px] items-center justify-center rounded-[16px] bg-purple-500 py-[14px] text-white font-T05-SB">
+        <button className="flex h-12 w-full items-center justify-center rounded-[16px] bg-purple-500 py-[14px] text-white font-T05-SB">
           메모 저장하기
         </button>
       </div>
