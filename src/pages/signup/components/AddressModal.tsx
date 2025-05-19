@@ -24,7 +24,13 @@ const AddressModal = ({ onClose }: ModalProps) => {
 
       const map: Record<string, string[]> = {};
       regions.forEach(({ regionName }) => {
-        const [city, district] = regionName.trim().split(/\s+/);
+        const parsing = regionName.trim().split(/\s+/);
+
+        if (parsing.length < 2) return;
+
+        const city = parsing[0];
+        const district = parsing.slice(1).join(' ');
+
         if (map[city]) {
           if (!map[city].includes(district)) {
             map[city].push(district);
