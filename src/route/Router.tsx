@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
 import SignupFunnel from '@pages/signup/SignupFunnel';
 import HideLayout from '@outlet/HideLayout';
@@ -36,6 +36,7 @@ const Router = () => {
           <Route path="/others/:jobId" element={<OtherTodoPage />} />
           <Route path="/otherslist/:jobId" element={<OtherTodoListPage />} />
           <Route path="/mydream" element={<MyDreamPage />}>
+            <Route index element={<Navigate to="/mydream/list" replace />} />
             <Route path="list" element={<TodoListPage />} />
             <Route path="scrap" element={<ScrapPage />} />
           </Route>
