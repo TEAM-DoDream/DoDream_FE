@@ -12,6 +12,7 @@ import JobFound from '@pages/jobfound/JobFound';
 import JobInfo from '@pages/jobDetail/JobInfo';
 import OtherTodoPage from '@pages/otherTodo/OtherTodoPage';
 import OtherTodoListPage from '@pages/otherTodoList/OtherTodoListPage.tsx';
+import Mydream from '@pages/mydream/Mydream';
 
 const Router = () => {
   return (
@@ -32,6 +33,7 @@ const Router = () => {
           <Route path="/jobinfo/:jobId" element={<JobInfo />} />
           <Route path="/others/:jobId" element={<OtherTodoPage />} />
           <Route path="/otherslist/:jobId" element={<OtherTodoListPage />} />
+          <Route path="/mydream" element={<Mydream />} />
         </Route>
       </Routes>
     </BrowserRouter>
