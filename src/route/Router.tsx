@@ -12,9 +12,9 @@ import JobFound from '@pages/jobfound/JobFound';
 import JobInfo from '@pages/jobDetail/JobInfo';
 import OtherTodoPage from '@pages/otherTodo/OtherTodoPage';
 import OtherTodoListPage from '@pages/otherTodoList/OtherTodoListPage.tsx';
-import MyDreamPage from '@pages/mydream/MyDreamPage.tsx';
-import TodoListPage from '@pages/mydream/tabs/TodoListPage.tsx';
-import ScrapPage from '@pages/mydream/tabs/ScrapPage.tsx';
+import MyDreamPage from '@pages/myDream/MyDreamPage.tsx';
+import TodoListPage from '@pages/myDream/tabs/TodoListPage.tsx';
+import ScrapPage from '@pages/myDream/tabs/ScrapPage.tsx';
 
 const Router = () => {
   return (
