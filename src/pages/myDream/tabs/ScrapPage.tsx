@@ -1,6 +1,23 @@
 import { useState } from 'react';
 import CustomSortDropdown from '@pages/mydream/components/CustomSortDropdown.tsx';
 import AddressModal from '@pages/signup/components/AddressModal.tsx';
+import Pagination from '@common/Pagination.tsx';
+import RecruitCard from '@common/RecruitCard.tsx';
+import CardDetail from '@pages/jobSearch/components/CardDetail.tsx';
+
+const dummyJobs = Array.from({ length: 9 }, (_, i) => ({
+  id: `${i + 1}`,
+  companyName: `회사 ${i + 1}`,
+  title: `직무 ${i + 1}`,
+  experienceLevel: '경력무관',
+  jobTypeName: '정규직',
+  requiredEducationLevel: '학력무관',
+  salary: '연봉 3,000만원',
+  locationName: '서울',
+  'expiration-date': '2025-12-31',
+  deadline: '채용 시 마감',
+  url: '#',
+}));
 
 const ScrapPage = () => {
   const [activeTab, setActiveTab] = useState<'job' | 'edu'>('job');
@@ -12,6 +29,9 @@ const ScrapPage = () => {
   const [eduRegion, setEduRegion] = useState('지역 선택');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [jobPage, setJobPage] = useState(1);
+  const [eduPage, setEduPage] = useState(1);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
   const renderDropdown = (tab: 'job' | 'edu') => {
     const value = tab === 'job' ? jobSort : eduSort;
@@ -43,9 +63,7 @@ const ScrapPage = () => {
   return (
     <div className="bg-gray-50 px-8 py-6">
       <h3 className="text-black font-T02-B">스크랩한 공고</h3>
-      <br />
-      <br />
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="mt-6 flex gap-2 border-b border-gray-200">
         <button
           onClick={() => setActiveTab('job')}
           className={`ml-2 w-[102px] pb-2 font-T05-SB ${
@@ -69,19 +87,74 @@ const ScrapPage = () => {
         {renderRegion(activeTab)}
       </div>
 
+      {/* 콘텐츠 */}
       <div className="mt-6 text-sm text-gray-600">
         {activeTab === 'job' ? (
-          <div>
-            스크랩한 일자리 공고 (정렬: {jobSort}, 지역: {jobRegion})
-          </div>
+          <>
+            <div className="mb-4 text-sm">
+              스크랩한 일자리 공고 (정렬: {jobSort}, 지역: {jobRegion}, 페이지:{' '}
+              {jobPage})
+            </div>
+
+            <div className="mb-6 flex justify-center">
+              <div className="grid grid-cols-3 gap-4">
+                {dummyJobs.map((job) => (
+                  <RecruitCard
+                    key={job.id}
+                    item={{
+                      id: Number(job.id),
+                      company: job.companyName,
+                      title: job.title,
+                      hashtags: [
+                        job.experienceLevel,
+                        job.jobTypeName,
+                        job.requiredEducationLevel,
+                        job.salary,
+                        job.locationName,
+                      ].filter((tag): tag is string => Boolean(tag)),
+                      endDate: job['expiration-date'],
+                      deadline: job.deadline,
+                      url: job.url,
+                    }}
+                    onClick={() => setSelectedCardId(job.id)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="mx-auto mb-[80px] mt-[30px] w-fit">
+              <Pagination
+                totalPages={5}
+                currentPage={jobPage}
+                setCurrentPage={setJobPage}
+              />
+            </div>
+          </>
         ) : (
-          <div>
-            스크랩한 배움터 정보 (정렬: {eduSort}, 지역: {eduRegion})
-          </div>
+          <>
+            <div className="mb-4 text-sm">
+              스크랩한 배움터 정보 (정렬: {eduSort}, 지역: {eduRegion}, 페이지:{' '}
+              {eduPage})
+            </div>
+            <Pagination
+              totalPages={3}
+              currentPage={eduPage}
+              setCurrentPage={setEduPage}
+            />
+          </>
         )}
       </div>
 
       {isModalOpen && <AddressModal onClose={handleRegionSelect} />}
+
+      {selectedCardId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <CardDetail
+            id={selectedCardId}
+            onClose={() => setSelectedCardId(null)}
+          />
+        </div>
+      )}
     </div>
   );
 };
