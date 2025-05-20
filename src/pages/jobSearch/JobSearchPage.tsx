@@ -17,7 +17,7 @@ interface JobListResponse {
 }
 
 const JobSearchPage = () => {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
   const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
