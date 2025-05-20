@@ -77,7 +77,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
         </div>
 
         <button
-          className="mt-5 h-[60px] w-full rounded-2xl bg-purple-500 py-[11px] text-white font-T05-SB"
+          className="mt-5 h-[60px] w-full rounded-2xl bg-purple-500 py-[11px] text-white font-T05-SB hover:bg-purple-600"
           onClick={handleSubmit}
         >
           추가하기
