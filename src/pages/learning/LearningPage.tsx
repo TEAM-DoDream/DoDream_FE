@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Filter from '@pages/learning/components/Filter.tsx';
-import PencilIcon from '@assets/images/learn.webp';
+
 import Img from '@assets/images/illustration_2.webp';
 import LearningDummy, { LearningItem } from '@utils/data/learn/learnDummy.ts';
 import Footer from '@common/Footer.tsx';
@@ -15,31 +15,30 @@ const LearningPage = () => {
     : null;
 
   return (
-    <div className="flex flex-col">
-      <div className="relative h-[450px] bg-[#36369A] px-[120px]">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-4">
-            <img className="h-12 w-12" src={PencilIcon} alt="연필" />
-            <p className="text-white font-B03-M">배움터 찾기</p>
-            <h1 className="text-white font-T01-B">
-              꿈을 향한 도약, 배움터를 찾아보세요
-            </h1>
+    <div>
+      <div className="bg-[#36369A] pb-6">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4">
+              <p className="text-white font-B03-M">학원 정보</p>
+              <h1 className="text-white font-T01-B">
+                배움의 시작, 국비 지원 학원부터 알아보세요
+              </h1>
+            </div>
+
+            <img
+              className="h-auto max-w-xs lg:max-w-sm"
+              src={Img}
+              alt="일자리 이미지"
+            />
           </div>
-
-          <img
-            className="h-auto max-w-xs lg:max-w-sm"
-            src={Img}
-            alt="일자리 이미지"
-          />
-        </div>
-
-        <div className="z-1 absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2">
-          <Filter />
+          <div className="flex justify-center">
+            <Filter />
+          </div>
         </div>
       </div>
-
-      <div className="mt-[182px] px-[120px]">
-        <div className="mb-4 mt-8 flex text-black font-T03-B">
+      <div className="mx-auto mt-[60px] max-w-[1200px]">
+        <div className="mb-4 flex text-black font-T03-B">
           <p className="text-purple-500 font-T03-B">8개</p>의 훈련과정이 모집
           중이에요
         </div>
