@@ -57,6 +57,7 @@ const JobSearchPage = () => {
           </div>
         </div>
       </div>
+
       <div className="mx-auto mt-[60px] max-w-[1200px]">
         <div className="mb-4 flex text-black font-T03-B">
           <p className="text-purple-500 font-T03-B">{data.total ?? 0}개</p>의
@@ -89,7 +90,7 @@ const JobSearchPage = () => {
           </div>
         </div>
 
-        <div className="mx-auto mb-[80px] mt-[30px] w-fit">
+        <div className="mx-auto mb-[80px] mt-[100px] w-fit">
           {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
