@@ -48,7 +48,7 @@ const Filter = () => {
   };
 
   return (
-    <div className="w-[1140px] rounded-[30px] bg-white p-[30px] shadow-lg">
+    <div className="w-[1200px] rounded-[30px] bg-white p-[30px] shadow-lg">
       <div className="mt-2 flex flex-col gap-4 md:flex-row">
         <div className="w-[560px]">
           <DropDown
