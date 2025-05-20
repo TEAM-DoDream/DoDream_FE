@@ -28,7 +28,10 @@ const FloatingButton = () => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="text-white font-T02-B">
+        <div
+          className="cursor-pointer text-white font-T02-B"
+          onClick={() => setIsModal(false)}
+        >
           {isModal
             ? '할일 추가 닫기'
             : isHovered
