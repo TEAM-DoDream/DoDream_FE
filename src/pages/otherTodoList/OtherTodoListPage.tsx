@@ -48,8 +48,6 @@ const simriGroups = [
     '유튜브에 ‘50대 심리상담사’ 검색해서 사례 영상 보기',
     "신내도서관에서 '심리치료에서 정서를 어떻게 다룰 것인가' 대출하기",
     '온라인 무료 진로 성향 검사 진행하기 (서울진로진학정보센터 - 딸과 함께 해보기)',
-  ],
-  [
     '서울여성인력개발원 홈페이지에서 ‘심리상담사 양성과정’ 개강 일정 확인 (다음 개강이 6월 둘째주→ 달력에 표시하기)',
     '중랑여성인력개발센터 상담과정 수강 일정 체크하기',
     '상담 자격증 교육비 알아보기 (서울여성인력개발원: 40만원대, 사설: 65만원-국비 지원 미포함)',
@@ -58,8 +56,6 @@ const simriGroups = [
     '‘50대에 심리상담사 된 이야기’ 영상 보기 (유튜브에서 봤던 거 저장해둠)',
     '네이버 카페 ‘심전- 심리상담’, ‘50심리 공간’ 가입 후 주기적으로 정보 확인하기',
     '청소년 상담사 민숙 언니에게 전화 해보기 (상담일과 관련된 질문하기)',
-  ],
-  [
     '심리상담사 수료증 받자마자 실습기관 2곳에 지원하기 (마음쉼터상담소, 행복심리상담센터)',
     '실습일지 양식 출력해두기 (한국상담학회 양식 기준)- 하루 2회 이상 작성',
     '면접 준비용 자기소개서 초안 작성하기 (“왜 심리상담사가 되고 싶은가요?” 질문에 대한 답변부터 정리 시작!)',
@@ -83,8 +79,9 @@ const OtherTodoListPage = () => {
     if (name.includes('심리')) return simriGroups;
     return [['할 일이 등록되지 않았어요.']];
   };
-
   const taskGroups = getTaskGroups(jobDetail?.jobName || '');
+  // 각 그룹을 하나로 합칩니다.
+  const allTodos = taskGroups.flat().map((text) => ({ text, checked: false }));
 
   return (
     <>
@@ -121,18 +118,12 @@ const OtherTodoListPage = () => {
             </div>
 
             <div className="mt-6 flex flex-col gap-6">
-              {taskGroups.map((group, idx) => (
-                <TodoCard
-                  key={idx}
-                  title={
-                    ['준비하기', '시작하기', '도전하기'][idx] ||
-                    `단계 ${idx + 1}`
-                  }
-                  todos={group.map((text) => ({ text, checked: false }))}
-                  showAddButton={false}
-                  disableHover={true}
-                />
-              ))}
+              <TodoCard
+                title="할 일 목록"
+                todos={allTodos}
+                showAddButton={false}
+                disableHover={true}
+              />
             </div>
           </div>
         </div>
