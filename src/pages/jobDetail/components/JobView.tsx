@@ -31,12 +31,9 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
   if (error) return <div>에러가 발생했어요.</div>;
 
   return (
-    <div className="mt-[70px] flex w-full flex-col items-start gap-[50px]">
+    <div className="mb-[75px] mt-[50px] flex w-full flex-col items-start gap-[50px]">
       <div className="flex w-full flex-row items-center justify-between">
-        <div className="text-gray-900 font-T02-B">
-          {' '}
-          {jobName}의 일자리 둘러보기
-        </div>
+        <div className="text-gray-900 font-T02-B"> {jobName} 채용 정보</div>
         <div
           className="flex cursor-pointer flex-row items-center"
           onClick={() => {
