@@ -1,9 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAcademyFilterStore } from '@store/academyFilterStore';
 import { useShallow } from 'zustand/react/shallow';
+import { keepPreviousData } from '@tanstack/react-query';
 import axios from 'axios';
+import {
+  AcademyListResponse,
+  AcademyListResponseSchema,
+} from '@validation/academy/academySchema';
 
-export const useAcademyInfoQuery = <TData = any>(pageNum: number) => {
+export const useAcademyInfoQuery = (pageNum: number) => {
   const { job, location, trainingCourse } = useAcademyFilterStore(
     useShallow((s) => ({
       job: s.job,
@@ -11,13 +16,13 @@ export const useAcademyInfoQuery = <TData = any>(pageNum: number) => {
       trainingCourse: s.trainingCourse,
     }))
   );
-
   const BaseUrl = import.meta.env.VITE_BASE_URL;
 
-  return useQuery<TData, Error>({
+  return useQuery<AcademyListResponse, Error>({
     queryKey: ['academyList', pageNum, job, location, trainingCourse],
+
     queryFn: async () => {
-      const { data } = await axios.get(`${BaseUrl}/v1/training/list`, {
+      const res = await axios.get(`${BaseUrl}/v1/training/list`, {
         params: {
           pageNum: String(pageNum),
           jobName: job || undefined,
@@ -25,12 +30,16 @@ export const useAcademyInfoQuery = <TData = any>(pageNum: number) => {
           type: trainingCourse || undefined,
         },
       });
-      return data.data;
+      const payload = res.data.data;
+
+      return AcademyListResponseSchema.parse(payload);
     },
-    enabled: true,
+
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: 1,
+    enabled: true,
   });
 };
