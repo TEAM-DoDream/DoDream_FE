@@ -1,32 +1,25 @@
 import { useState } from 'react';
 import Filter from '@pages/jobSearch/components/Filter.tsx';
-import RecruitCard from '@common/RecruitCard.tsx';
+import RecruitCard from '@pages/jobSearch/components/RecruitCard.tsx';
 import CardDetail from '@pages/jobSearch/components/CardDetail.tsx';
 import Img from '@assets/images/illustration_1.webp';
 import Footer from '@common/Footer.tsx';
 import { useRecruitListQuery } from '@hook/useRecruitListQuery.ts';
 import Pagination from '@common/Pagination.tsx';
 import LoadingSpinner from '@common/LoadingSpinner.tsx';
-import { JobItem } from '@utils/data/job/jobMapper.ts';
 import DropDown from '@common/DropDown.tsx';
-
-interface JobListResponse {
-  job: JobItem[];
-  count: number;
-  total: number;
-  start: number;
-}
 
 const JobSearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const sortOptions = ['마감 임박순', '마감 여유순'];
   const [sortOrder, setSortOrder] = useState<string>(sortOptions[0]);
   const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
-    useRecruitListQuery<JobListResponse>(currentPage);
+    useRecruitListQuery(currentPage);
 
   const totalPages = Math.ceil(Number(data.total || 0) / (data.count || 10));
   const jobs = data.job || [];
+  const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
 
   if (isPending) {
     return (
@@ -79,26 +72,14 @@ const JobSearchPage = () => {
 
         <div className="mb-6 flex justify-center">
           <div className="grid grid-cols-3 gap-4">
-            {jobs.map((job) => (
-              <RecruitCard
-                key={job.id}
-                item={{
-                  id: Number(job.id),
-                  company: job.companyName,
-                  title: job.title,
-                  hashtags: [
-                    job.experienceLevel,
-                    job.jobTypeName,
-                    job.requiredEducationLevel,
-                    job.salary,
-                    job.locationName,
-                  ].filter((tag): tag is string => Boolean(tag)),
-                  endDate: job['expiration-date'],
-                  deadline: job.deadline,
-                  url: job.url,
-                }}
-                onClick={() => setSelectedCardId(job.id)}
-              />
+            {jobs.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => setSelectedCardId(index)}
+                className="cursor-pointer"
+              >
+                <RecruitCard item={item} />
+              </div>
             ))}
           </div>
         </div>
@@ -116,10 +97,10 @@ const JobSearchPage = () => {
 
       <Footer />
 
-      {selectedCardId && (
+      {selectedCard && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
           <CardDetail
-            id={selectedCardId}
+            item={selectedCard}
             onClose={() => setSelectedCardId(null)}
           />
         </div>
