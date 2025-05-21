@@ -8,6 +8,7 @@ import { useRecruitListQuery } from '@hook/useRecruitListQuery.ts';
 import Pagination from '@common/Pagination.tsx';
 import LoadingSpinner from '@common/LoadingSpinner.tsx';
 import { JobItem } from '@utils/data/job/jobMapper.ts';
+import DropDown from '@common/DropDown.tsx';
 
 interface JobListResponse {
   job: JobItem[];
@@ -19,7 +20,8 @@ interface JobListResponse {
 const JobSearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-
+  const sortOptions = ['마감 임박순', '마감 여유순'];
+  const [sortOrder, setSortOrder] = useState<string>(sortOptions[0]);
   const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
     useRecruitListQuery<JobListResponse>(currentPage);
 
@@ -58,10 +60,21 @@ const JobSearchPage = () => {
         </div>
       </div>
 
-      <div className="mx-auto mt-[60px] max-w-[1200px]">
-        <div className="mb-4 flex text-black font-T03-B">
-          <p className="text-purple-500 font-T03-B">{data.total ?? 0}개</p>의
-          일자리가 구인 중이에요
+      <div className="mx-auto mt-[40px] max-w-[1200px]">
+        <div className="mb-4 flex justify-between text-black font-T03-B">
+          <div className="flex content-center items-center justify-center">
+            <p className="text-purple-500 font-T03-B">{data.total ?? 0}개</p>의
+            일자리가 구인 중이에요
+          </div>
+          <div className="w-[140px]">
+            <DropDown
+              placeholder={sortOrder}
+              options={sortOptions}
+              value={sortOrder}
+              onSelect={(v) => setSortOrder(v)}
+              toggleClassName="border-none font-B01-M w-[145px]"
+            />
+          </div>
         </div>
 
         <div className="mb-6 flex justify-center">
