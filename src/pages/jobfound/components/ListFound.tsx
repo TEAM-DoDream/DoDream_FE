@@ -55,15 +55,15 @@ const ListFound = ({ page, setTotalPages }: ListFoundProps) => {
       ) : (
         sortedJobs.map((item: JobRequest) => {
           return (
-            <div className="mb-4 flex items-center justify-center rounded-[30px] border border-gray-300 bg-white pb-[30px]">
-              <div
-                key={item.jobId}
-                className="flex w-full cursor-pointer flex-col items-start"
-              >
+            <div
+              key={item.jobId}
+              className="mb-4 flex items-center justify-center rounded-[30px] border border-gray-300 bg-white pb-[30px]"
+            >
+              <div className="flex w-full cursor-pointer flex-col items-start">
                 <img
                   src={item.imageUrl || Checker}
                   alt={item.jobName}
-                  className="h-[240px] w-[360px] items-stretch rounded-t-[30px] object-cover"
+                  className="h-[240px] w-full rounded-t-[30px] object-cover"
                   onClick={() => navigate(`/jobinfo/${item.jobId}`)}
                 />
 
