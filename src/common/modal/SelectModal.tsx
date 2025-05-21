@@ -37,7 +37,10 @@ const SelectModal = <
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
       <div className="flex w-full max-w-[778px] flex-col items-start justify-center rounded-[30px] bg-white p-[30px]">
         <div className="flex flex-col items-end justify-center self-stretch">
-          <Cancel className="h-4 w-4 cursor-pointer" onClick={onClose} />
+          <Cancel
+            className="h-4 w-4 cursor-pointer text-[#676F7B]"
+            onClick={onClose}
+          />
         </div>
 
         <div className="mt-1">

@@ -10,7 +10,10 @@ const AddJobModal = ({ onClose }: AddJobModalProps) => {
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
       <div className="flex h-[420px] w-full max-w-[548px] flex-col items-center justify-center rounded-[30px] bg-white px-[30px] pb-[40px] pt-[30px]">
         <div className="flex h-4 flex-col items-end justify-center self-stretch">
-          <Cancel className="h-4 w-4 cursor-pointer" onClick={onClose} />
+          <Cancel
+            className="h-4 w-4 cursor-pointer text-[#676F7B]"
+            onClick={onClose}
+          />
         </div>
 
         <div className="mt-[10px] text-gray-900 font-T03-B">
