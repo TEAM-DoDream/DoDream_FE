@@ -1,30 +1,26 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
 import HeartIcon from '@assets/icons/like.svg?react';
-import { useRecruitDetailQuery } from '@hook/useRecruitDetailQuery.ts';
+import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
 
 interface CardDetailProps {
-  id: string;
+  item: RecruitItem;
   onClose: () => void;
 }
 
-const CardDetail = ({ id, onClose }: CardDetailProps) => {
-  const { data, isLoading } = useRecruitDetailQuery(id);
-
-  if (isLoading || !data) return null;
-
+const CardDetail = ({ item, onClose }: CardDetailProps) => {
   const details = [
     {
       label: '마감일',
-      value: data['expiration-date'],
+      value: item.deadline,
       color: 'text-purple-500',
     },
-    { label: '지역', value: data.locationName, color: 'text-gray-900' },
+    { label: '지역', value: item.locationName, color: 'text-gray-900' },
     {
       label: '학력',
-      value: data.requiredEducationLevel,
+      value: item.requiredEducationLevel,
       color: 'text-gray-900',
     },
-    { label: '고용형태', value: data.jobTypeName, color: 'text-gray-900' },
+    { label: '고용형태', value: item.jobTypeName, color: 'text-gray-900' },
   ];
 
   return (
@@ -39,12 +35,12 @@ const CardDetail = ({ id, onClose }: CardDetailProps) => {
 
       <div className="mt-2">
         <span className="rounded-md bg-purple-100 px-3 py-2.5 text-purple-500 font-T04-SB">
-          {data.deadline === 'D-0' ? 'D-day' : data.deadline}
+          {item.deadline === 'D-0' ? 'D-day' : item.deadline}
         </span>
       </div>
 
-      <p className="mt-8 text-gray-500 font-B01-SB">{data.companyName}</p>
-      <h2 className="mt-2 text-gray-900 font-T02-B">{data.title}</h2>
+      <p className="mt-8 text-gray-500 font-B01-SB">{item.companyName}</p>
+      <h2 className="mt-2 text-gray-900 font-T02-B">{item.title}</h2>
 
       <div className="mt-8 space-y-3 rounded-xl bg-gray-50 px-6 py-5 text-gray-600 font-B01-M">
         {details.map((d, idx) => (
@@ -61,7 +57,7 @@ const CardDetail = ({ id, onClose }: CardDetailProps) => {
           담기
         </button>
         <a
-          href={data.url}
+          href={item.url}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center rounded-xl bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600"
