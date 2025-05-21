@@ -85,8 +85,8 @@ const Filter = () => {
         </div>
       </div>
 
-      <div className="mb-4 mt-6 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {tags.map((tag) => (
             <span
               key={tag.label}
@@ -99,7 +99,7 @@ const Filter = () => {
             </span>
           ))}
         </div>
-        <ResetButton onClick={handleResetAll} />
+        <ResetButton onClick={handleResetAll} className="ml-auto" />
       </div>
     </div>
   );
