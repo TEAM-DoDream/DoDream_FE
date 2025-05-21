@@ -12,6 +12,7 @@ export interface DropDownProps<T extends string> {
   onSelect: (value: T) => void;
   backButton?: { label: string; onClick: () => void };
   keepOpenOnSelect?: boolean;
+  toggleClassName?: string;
 }
 
 export default function DropDown<T extends string>({
@@ -23,6 +24,7 @@ export default function DropDown<T extends string>({
   onSelect,
   backButton,
   keepOpenOnSelect = false,
+  toggleClassName,
 }: DropDownProps<T>) {
   const { isOpen, toggle, ref } = useDropdown<T>();
 
@@ -46,7 +48,8 @@ export default function DropDown<T extends string>({
           onClick={toggle}
           className={clsx(
             'flex cursor-pointer items-center justify-between rounded-2xl border px-4 py-5 text-gray-500 transition-colors duration-200',
-            isOpen ? 'border-purple-500' : 'border-gray-200'
+            isOpen ? 'border-purple-500' : 'border-gray-200',
+            toggleClassName
           )}
         >
           <span>{placeholder}</span>
