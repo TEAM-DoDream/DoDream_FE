@@ -27,19 +27,20 @@ const RecruitCard = ({ item }: { item: RecruitItem }) => {
         </div>
         <h3 className="mt-[12px] text-black font-T04-SB">{item.title}</h3>
 
-        <div className="mt-[16px] flex flex-wrap gap-0.5">
-          <span className="whitespace-nowrap px-2 py-1 text-gray-500 font-B03-M">
-            # {item.locationName}
-          </span>
-          <span className="whitespace-nowrap px-2 py-1 text-gray-500 font-B03-M">
-            # {item.jobTypeName}
-          </span>
-          <span className="whitespace-nowrap px-2 py-1 text-gray-500 font-B03-M">
-            # {item.experienceLevel}
-          </span>
-          <span className="whitespace-nowrap px-2 py-1 text-gray-500 font-B03-M">
-            # {item.requiredEducationLevel}
-          </span>
+        <div className="mt-[16px] flex flex-wrap gap-1">
+          {[
+            item.locationName,
+            item.jobTypeName,
+            item.experienceLevel,
+            item.requiredEducationLevel,
+          ].map((text) => (
+            <span
+              key={text}
+              className="inline-block max-w-[45%] truncate break-words px-2 py-1 text-gray-500 font-B03-M"
+            >
+              # {text}
+            </span>
+          ))}
         </div>
       </div>
 
