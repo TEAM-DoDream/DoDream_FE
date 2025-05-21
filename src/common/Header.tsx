@@ -22,7 +22,11 @@ const NavItems = [
   { label: '채용 정보', path: '/jobsearch' },
 
   //마이드림
-  { label: '나의 할일', path: '/' },
+  {
+    label: '나의 할일',
+    path: '/mytodo',
+    match: (pathname: string) => pathname.startsWith('/mytodo'),
+  },
 ];
 
 const Header = ({ type }: ShowProps) => {
