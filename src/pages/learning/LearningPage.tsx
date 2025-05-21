@@ -1,18 +1,50 @@
 import { useState } from 'react';
 import Filter from '@pages/learning/components/Filter.tsx';
-
+import { useAcademyInfoQuery } from '@hook/useAcademyInfoQuery.ts';
 import Img from '@assets/images/illustration_2.webp';
-import LearningDummy, { LearningItem } from '@utils/data/learn/learnDummy.ts';
 import Footer from '@common/Footer.tsx';
 import LearningCard from '@pages/learning/components/LearningCard.tsx';
 import CardDetail from '@pages/learning/components/CardDetail.tsx';
-
+import LoadingSpinner from '@common/LoadingSpinner.tsx';
+import Pagination from '@common/Pagination.tsx';
+interface LearnListResponse {
+  srchList: AcademyItem[];
+  scn_cnt: number;
+  pageNum: number;
+  pageSize: number;
+}
+interface AcademyItem {
+  address: string;
+  realMan: string;
+  subTitle: string;
+  title: string;
+  titleLink: string;
+  traStartDate: string;
+  traEndDate: string;
+  traDuration: string;
+  trainstCstId: string;
+  trprDegr: string;
+  trprId: string;
+}
 const LearningPage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
-
-  const selectedCard = selectedCardId
-    ? LearningDummy.find((item) => item.id === selectedCardId)
-    : null;
+  const {
+    data = { srchList: [], scn_cnt: 0, pageNum: 0, pageSize: 0 },
+    isPending,
+  } = useAcademyInfoQuery<LearnListResponse>(currentPage);
+  const totalPages = Math.ceil(
+    Number(data.scn_cnt || 0) / (data.pageSize || 10)
+  );
+  const jobs = data.srchList || [];
+  const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
+  if (isPending) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -39,22 +71,31 @@ const LearningPage = () => {
       </div>
       <div className="mx-auto mt-[60px] max-w-[1200px]">
         <div className="mb-4 flex text-black font-T03-B">
-          <p className="text-purple-500 font-T03-B">8개</p>의 훈련과정이 모집
-          중이에요
+          <p className="text-purple-500 font-T03-B">{data.scn_cnt}개</p>의
+          훈련과정이 모집 중이에요
         </div>
 
         <div className="mb-6 flex justify-center">
           <div className="grid grid-cols-3 gap-4">
-            {LearningDummy.map((item: LearningItem) => (
+            {jobs.map((item, index) => (
               <div
-                key={item.id}
-                onClick={() => setSelectedCardId(item.id)}
+                key={index}
+                onClick={() => setSelectedCardId(index)}
                 className="cursor-pointer"
               >
                 <LearningCard item={item} />
               </div>
             ))}
           </div>
+        </div>
+        <div className="mx-auto mb-[80px] mt-[100px] w-fit">
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+          )}
         </div>
       </div>
 
