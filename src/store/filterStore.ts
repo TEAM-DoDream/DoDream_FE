@@ -7,6 +7,7 @@ type FilterState = {
   require: string;
   workTime: string;
   bodyActivity: string;
+  sortBy: string;
 };
 
 type FilterActions = {
@@ -17,7 +18,8 @@ type FilterActions = {
       | 'trainingCourse'
       | 'require'
       | 'workTime'
-      | 'bodyActivity',
+      | 'bodyActivity'
+      | 'sortBy',
     value: string
   ) => void;
   removeTag: (
@@ -39,6 +41,7 @@ export const useFilterStore = create<FilterState & FilterActions>((set) => ({
   require: '',
   workTime: '',
   bodyActivity: '',
+  sortBy: '마감 임박순',
 
   setSelection: (key, value) =>
     set((state) => ({
@@ -58,5 +61,6 @@ export const useFilterStore = create<FilterState & FilterActions>((set) => ({
       require: '',
       workTime: '',
       bodyActivity: '',
+      sortBy: '마감 임박순',
     }),
 }));
