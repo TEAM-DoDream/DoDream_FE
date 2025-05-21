@@ -48,7 +48,11 @@ const ScrapPage = () => {
 
   const handleRegionSelect = (regionName?: string) => {
     if (regionName) {
-      activeTab === 'job' ? setJobRegion(regionName) : setEduRegion(regionName);
+      if (activeTab === 'job') {
+        setJobRegion(regionName);
+      } else {
+        setEduRegion(regionName);
+      }
     }
     setIsModalOpen(false);
   };
@@ -112,7 +116,9 @@ const ScrapPage = () => {
         {activeTab === 'job' ? (
           <>
             <div className="mb-6 flex justify-center">
-              <div className="grid grid-cols-3 gap-4">{/* 채용카드 /*/}</div>
+              <div className="grid grid-cols-3 gap-4">
+                {/* TODO: 채용카드 */}
+              </div>
             </div>
 
             <div className="mx-auto mb-[80px] mt-[30px] w-fit">
