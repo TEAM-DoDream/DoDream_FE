@@ -6,7 +6,8 @@ import {
   districtMap,
   cityOptions,
 } from '@utils/data/job/filterOptions.ts';
-import { LearningFilterStore } from '@store/learningFilterStore';
+
+import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
 
 type Tag = {
   label: string;
@@ -17,7 +18,7 @@ const trainingOptions = ['이론 위주', '실습 위주'];
 
 const Filter = () => {
   const { job, location, setSelection, trainingCourse, removeTag, reset } =
-    LearningFilterStore();
+    useAcademyFilterStore();
 
   const [locStep, setLocStep] = useState<'city' | 'district'>('city');
   const [tempCity, setTempCity] = useState('');
