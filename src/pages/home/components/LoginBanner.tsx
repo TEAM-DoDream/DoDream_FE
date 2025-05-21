@@ -52,7 +52,8 @@ const LoginBanner = () => {
       <div className="flex h-[379px] w-[440px] flex-col items-start rounded-[30px] border border-gray-300 bg-white p-[30px]">
         <div className="flex w-full flex-row items-start justify-between">
           <img src={Bell} alt="Bell" className="h-[60px] w-[60px]" />
-          <div
+          <button
+            type="button"
             className="flex cursor-pointer flex-row items-center"
             onClick={() => {
               setSelection('location', regionName);
@@ -61,7 +62,7 @@ const LoginBanner = () => {
           >
             <div className="text-gray-500 font-B02-SB"> 채용 정보 보기 </div>
             <Arrow />
-          </div>
+          </button>
         </div>
 
         <span className="mt-5 text-gray-900 font-T01-B">
