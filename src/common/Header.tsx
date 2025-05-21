@@ -8,15 +8,24 @@ interface ShowProps {
 }
 
 const NavItems = [
-  { label: '마이드림', path: '/' },
-  { label: '일자리 찾기', path: '/jobsearch' },
-  { label: '배움터 찾기', path: '/learning' },
   {
-    label: '직업 탐색',
+    // 직업 탐색
+    label: '직업 정보',
     path: '/jobfound',
     match: (pathname: string) =>
       (pathname.startsWith('/job') && pathname !== '/jobsearch') ||
       pathname.startsWith('/others'),
+  },
+  //배움터 찾기
+  { label: '학원 정보', path: '/learning' },
+  // (구)일자리 찾기
+  { label: '채용 정보', path: '/jobsearch' },
+
+  //마이드림
+  {
+    label: '나의 할일',
+    path: '/mytodo',
+    match: (pathname: string) => pathname.startsWith('/mytodo'),
   },
 ];
 

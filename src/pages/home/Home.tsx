@@ -10,7 +10,7 @@ const Home = () => {
     <div>
       {isLoggedIn ? <LoginBanner /> : <Banner />}
 
-      <div className="mb-[160px] mt-[420px] px-[120px]">
+      <div className="px-[120px] py-20">
         <HomeDreamer />
       </div>
 

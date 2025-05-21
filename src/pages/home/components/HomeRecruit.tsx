@@ -41,8 +41,8 @@ const HomeRecruit = () => {
       <div className="mb-[50px] flex items-center justify-between">
         <div className="text-gray-900 font-T02-B">
           {isLoggedIn
-            ? `${regionName}에 새로 올라온 구인글이에요!`
-            : '두드림에 새로 올라온 구인글이에요!'}
+            ? `${regionName} 최신 채용 정보`
+            : '두드림 최신 채용 정보'}
         </div>
         <div
           className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB"
