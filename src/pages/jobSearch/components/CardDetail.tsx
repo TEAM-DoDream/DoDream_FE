@@ -1,31 +1,12 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
 import HeartIcon from '@assets/icons/like.svg?react';
+import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
 
 interface CardDetailProps {
   item: RecruitItem;
   onClose: () => void;
 }
 
-interface RecruitItem {
-  url: string;
-  active: number;
-  title: string;
-  jobName: string;
-  companyName: string;
-  locationName: string;
-  jobTypeName: string;
-  experienceLevel: string;
-  requiredEducationLevel: string;
-  closeType: string;
-  salary: string;
-  id: string;
-  postTimestamp: string;
-  postDate: string;
-  'expiration-timestamp': string;
-  'expiration-date': string;
-  deadline: string;
-  count: number;
-}
 const CardDetail = ({ item, onClose }: CardDetailProps) => {
   const details = [
     {
