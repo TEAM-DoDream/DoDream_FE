@@ -55,7 +55,7 @@ const LearningPage = () => {
         </div>
       </div>
       <div className="mx-auto mt-[60px] max-w-[1200px]">
-        <div className="mb-4 flex text-black font-T03-B">
+        <div className="mb-4 flex justify-between text-black font-T03-B">
           <div className="flex content-center items-center justify-center">
             <p className="text-purple-500 font-T03-B">{data.scn_cnt}개</p>의
             훈련과정이 모집 중이에요

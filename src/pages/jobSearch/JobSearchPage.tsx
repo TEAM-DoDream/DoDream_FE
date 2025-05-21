@@ -1,24 +1,33 @@
 import { useState } from 'react';
-import Filter from '@pages/jobSearch/components/Filter.tsx';
-import RecruitCard from '@pages/jobSearch/components/RecruitCard.tsx';
-import CardDetail from '@pages/jobSearch/components/CardDetail.tsx';
+import Filter from '@pages/jobSearch/components/Filter';
+import RecruitCard from '@pages/jobSearch/components/RecruitCard';
+import CardDetail from '@pages/jobSearch/components/CardDetail';
 import Img from '@assets/images/illustration_1.webp';
-import Footer from '@common/Footer.tsx';
-import { useRecruitListQuery } from '@hook/useRecruitListQuery.ts';
-import Pagination from '@common/Pagination.tsx';
-import LoadingSpinner from '@common/LoadingSpinner.tsx';
-import DropDown from '@common/DropDown.tsx';
+import Footer from '@common/Footer';
+import { useRecruitListQuery } from '@hook/useRecruitListQuery';
+import Pagination from '@common/Pagination';
+import LoadingSpinner from '@common/LoadingSpinner';
+import DropDown from '@common/DropDown';
+import { useFilterStore } from '@store/filterStore';
+import { useShallow } from 'zustand/react/shallow';
+
+const sortOptions = ['마감 임박순', '마감 여유순'];
 
 const JobSearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
-  const sortOptions = ['마감 임박순', '마감 여유순'];
-  const [sortOrder, setSortOrder] = useState<string>(sortOptions[0]);
+
+  // 1) filterStore에서 sortBy 가져오기
+  const { sortBy, setSelection } = useFilterStore(
+    useShallow((s) => ({ sortBy: s.sortBy, setSelection: s.setSelection }))
+  );
+
+  // 2) 훅 자체가 내부에서 sortBy를 꺼내서 쿼리Key·params에 넣도록 수정해 두었다고 가정
   const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
     useRecruitListQuery(currentPage);
 
   const totalPages = Math.ceil(Number(data.total || 0) / (data.count || 10));
-  const jobs = data.job || [];
+  const jobs = data.job;
   const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
 
   if (isPending) {
@@ -31,6 +40,7 @@ const JobSearchPage = () => {
 
   return (
     <div>
+      {/* Header / Filter */}
       <div className="bg-purple-100 pb-6">
         <div className="mx-auto max-w-[1200px]">
           <div className="flex items-center justify-between">
@@ -46,25 +56,25 @@ const JobSearchPage = () => {
               alt="일자리 이미지"
             />
           </div>
-
           <div className="flex justify-center">
             <Filter />
           </div>
         </div>
       </div>
 
+      {/* List & Sort */}
       <div className="mx-auto mt-[40px] max-w-[1200px]">
         <div className="mb-4 flex justify-between text-black font-T03-B">
-          <div className="flex content-center items-center justify-center">
-            <p className="text-purple-500 font-T03-B">{data.total ?? 0}개</p>의
+          <div className="flex items-center">
+            <span className="text-purple-500 font-T03-B">{data.total}개</span>의
             일자리가 구인 중이에요
           </div>
           <div className="w-[140px]">
             <DropDown
-              placeholder={sortOrder}
+              placeholder={sortBy}
               options={sortOptions}
-              value={sortOrder}
-              onSelect={(v) => setSortOrder(v)}
+              value={sortBy}
+              onSelect={(v) => setSelection('sortBy', v)}
               toggleClassName="border-none font-B01-M w-[145px]"
             />
           </div>
@@ -74,7 +84,7 @@ const JobSearchPage = () => {
           <div className="grid grid-cols-3 gap-4">
             {jobs.map((item, index) => (
               <div
-                key={index}
+                key={item.id}
                 onClick={() => setSelectedCardId(index)}
                 className="cursor-pointer"
               >
