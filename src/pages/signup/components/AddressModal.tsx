@@ -24,7 +24,13 @@ const AddressModal = ({ onClose }: ModalProps) => {
 
       const map: Record<string, string[]> = {};
       regions.forEach(({ regionName }) => {
-        const [city, district] = regionName.trim().split(/\s+/);
+        const parsing = regionName.trim().split(/\s+/);
+
+        if (parsing.length < 2) return;
+
+        const city = parsing[0];
+        const district = parsing.slice(1).join(' ');
+
         if (map[city]) {
           if (!map[city].includes(district)) {
             map[city].push(district);
@@ -74,7 +80,7 @@ const AddressModal = ({ onClose }: ModalProps) => {
             onClick={handleClose}
             className="absolute right-5 top-1/2 -translate-y-1/2"
           >
-            <Cancel className="h-[18px] w-[18px]" />
+            <Cancel className="h-[18px] w-[18px] text-[#676F7B]" />
           </button>
         </div>
 

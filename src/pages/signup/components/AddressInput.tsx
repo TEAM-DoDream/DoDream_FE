@@ -20,7 +20,7 @@ const AddressInput = ({ onClick, address }: AddressInputProps) => {
         <>
           <div className="flex items-center gap-2">
             <span className="text-gray-600 font-B01-M">거주지 선택</span>
-            <span className="text-gray-400 font-B01-M">(선택)</span>
+            <span className="text-gray-400 font-B01-M">(필수)</span>
           </div>
           <span className="mt-1 flex text-gray-400 font-B03-M">
             내 위치 기반으로 더 정확한 서비스가 제공돼요
