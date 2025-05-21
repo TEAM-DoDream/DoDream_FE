@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import foundIcon from '@assets/images/bag.webp';
 import FoundFilter from './components/FoundFilter';
 import ListFound from './components/ListFound';
 import FoundIller from '@assets/images/foundillust.webp';
@@ -12,25 +11,20 @@ const JobFound = () => {
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <div className="h-[450px] bg-[#D5D5FF] px-[120px] pt-20">
+      <div className="h-[536px] bg-[#D5D5FF] px-[120px] pt-20">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <img
-              src={foundIcon}
-              alt="직업탐색 아이콘"
-              className="h-[69px] w-[69px]"
-            />
-            <div className="mt-[30px] text-gray-500 font-B01-M">직업탐색</div>
+            <div className="mt-3 text-gray-500 font-B01-M">직업 정보</div>
             <div className="mt-[10px] text-gray-900 font-T01-B">
-              원하는 직업을 탐색해보세요
+              직업 정보부터 할 일 목록까지, 드리머와 함께해요
             </div>
           </div>
 
-          <div className="absolute right-[82px] top-[70px]">
+          <div className="absolute right-[120px] top-[85px]">
             <img
               src={FoundIller}
               alt="직업탐색 일러스트"
-              className="h-[329px] w-[400px]"
+              className="w-[300px]] h-[247px]"
             />
           </div>
         </div>
@@ -38,7 +32,7 @@ const JobFound = () => {
         <FoundFilter />
       </div>
 
-      <div className="mt-[182px] flex-grow px-[120px]">
+      <div className="flex-grow px-[120px]">
         <ListFound page={currentPage} setTotalPages={setTotalPages} />
 
         <div className="mb-[80px] mt-[30px]">
