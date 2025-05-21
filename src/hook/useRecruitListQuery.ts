@@ -11,22 +11,24 @@ import {
 export const useRecruitListQuery = (
   pageNum: number
 ): UseQueryResult<RecruitListResponse, Error> => {
-  const { job, location } = useFilterStore(
+  const { job, location, sortBy } = useFilterStore(
     useShallow((s) => ({
       job: s.job,
       location: s.location,
+      sortBy: s.sortBy,
     }))
   );
   const BaseUrl = import.meta.env.VITE_BASE_URL;
 
   return useQuery<RecruitListResponse, Error>({
-    queryKey: ['recruitList', pageNum, job, location],
+    queryKey: ['recruitList', pageNum, job, location, sortBy],
     queryFn: async () => {
       const res = await axios.get(`${BaseUrl}/v1/recruit/list`, {
         params: {
           pageNum,
           keyWord: job || undefined,
           locationName: location || undefined,
+          sortBy: sortBy || undefined,
         },
       });
       // API 가 { success, timestamp, data: { … } } 형태라면
