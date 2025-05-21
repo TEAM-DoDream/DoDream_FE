@@ -1,4 +1,6 @@
 import Like from '@assets/icons/like.svg?react';
+import { isDdayReached } from '@utils/functions/dateCompare';
+
 interface AcademyItem {
   address: string;
   realMan: string;
@@ -14,12 +16,11 @@ interface AcademyItem {
 }
 
 const LearningCard = ({ item }: { item: AcademyItem }) => {
-  console.log(item);
   return (
     <div className="flex h-[330px] w-[388px] flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-6 transition-shadow hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
       <div>
         <div className="flex items-start justify-between">
-          {new Date(item.traStartDate) <= new Date() && (
+          {isDdayReached(item.traStartDate) && (
             <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
               D-day
             </span>
