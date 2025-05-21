@@ -15,7 +15,7 @@ type AcademyFilterActions = {
 export const useAcademyFilterStore = create<
   AcademyFilterState & AcademyFilterActions
 >((set) => ({
-  job: '',
+  job: '요양보호사',
   location: '',
   trainingCourse: '',
 
@@ -28,7 +28,7 @@ export const useAcademyFilterStore = create<
 
   reset: () =>
     set({
-      job: '',
+      job: '요양보호사',
       location: '',
       trainingCourse: '',
     }),
