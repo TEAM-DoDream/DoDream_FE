@@ -48,14 +48,16 @@ const ScrapPage = () => {
   const jobs = dummyJobs;
 
   return (
-    <div className="bg-gray-50 px-8 py-6">
+    <div className="h-full bg-gray-50 px-8 py-6">
       <h3 className="text-black font-T02-B">스크랩한 공고</h3>
 
       <div className="mt-6 flex gap-2 border-b border-gray-200">
         <button
           onClick={() => setActiveTab('job')}
-          className={`ml-2 w-[102px] pb-2 font-T05-SB ${
-            activeTab === 'job' ? 'text-purple-500' : 'text-gray-300'
+          className={`w-[102px] pb-2 font-T05-SB ${
+            activeTab === 'job'
+              ? 'border-b-4 border-purple-500 text-purple-500'
+              : 'text-gray-300'
           }`}
         >
           채용 정보
@@ -63,7 +65,9 @@ const ScrapPage = () => {
         <button
           onClick={() => setActiveTab('edu')}
           className={`w-[102px] pb-2 font-T05-SB ${
-            activeTab === 'edu' ? 'text-purple-500' : 'text-gray-300'
+            activeTab === 'edu'
+              ? 'border-b-4 border-purple-500 text-purple-500'
+              : 'text-gray-300'
           }`}
         >
           학원 정보
@@ -89,7 +93,7 @@ const ScrapPage = () => {
               </div>
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="flex min-h-[500px] flex-col items-center justify-center space-y-4">
               <img
                 src={WarningImg}
                 alt="스크랩한 채용 정보가 아직 없어요"
@@ -105,15 +109,13 @@ const ScrapPage = () => {
               </p>
               <Button
                 text="채용 정보 둘러보기"
-                className={'h-[62px] w-[242px] font-T05-SB'}
-                onClick={() => {
-                  navigate('/jobsearch');
-                }}
+                className="h-[62px] w-[242px] font-T05-SB"
+                onClick={() => navigate('/jobsearch')}
               />
             </div>
           )
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="flex min-h-[500px] flex-col items-center justify-center space-y-4">
             <img
               src={WarningImg}
               alt="스크랩한 학원 정보가 아직 없어요"
