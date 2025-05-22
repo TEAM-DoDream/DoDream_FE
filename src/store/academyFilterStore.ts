@@ -4,6 +4,7 @@ type AcademyFilterState = {
   job: string;
   location: string;
   trainingCourse: string;
+  sortBy: string;
 };
 
 type AcademyFilterActions = {
@@ -18,6 +19,7 @@ export const useAcademyFilterStore = create<
   job: '요양보호사',
   location: '',
   trainingCourse: '',
+  sortBy: '마감 임박순',
 
   setSelection: (key, value) =>
     set((state) => ({
@@ -31,5 +33,6 @@ export const useAcademyFilterStore = create<
       job: '요양보호사',
       location: '',
       trainingCourse: '',
+      sortBy: '마감 임박순',
     }),
 }));
