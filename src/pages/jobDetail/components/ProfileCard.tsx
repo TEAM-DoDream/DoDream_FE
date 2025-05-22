@@ -2,6 +2,7 @@ import Checker from '@assets/images/checker.png';
 import Button from '@common/Button';
 import CheckList from '@common/CheckList';
 import Divider from '@common/Divider';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const todotext = [
   '아롱이 병원에ㅇㅇㅇ 들렀을 때, 늘 친절하신 간호 선생님께 취업 경로 살짝 여쭤보기',
@@ -9,6 +10,8 @@ const todotext = [
 ];
 
 const ProfileCard = () => {
+  const navigate = useNavigate();
+  const { jobId } = useParams<{ jobId: string }>();
   return (
     <div className="mt-[66px] flex h-[752px] w-[444px] flex-col items-start rounded-[30px] bg-white p-[30px]">
       <div className="text-black font-T03-B">
@@ -88,6 +91,7 @@ const ProfileCard = () => {
         color="secondary"
         type="button"
         className="mt-10 flex w-full items-center justify-center rounded-2xl border border-purple-500 py-4 font-T05-SB hover:bg-purple-150"
+        onClick={() => navigate(`/otherslist/${jobId}`)}
       />
     </div>
   );
