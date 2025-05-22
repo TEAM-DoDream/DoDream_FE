@@ -2,22 +2,14 @@ import { useState } from 'react';
 import CustomSortDropdown from '@pages/myTodo/components/CustomSortDropdown';
 import AddressModal from '@pages/signup/components/AddressModal';
 import Pagination from '@common/Pagination';
+import WarningImg from '@assets/images/warning.webp';
+import Button from '@common/Button';
+import { useNavigate } from 'react-router-dom';
 
-const dummyJobs = Array.from({ length: 9 }, (_, i) => ({
-  id: `${i + 1}`,
-  companyName: `회사 ${i + 1}`,
-  title: `직무 ${i + 1}`,
-  experienceLevel: '경력무관',
-  jobTypeName: '정규직',
-  requiredEducationLevel: '학력무관',
-  salary: '연봉 3,000만원',
-  locationName: '서울',
-  'expiration-date': '2025-12-31',
-  deadline: '채용 시 마감',
-  url: '#',
-}));
+const dummyJobs = Array.from({ length: 0 }, (_) => ({}));
 
 const ScrapPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'job' | 'edu'>('job');
   const [jobSort, setJobSort] = useState('최신순');
   const [eduSort, setEduSort] = useState('최신순');
@@ -25,8 +17,7 @@ const ScrapPage = () => {
   const [eduRegion, setEduRegion] = useState('지역 선택');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobPage, setJobPage] = useState(1);
-  const [eduPage, setEduPage] = useState(1);
-  const [selectedCardId, _setSelectedCardId] = useState<string | null>(null);
+  // const [eduPage, setEduPage] = useState(1);
 
   const renderDropdown = (tab: 'job' | 'edu') => {
     const value = tab === 'job' ? jobSort : eduSort;
@@ -48,41 +39,13 @@ const ScrapPage = () => {
 
   const handleRegionSelect = (regionName?: string) => {
     if (regionName) {
-      if (activeTab === 'job') {
-        setJobRegion(regionName);
-      } else {
-        setEduRegion(regionName);
-      }
+      if (activeTab === 'job') setJobRegion(regionName);
+      else setEduRegion(regionName);
     }
     setIsModalOpen(false);
   };
 
-  const selectedJob = selectedCardId
-    ? dummyJobs.find((job) => job.id === selectedCardId) || null
-    : null;
-
-  const selectedRecruitItem = selectedJob
-    ? {
-        id: selectedJob.id,
-        url: selectedJob.url,
-        active: 1,
-        title: selectedJob.title,
-        jobName: selectedJob.title,
-        companyName: selectedJob.companyName,
-        locationName: selectedJob.locationName,
-        jobTypeName: selectedJob.jobTypeName,
-        experienceLevel: selectedJob.experienceLevel,
-        requiredEducationLevel: selectedJob.requiredEducationLevel,
-        closeType: '채용 시 마감',
-        salary: selectedJob.salary,
-        postTimestamp: '',
-        postDate: '',
-        'expiration-timestamp': '',
-        'expiration-date': selectedJob['expiration-date'],
-        deadline: selectedJob.deadline,
-        count: '0',
-      }
-    : null;
+  const jobs = dummyJobs;
 
   return (
     <div className="bg-gray-50 px-8 py-6">
@@ -95,7 +58,7 @@ const ScrapPage = () => {
             activeTab === 'job' ? 'text-purple-500' : 'text-gray-300'
           }`}
         >
-          채용
+          채용 정보
         </button>
         <button
           onClick={() => setActiveTab('edu')}
@@ -103,7 +66,7 @@ const ScrapPage = () => {
             activeTab === 'edu' ? 'text-purple-500' : 'text-gray-300'
           }`}
         >
-          학원
+          학원 정보
         </button>
       </div>
 
@@ -111,44 +74,70 @@ const ScrapPage = () => {
         {renderDropdown(activeTab)}
         {renderRegion(activeTab)}
       </div>
-
-      <div className="mt-6 text-sm text-gray-600">
+      <div className="mt-6">
         {activeTab === 'job' ? (
-          <>
-            <div className="mb-6 flex justify-center">
-              <div className="grid grid-cols-3 gap-4">
-                {/* TODO: 채용카드 */}
-              </div>
-            </div>
+          jobs.length > 0 ? (
+            <>
+              <div className="mb-6 grid grid-cols-3 gap-4"></div>
 
-            <div className="mx-auto mb-[80px] mt-[30px] w-fit">
-              <Pagination
-                totalPages={5}
-                currentPage={jobPage}
-                setCurrentPage={setJobPage}
+              <div className="mx-auto mb-[80px] mt-[30px] w-fit">
+                <Pagination
+                  totalPages={5}
+                  currentPage={jobPage}
+                  setCurrentPage={setJobPage}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <img
+                src={WarningImg}
+                alt="스크랩한 채용 정보가 아직 없어요"
+                className="h-32 w-32 font-T03-B"
+              />
+              <h2 className="text-gray-900 font-T02-B">
+                스크랩한 채용 정보가 아직 없어요!
+              </h2>
+              <p className="text-center text-gray-500 font-B02-M">
+                관심있는 직업에 필요한 채용 정보를
+                <br />
+                차근차근 탐색한 후에 스크랩을 해보세요!
+              </p>
+              <Button
+                text="채용 정보 둘러보기"
+                className={'h-[62px] w-[242px] font-T05-SB'}
+                onClick={() => {
+                  navigate('/jobsearch');
+                }}
               />
             </div>
-          </>
+          )
         ) : (
-          <>
-            <div className="mb-4 text-sm">
-              스크랩한 배움터 정보 (정렬: {eduSort}, 지역: {eduRegion}, 페이지:{' '}
-              {eduPage})
-            </div>
-            <Pagination
-              totalPages={3}
-              currentPage={eduPage}
-              setCurrentPage={setEduPage}
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <img
+              src={WarningImg}
+              alt="스크랩한 학원 정보가 아직 없어요"
+              className="h-32 w-32"
             />
-          </>
+            <h2 className="text-gray-900 font-T02-B">
+              스크랩한 학원 정보가 아직 없어요!
+            </h2>
+            <p className="text-center text-gray-500 font-B02-M">
+              관심있는 직업에 필요한 학원 정보를
+              <br />
+              차근차근 탐색한 후에 스크랩을 해보세요!
+            </p>
+            <Button
+              text="학원 정보 둘러보기"
+              className={'h-[62px] w-[242px] font-T05-SB'}
+              onClick={() => {
+                navigate('/learning');
+              }}
+            />
+          </div>
         )}
       </div>
-
       {isModalOpen && <AddressModal onClose={handleRegionSelect} />}
-
-      {selectedRecruitItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"></div>
-      )}
     </div>
   );
 };
