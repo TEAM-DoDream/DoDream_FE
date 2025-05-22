@@ -5,8 +5,12 @@ const Container = () => {
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
       <div className="flex w-full items-stretch justify-center gap-[20px]">
-        <MyEditor />
-        <ImgUpload />
+        <div className="flex-1">
+          <MyEditor />
+        </div>
+        <div className="flex-1">
+          <ImgUpload />
+        </div>
       </div>
 
       <div className="flex w-full items-stretch justify-center gap-[20px]">
