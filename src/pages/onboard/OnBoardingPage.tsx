@@ -1,11 +1,10 @@
-// OnBoardingPage.tsx
 import Stepper from '@pages/onboard/components/Stepper';
 import stepQuestions from '@utils/data/onboard/onboardDummy';
 import { useOnboarding } from '@hook/useOnboarding';
 import Navigation from '@pages/onboard/components/Navigation';
 import Questions from '@pages/onboard/components/Questions';
 import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation.ts';
-import LoadingSpinner from '@common/LoadingSpinner'; // react-spinners 로 만든 스피너
+import LoadingSpinner from '@common/LoadingSpinner';
 
 const OnBoardingPage = () => {
   const {
@@ -64,7 +63,6 @@ const OnBoardingPage = () => {
             }
             isLast={curStep === stepQuestions.length - 1}
             onSubmit={handleSubmit}
-            // 버튼 내부 스피너가 아니라 화면 로딩이기 때문에 여기선 넘길 필요 없습니다
           />
         </div>
       </div>
