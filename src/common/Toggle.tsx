@@ -7,7 +7,7 @@ const ToggleButton = () => {
     <button
       onClick={() => setIsOn(!isOn)}
       className={`flex h-[24px] w-[46px] items-center rounded-full p-1 duration-300 ${
-        isOn ? 'bg-purple-200' : 'bg-gray-200'
+        isOn ? 'bg-purple-500' : 'bg-gray-400'
       }`}
       aria-pressed={isOn}
       role="switch"

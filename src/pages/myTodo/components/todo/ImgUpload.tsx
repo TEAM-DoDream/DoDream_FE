@@ -31,14 +31,14 @@ const ImgUpload = () => {
   };
 
   return (
-    <div className="h-[725px] w-[348px] rounded-2xl bg-white p-[20px]">
+    <div className="flex h-full w-full flex-col overflow-y-auto rounded-2xl bg-white p-[20px]">
       <div className="flex w-full items-center justify-between">
         <h2 className="font-T05-SB">이미지</h2>
         <div
-          className="flex h-[42px] w-[116px] cursor-pointer items-center justify-center rounded-[12px] bg-purple-500 text-white font-B03-SB"
+          className="flex h-[42px] w-[116px] cursor-pointer items-center justify-center rounded-[12px] bg-purple-100 text-purple-500 font-B03-SB"
           onClick={() => inputRef.current?.click()}
         >
-          <AddImgIcon />
+          <AddImgIcon stroke={'#8173FF'} />
           <button className="ml-1">이미지 첨부</button>
         </div>
         <input
@@ -50,8 +50,7 @@ const ImgUpload = () => {
           className="hidden"
         />
       </div>
-
-      <div className="mt-4 flex max-h-[600px] flex-col gap-3 overflow-y-auto">
+      <div className="mt-4 flex flex-1 flex-col gap-3">
         {images.length === 0 ? (
           <span className="text-gray-500 font-B02-M">
             아직 첨부된 이미지가 없어요
