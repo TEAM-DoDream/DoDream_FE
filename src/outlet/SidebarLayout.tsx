@@ -1,46 +1,47 @@
 import { ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-interface SidebarProps {
-  selected: 'todo' | 'scrap';
-  setSelected: (tab: 'todo' | 'scrap') => void;
+interface SidebarLayoutProps {
   children: ReactNode;
 }
 
-const SidebarLayout = ({ selected, setSelected, children }: SidebarProps) => {
+const SidebarLayout = ({ children }: SidebarLayoutProps) => {
+  const { pathname } = useLocation();
+
   return (
-    <div className="flex">
-      <aside className="fixed left-0 h-screen w-[200px] bg-white">
-        <nav className="gap-[10px] py-10">
-          <ul className="flex flex-col gap-[10px] px-[10px] py-2">
+    <div className="flex min-h-screen">
+      <aside className="fixed left-0 h-screen w-[200px] bg-white shadow-sm">
+        <nav className="py-10">
+          <ul className="flex flex-col gap-2 px-4">
             <li>
-              <button
-                onClick={() => setSelected('todo')}
-                className={`flex w-full items-center rounded-2xl px-[18px] py-[14px] font-B01-B ${
-                  selected === 'todo'
+              <Link
+                to="/mytodo/list"
+                className={`block w-full rounded-2xl px-4 py-3 text-left font-B01-B ${
+                  pathname.includes('/mytodo/list')
                     ? 'bg-purple-100 text-purple-500'
                     : 'text-gray-400 hover:text-purple-500'
                 }`}
               >
                 할일 목록
-              </button>
+              </Link>
             </li>
             <li>
-              <button
-                onClick={() => setSelected('scrap')}
-                className={`flex w-full items-center rounded-2xl px-[18px] py-[14px] font-B01-B ${
-                  selected === 'scrap'
+              <Link
+                to="/mytodo/scrap"
+                className={`block w-full rounded-2xl px-4 py-3 text-left font-B01-B ${
+                  pathname.includes('/mytodo/scrap')
                     ? 'bg-purple-100 text-purple-500'
                     : 'text-gray-400 hover:text-purple-500'
                 }`}
               >
                 스크랩
-              </button>
+              </Link>
             </li>
           </ul>
         </nav>
       </aside>
 
-      <main className="ml-[200px] h-screen flex-1 bg-gray-100">{children}</main>
+      <main className="ml-[200px] flex-1 bg-gray-50 p-6">{children}</main>
     </div>
   );
 };
