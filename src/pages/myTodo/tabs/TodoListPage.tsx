@@ -1,4 +1,4 @@
-import Container from '@pages/myTodo/components/Container.tsx';
+import Container from '@pages/myTodo/components/todo/Container.tsx';
 import BackIcon from '@assets/icons/back.svg?react';
 import CautionIcon from '@assets/icons/caution.svg?react';
 import ToggleButton from '@common/Toggle.tsx';
