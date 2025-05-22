@@ -9,17 +9,18 @@ import {
 } from '@validation/academy/academySchema';
 
 export const useAcademyInfoQuery = (pageNum: number) => {
-  const { job, location, trainingCourse } = useAcademyFilterStore(
+  const { job, location, trainingCourse, sortBy } = useAcademyFilterStore(
     useShallow((s) => ({
       job: s.job,
       location: s.location,
       trainingCourse: s.trainingCourse,
+      sortBy: s.sortBy,
     }))
   );
   const BaseUrl = import.meta.env.VITE_BASE_URL;
 
   return useQuery<AcademyListResponse, Error>({
-    queryKey: ['academyList', pageNum, job, location, trainingCourse],
+    queryKey: ['academyList', pageNum, job, location, trainingCourse, sortBy],
 
     queryFn: async () => {
       const res = await axios.get(`${BaseUrl}/v1/training/list`, {
@@ -28,6 +29,7 @@ export const useAcademyInfoQuery = (pageNum: number) => {
           jobName: job || undefined,
           regionName: location || undefined,
           type: trainingCourse || undefined,
+          sortBy: sortBy || undefined,
         },
       });
       const payload = res.data.data;

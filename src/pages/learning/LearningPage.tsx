@@ -9,6 +9,8 @@ import CardDetail from '@pages/learning/components/CardDetail.tsx';
 import LoadingSpinner from '@common/LoadingSpinner.tsx';
 import Pagination from '@common/Pagination.tsx';
 import DropDown from '@common/DropDown.tsx';
+import { useShallow } from 'zustand/react/shallow';
+import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
 
 const LearningPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +23,10 @@ const LearningPage = () => {
   const totalPages = Math.ceil(data.scn_cnt / data.pageSize);
   const jobs: AcademyItem[] = data.srchList;
   const sortOptions = ['마감 임박순', '마감 여유순'];
-  const [sortOrder, setSortOrder] = useState<string>(sortOptions[0]);
+  const { sortBy, setSelection } = useAcademyFilterStore(
+    useShallow((s) => ({ sortBy: s.sortBy, setSelection: s.setSelection }))
+  );
+
   const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
   if (isPending) {
     return (
@@ -62,10 +67,10 @@ const LearningPage = () => {
           </div>
           <div className="w-[140px]">
             <DropDown
-              placeholder={sortOrder}
+              placeholder={sortBy}
               options={sortOptions}
-              value={sortOrder}
-              onSelect={(v) => setSortOrder(v)}
+              value={sortBy}
+              onSelect={(v) => setSelection('sortBy', v)}
               toggleClassName="border-none font-B01-M w-[145px]"
             />
           </div>
