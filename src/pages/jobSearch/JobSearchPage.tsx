@@ -17,12 +17,10 @@ const JobSearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
-  // 1) filterStore에서 sortBy 가져오기
   const { sortBy, setSelection } = useFilterStore(
     useShallow((s) => ({ sortBy: s.sortBy, setSelection: s.setSelection }))
   );
 
-  // 2) 훅 자체가 내부에서 sortBy를 꺼내서 쿼리Key·params에 넣도록 수정해 두었다고 가정
   const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
     useRecruitListQuery(currentPage);
 
@@ -40,7 +38,6 @@ const JobSearchPage = () => {
 
   return (
     <div>
-      {/* Header / Filter */}
       <div className="bg-purple-100 pb-6">
         <div className="mx-auto max-w-[1200px]">
           <div className="flex items-center justify-between">
@@ -62,7 +59,6 @@ const JobSearchPage = () => {
         </div>
       </div>
 
-      {/* List & Sort */}
       <div className="mx-auto mt-[40px] max-w-[1200px]">
         <div className="mb-4 flex justify-between text-black font-T03-B">
           <div className="flex items-center">
