@@ -1,31 +1,22 @@
 import Like from '@assets/icons/like.svg?react';
-import { isDdayReached } from '@utils/functions/dateCompare';
-
-interface AcademyItem {
-  address: string;
-  realMan: string;
-  subTitle: string;
-  title: string;
-  titleLink: string;
-  traStartDate: string;
-  traEndDate: string;
-  traDuration: string;
-  trainstCstId: string;
-  trprDegr: string;
-  trprId: string;
-}
+import { AcademyItem } from '@validation/academy/academySchema.ts';
 
 const LearningCard = ({ item }: { item: AcademyItem }) => {
   return (
     <div className="flex h-[330px] w-[388px] flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-6 transition-shadow hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
       <div>
         <div className="flex items-start justify-between">
-          {isDdayReached(item.traStartDate) && (
-            <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
-              D-day
-            </span>
-          )}
-          <Like className="ml-auto h-6 w-6 cursor-pointer text-gray-300 hover:text-purple-500" />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            aria-label="관심 채용 공고 담기"
+            className="ml-auto"
+          >
+            <Like className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+          </button>
         </div>
 
         <div className="mt-[12px] text-gray-500 font-B03-M">
