@@ -2,11 +2,13 @@ import Profile from '@assets/icons/profile.svg?react';
 import Camera from '@assets/icons/camera.svg?react';
 import Edit from '@assets/icons/edit-nickname.svg?react';
 import { useState } from 'react';
+import PasswordChangeModal from '@common/modal/PasswordChangeModal';
 
 const Mypage = () => {
   const [nickname, setNickname] = useState('큐시즘 님');
   const [tempNickname, setTempNickname] = useState(nickname);
   const [isEditing, setIsEditing] = useState(false);
+  const [passwordModal, setIsPasswordModal] = useState(false);
 
   const handleEditClick = () => {
     setTempNickname(nickname);
@@ -80,11 +82,17 @@ const Mypage = () => {
               <span> **** </span>
             </div>
 
-            <button className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M">
+            <button
+              className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
+              onClick={() => setIsPasswordModal(true)}
+            >
               {' '}
               변경
             </button>
           </div>
+          {passwordModal && (
+            <PasswordChangeModal onClose={() => setIsPasswordModal(false)} />
+          )}
         </div>
 
         <div className="mt-5 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
