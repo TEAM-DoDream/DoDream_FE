@@ -93,7 +93,7 @@ const CheckList = ({
             key={index}
             className="flex w-full items-center justify-between gap-2"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2">
               <div
                 className={`flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-lg border ${
                   done
