@@ -3,12 +3,16 @@ import Camera from '@assets/icons/camera.svg?react';
 import Edit from '@assets/icons/edit-nickname.svg?react';
 import { useState } from 'react';
 import PasswordChangeModal from '@common/modal/PasswordChangeModal';
+import AddressModal from '@pages/signup/components/AddressModal';
+import LikeJobModal from '@common/modal/LikeJobModal';
 
 const Mypage = () => {
   const [nickname, setNickname] = useState('큐시즘 님');
   const [tempNickname, setTempNickname] = useState(nickname);
   const [isEditing, setIsEditing] = useState(false);
   const [passwordModal, setIsPasswordModal] = useState(false);
+  const [regionModal, setIsRegionModal] = useState(false);
+  const [likeJob, setIsLikeJob] = useState(false);
 
   const handleEditClick = () => {
     setTempNickname(nickname);
@@ -102,10 +106,16 @@ const Mypage = () => {
               <span className="text-gray-500 font-B01-M">대전 서구</span>
             </div>
 
-            <button className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M">
+            <button
+              className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
+              onClick={() => setIsRegionModal(true)}
+            >
               {' '}
               변경
             </button>
+            {regionModal && (
+              <AddressModal onClose={() => setIsRegionModal(false)} />
+            )}
           </div>
 
           <div className="flex gap-6">
@@ -130,11 +140,15 @@ const Mypage = () => {
               </div>
             </div>
 
-            <button className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M">
+            <button
+              className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
+              onClick={() => setIsLikeJob(true)}
+            >
               {' '}
               변경
             </button>
           </div>
+          {likeJob && <LikeJobModal onClose={() => setIsLikeJob(false)} />}
         </div>
 
         <div className="mt-[60px] flex gap-[26px]">
