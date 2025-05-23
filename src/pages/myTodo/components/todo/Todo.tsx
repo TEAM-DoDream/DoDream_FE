@@ -7,7 +7,7 @@ import Plus from '@assets/icons/plus.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 const list = [
-  { text: '고용24에서 인근 요양보호사 과정 검색하기', hasMemo: true },
+  // { text: '고용24에서 인근 요양보호사 과정 검색하기', hasMemo: true },
   { text: '지역 교육기관 전화로 일정 문의하기' },
   { text: '지원서 작성용 사진 준비하기', hasMemo: true },
   { text: '건강검진 일정 잡기' },
@@ -32,7 +32,7 @@ const Todo = () => {
   };
 
   return (
-    <div className="mt-10 flex flex-col px-[120px]">
+    <div className="mb-[95px] mt-10 flex flex-col px-[120px]">
       <div className="flex flex-row justify-between">
         <div className="relative flex flex-col items-start">
           <div
