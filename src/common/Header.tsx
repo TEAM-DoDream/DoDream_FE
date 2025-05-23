@@ -24,7 +24,7 @@ const NavItems = [
   //마이드림
   {
     label: '나의 할일',
-    path: '/mytodo',
+    path: '/mytodo/list',
     match: (pathname: string) => pathname.startsWith('/mytodo'),
   },
 ];

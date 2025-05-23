@@ -15,6 +15,7 @@ import OtherTodoListPage from '@pages/otherTodoList/OtherTodoListPage.tsx';
 import MyTodoPage from '@pages/myTodo/MyTodoPage.tsx';
 import TodoListPage from '@pages/myTodo/tabs/TodoListPage.tsx';
 import ScrapPage from '@pages/myTodo/tabs/ScrapPage.tsx';
+import Todo from '@pages/myTodo/components/todo/Todo';
 
 const Router = () => {
   return (
@@ -37,7 +38,8 @@ const Router = () => {
           <Route path="/otherslist/:jobId" element={<OtherTodoListPage />} />
           <Route path="/mytodo" element={<MyTodoPage />}>
             <Route index element={<Navigate to="/mytodo/list" replace />} />
-            <Route path="list" element={<TodoListPage />} />
+            <Route path="list" element={<Todo />} />
+            <Route path="add" element={<TodoListPage />} />
             <Route path="scrap" element={<ScrapPage />} />
           </Route>
         </Route>
