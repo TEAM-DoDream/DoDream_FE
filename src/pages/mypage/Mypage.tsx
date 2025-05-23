@@ -1,5 +1,7 @@
-import Profile from '@assets/icons/profile.svg?react';
+// import Profile from '@assets/icons/profile.svg?react';
+import BaseImage from '@assets/images/checker.png';
 import Camera from '@assets/icons/camera.svg?react';
+import Trash from '@assets/icons/profile_delete.svg?react';
 import Edit from '@assets/icons/edit-nickname.svg?react';
 import { useState } from 'react';
 import PasswordChangeModal from '@common/modal/PasswordChangeModal';
@@ -9,15 +11,28 @@ import Quit from '@common/modal/Quit';
 import useLogout from '@hook/useLogout';
 
 const Mypage = () => {
-  const [nickname, setNickname] = useState('큐시즘 님');
+  const [nickname, setNickname] = useState('큐시즘');
   const [tempNickname, setTempNickname] = useState(nickname);
   const [isEditing, setIsEditing] = useState(false);
   const [passwordModal, setIsPasswordModal] = useState(false);
   const [regionModal, setIsRegionModal] = useState(false);
   const [likeJob, setIsLikeJob] = useState(false);
   const [quit, setIsQuit] = useState(false);
-
+  const [imageSrc, setImageSrc] = useState<string>(BaseImage);
   const logout = useLogout();
+  const isDefaultImage = imageSrc === BaseImage;
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImageSrc(imageUrl);
+    }
+  };
+
+  const handleResetImage = () => {
+    setImageSrc(BaseImage);
+  };
 
   const handleEditClick = () => {
     setTempNickname(nickname);
@@ -40,11 +55,38 @@ const Mypage = () => {
 
         <div className="mt-[60px] flex items-center space-x-11">
           <div className="relative h-[65px] w-[65px]">
-            <Profile className="h-full w-full" />
-            <div className="absolute bottom-0 right-0 flex h-[22px] w-[22px] items-center rounded-[7px] bg-white p-[5.5px] shadow-shadow2">
-              <Camera className="absolute h-[11px] w-[11px]" />
-            </div>
+            <img
+              src={imageSrc}
+              alt="기본이미지"
+              className="h-full w-full rounded-full object-cover"
+            />
+            {isDefaultImage ? (
+              <>
+                <label
+                  htmlFor="profile-upload"
+                  className="absolute bottom-0 right-0 flex h-[22px] w-[22px] cursor-pointer items-center justify-center rounded-[7px] bg-white p-[5.5px] shadow-shadow2"
+                >
+                  <Camera className="h-[11px] w-[11px]" />
+                </label>
+                <input
+                  id="profile-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  hidden
+                />
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResetImage}
+                className="absolute bottom-0 right-0 flex h-[22px] w-[22px] items-center justify-center rounded-[7px] bg-white p-[5.5px] shadow-shadow2"
+              >
+                <Trash className="h-[10px] w-[10px]" />
+              </button>
+            )}
           </div>
+
           <div className="flex items-center space-x-3">
             {isEditing ? (
               <div className="flex items-center space-x-3">
@@ -68,7 +110,7 @@ const Mypage = () => {
               </div>
             ) : (
               <>
-                <span className="text-gray-900 font-T04-B">{nickname}</span>
+                <span className="text-gray-900 font-T04-B">{nickname} 님</span>
                 <div
                   className="flex cursor-pointer items-center rounded-[6px] bg-white p-[6px] shadow-shadow2"
                   onClick={handleEditClick}
@@ -95,7 +137,6 @@ const Mypage = () => {
               className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
               onClick={() => setIsPasswordModal(true)}
             >
-              {' '}
               변경
             </button>
           </div>
@@ -115,7 +156,6 @@ const Mypage = () => {
               className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
               onClick={() => setIsRegionModal(true)}
             >
-              {' '}
               변경
             </button>
             {regionModal && (
@@ -149,7 +189,6 @@ const Mypage = () => {
               className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
               onClick={() => setIsLikeJob(true)}
             >
-              {' '}
               변경
             </button>
           </div>
