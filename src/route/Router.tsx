@@ -16,6 +16,7 @@ import MyTodoPage from '@pages/myTodo/MyTodoPage.tsx';
 import TodoListPage from '@pages/myTodo/tabs/TodoListPage.tsx';
 import ScrapPage from '@pages/myTodo/tabs/ScrapPage.tsx';
 import Todo from '@pages/myTodo/components/todo/Todo';
+import Mypage from '@pages/mypage/Mypage';
 
 const Router = () => {
   return (
@@ -42,6 +43,7 @@ const Router = () => {
             <Route path="add" element={<TodoListPage />} />
             <Route path="scrap" element={<ScrapPage />} />
           </Route>
+          <Route path="/mypage" element={<Mypage />} />
         </Route>
       </Routes>
     </BrowserRouter>
