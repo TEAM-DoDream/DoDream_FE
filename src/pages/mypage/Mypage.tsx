@@ -5,6 +5,8 @@ import { useState } from 'react';
 import PasswordChangeModal from '@common/modal/PasswordChangeModal';
 import AddressModal from '@pages/signup/components/AddressModal';
 import LikeJobModal from '@common/modal/LikeJobModal';
+import Quit from '@common/modal/Quit';
+import useLogout from '@hook/useLogout';
 
 const Mypage = () => {
   const [nickname, setNickname] = useState('큐시즘 님');
@@ -13,6 +15,9 @@ const Mypage = () => {
   const [passwordModal, setIsPasswordModal] = useState(false);
   const [regionModal, setIsRegionModal] = useState(false);
   const [likeJob, setIsLikeJob] = useState(false);
+  const [quit, setIsQuit] = useState(false);
+
+  const logout = useLogout();
 
   const handleEditClick = () => {
     setTempNickname(nickname);
@@ -152,14 +157,21 @@ const Mypage = () => {
         </div>
 
         <div className="mt-[60px] flex gap-[26px]">
-          <button className="flex items-center justify-center rounded-[14px] bg-purple-500 px-[30px] py-3 text-purple-100 font-B01-SB hover:bg-purple-600">
+          <button
+            className="flex items-center justify-center rounded-[14px] bg-purple-500 px-[30px] py-3 text-purple-100 font-B01-SB hover:bg-purple-600"
+            onClick={logout}
+          >
             로그아웃
           </button>
-          <button className="text-gray-900 font-B01-M hover:underline">
+          <button
+            className="text-gray-900 font-B01-M hover:underline"
+            onClick={() => setIsQuit(true)}
+          >
             회원 탈퇴
           </button>
         </div>
       </div>
+      {quit && <Quit onClose={() => setIsQuit(false)} />}
     </div>
   );
 };
