@@ -56,7 +56,7 @@ const FloatingButton = () => {
       )}
 
       {showToast && (
-        <div className="fixed right-[564px] top-[100px] z-50">
+        <div className="fixed left-1/2 top-[120px] z-50 -translate-x-1/2 -translate-y-1/2 transform">
           <ToastModal
             icon={<Info className="text-white" />}
             text="할일 목록이 추가되었습니다"

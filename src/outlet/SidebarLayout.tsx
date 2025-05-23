@@ -1,3 +1,4 @@
+import Footer from '@common/Footer';
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -7,17 +8,19 @@ interface SidebarLayoutProps {
 
 const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const { pathname } = useLocation();
+  const showFooter = pathname === '/mytodo/list';
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="fixed left-0 h-screen w-[200px] bg-white shadow-sm">
+    <div className="flex">
+      <aside className="fixed left-0 h-screen w-[200px] bg-white">
         <nav className="py-10">
           <ul className="flex flex-col gap-2 px-4">
             <li>
               <Link
                 to="/mytodo/list"
                 className={`block w-full rounded-2xl px-4 py-3 text-left font-B01-B ${
-                  pathname.includes('/mytodo/list')
+                  pathname.includes('/mytodo/list') ||
+                  pathname.includes('/mytodo/add')
                     ? 'bg-purple-100 text-purple-500'
                     : 'text-gray-400 hover:text-purple-500'
                 }`}
@@ -41,7 +44,10 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
         </nav>
       </aside>
 
-      <main className="ml-[200px] flex-1 bg-gray-50 p-6">{children}</main>
+      <main className="ml-[200px] flex min-h-screen w-full flex-col bg-gray-50">
+        <div className="flex-1">{children}</div>
+        {showFooter && <Footer />}
+      </main>
     </div>
   );
 };
