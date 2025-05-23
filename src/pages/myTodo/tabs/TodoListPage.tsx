@@ -5,7 +5,7 @@ import ToggleButton from '@common/Toggle.tsx';
 
 const TodoListPage = () => {
   return (
-    <div className="mx-auto bg-gray-50 px-5 py-4">
+    <div className="mx-[120px] mt-10 bg-gray-50 px-5 py-4">
       <div className="mb-4 flex max-w-[1010px] flex-col gap-2">
         <div className="flex items-center gap-2 self-start">
           <BackIcon />
