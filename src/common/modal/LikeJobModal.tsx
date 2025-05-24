@@ -5,11 +5,11 @@ import { useState } from 'react';
 import SmallCancel from '@assets/icons/purplecancel.svg?react';
 import Button from '@common/Button';
 
-interface LikeJonModalProps {
+interface LikeJobModalProps {
   onClose: () => void;
 }
 
-const LikeJobModal = ({ onClose }: LikeJonModalProps) => {
+const LikeJobModal = ({ onClose }: LikeJobModalProps) => {
   const [tags, setTags] = useState([
     '요양보호사',
     '요양보호사',
