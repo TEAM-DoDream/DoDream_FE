@@ -210,12 +210,16 @@ export interface EachTodos {
 const EachTodos = async (todoGroupId: number) => {
   try {
     const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+      throw new Error('인증 토큰이 없습니다');
+    }
+
     const response = await api.get(`/v1/todo/${todoGroupId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('data', response.data);
     return response.data.data;
   } catch (error) {
     console.error('개인 투두를 불러오는 것에 실패했습니다.', error);
