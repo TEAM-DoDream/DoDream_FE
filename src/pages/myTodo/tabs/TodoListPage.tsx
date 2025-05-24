@@ -4,12 +4,14 @@ import CautionIcon from '@assets/icons/caution.svg?react';
 import ToggleButton from '@common/Toggle.tsx';
 import { useMdIsPublicMutation } from '@hook/mydream/useMdIsPublicMutation';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const TodoListPage = () => {
+  const navigate = useNavigate();
   const { todoGroupId: todoGroupIdParam } = useParams<{ todoGroupId: string }>();
   const todoGroupId = todoGroupIdParam ? parseInt(todoGroupIdParam, 10) : undefined;
   const [isPublic, setIsPublic] = useState(false);
+  const [todoTitle, setTodoTitle] = useState('');
   const { mutate: togglePublicState } = useMdIsPublicMutation();
 
   const handleToggle = (isPublic: boolean) => {
@@ -25,10 +27,12 @@ const TodoListPage = () => {
     <div className="mx-[120px] mt-10 bg-gray-50 px-5 py-4">
       <div className="mb-4 flex max-w-[1010px] flex-col gap-2">
         <div className="flex items-center gap-2 self-start">
-          <BackIcon />
+          <BackIcon className="cursor-pointer" onClick={() => navigate(-1)} />
           <input
             placeholder="할일을 입력해주세요"
             className="w-[974px] rounded-[10px] border border-gray-200 bg-white px-[20px] py-[10px] text-gray-900 font-T05-SB"
+            value={todoTitle}
+            onChange={(e) => setTodoTitle(e.target.value)}
           />
         </div>
 
@@ -43,7 +47,11 @@ const TodoListPage = () => {
         </div>
       </div>
 
-      <Container />
+      <Container 
+        todoTitle={todoTitle}
+        isPublic={isPublic}
+        todoGroupId={todoGroupId}
+      />
     </div>
   );
 };
