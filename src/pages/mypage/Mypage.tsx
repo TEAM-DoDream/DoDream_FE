@@ -1,5 +1,4 @@
-// import Profile from '@assets/icons/profile.svg?react';
-import BaseImage from '@assets/images/checker.png';
+import BaseImage from '@assets/images/profile.png';
 import Camera from '@assets/icons/camera.svg?react';
 import Trash from '@assets/icons/profile_delete.svg?react';
 import Edit from '@assets/icons/edit-nickname.svg?react';
@@ -50,7 +49,7 @@ const Mypage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="mt-10 flex w-[796px] flex-col items-start">
+      <div className="mb-[153px] mt-10 flex w-[796px] flex-col items-start">
         <div className="text-black font-T01-B">나의 계정</div>
 
         <div className="mt-[60px] flex items-center space-x-11">
