@@ -36,7 +36,10 @@ const Router = () => {
           <Route path="/jobfound" element={<JobFound />} />
           <Route path="/jobinfo/:jobId" element={<JobInfo />} />
           <Route path="/others/:jobId" element={<OtherTodoPage />} />
-          <Route path="/otherslist/:jobId" element={<OtherTodoListPage />} />
+          <Route
+            path="/otherslist/:todoGroupId"
+            element={<OtherTodoListPage />}
+          />
           <Route path="/mytodo" element={<MyTodoPage />}>
             <Route index element={<Navigate to="/mytodo/list" replace />} />
             <Route path="list" element={<Todo />} />

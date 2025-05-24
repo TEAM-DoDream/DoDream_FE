@@ -32,6 +32,7 @@ const ProfileCard = () => {
             <div
               key={dreamer.todoGroupId}
               className="flex w-full cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 bg-white p-[30px] hover:bg-gray-100"
+              onClick={() => navigate(`/otherslist/${dreamer.todoGroupId}`)}
             >
               <div className="flex flex-row gap-5">
                 <img
@@ -81,6 +82,7 @@ const ProfileCard = () => {
             <div
               key={dreamer.todoGroupId}
               className="flex cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 bg-white p-[30px] hover:bg-gray-100"
+              onClick={() => navigate(`/otherslist/${dreamer.todoGroupId}`)}
             >
               <div className="flex flex-row gap-5">
                 <img
