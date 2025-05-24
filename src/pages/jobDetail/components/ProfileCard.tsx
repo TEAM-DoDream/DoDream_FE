@@ -117,7 +117,7 @@ const ProfileCard = () => {
         color="secondary"
         type="button"
         className="mt-10 flex w-full items-center justify-center rounded-2xl border border-purple-500 py-4 font-T05-SB hover:bg-purple-150"
-        onClick={() => navigate(`/otherslist/${jobId}`)}
+        onClick={() => navigate(`/others/${jobId}`)}
       />
     </div>
   );
