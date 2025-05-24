@@ -16,7 +16,7 @@ const Todo = () => {
   const alertShown = useRef(false);
   const { data: todoData, isLoading } = useMdTodoQuery();
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
-  
+
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
 
@@ -26,7 +26,7 @@ const Todo = () => {
       navigate('/');
     }
   }, [navigate]);
-  
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState('요양보호사');
 
@@ -40,43 +40,42 @@ const Todo = () => {
   };
 
   const hasTodos = todoData && todoData.todos && todoData.todos.length > 0;
-  
 
-  const handleCheckChange = useCallback((checkedList: boolean[]) => {
-    if (!todoData || !todoData.todos) return;
-    
+  const handleCheckChange = useCallback(
+    (checkedList: boolean[]) => {
+      if (!todoData || !todoData.todos) return;
 
-    checkedList.forEach((isChecked, index) => {
-      if (index >= todoData.todos.length) return;
-      
-      const todo = todoData.todos[index];
-   
-      if (todo.completed !== isChecked) {
-        console.log(`체크 상태 변경: 할일 ID ${todo.todoId}, 완료 상태: ${isChecked}`);
-        completeTodo({
-          todoId: todo.todoId,
-          completed: isChecked
-        });
-      }
-    });
-  }, [todoData, completeTodo]);
+      checkedList.forEach((isChecked, index) => {
+        if (index >= todoData.todos.length) return;
+
+        const todo = todoData.todos[index];
+
+        if (todo.completed !== isChecked) {
+          
+          completeTodo({
+            todoId: todo.todoId,
+            completed: isChecked,
+          });
+        }
+      });
+    },
+    [todoData, completeTodo]
+  );
 
   if (!isLoading && !hasTodos) {
     return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
   }
 
- 
-  const todoItems = hasTodos 
-    ? todoData.todos.map(todo => ({ 
+  const todoItems = hasTodos
+    ? todoData.todos.map((todo) => ({
         id: todo.todoId,
         text: todo.title,
-        hasMemo: todo.isMemoExist
+        hasMemo: todo.isMemoExist,
       }))
     : [];
-  
 
   const defaultCheckedList = hasTodos
-    ? todoData.todos.map(todo => todo.completed)
+    ? todoData.todos.map((todo) => todo.completed)
     : [];
 
   return (
@@ -118,8 +117,8 @@ const Todo = () => {
 
         <div className="flex flex-row items-center gap-[6px]">
           <Eye />
-          <div className="text-gray-500 font-B03-M"> 
-            조회수 {todoData?.totalView || 0} 
+          <div className="text-gray-500 font-B03-M">
+            조회수 {todoData?.totalView || 0}
           </div>
         </div>
       </div>
@@ -129,16 +128,14 @@ const Todo = () => {
         <Divider className="mb-4 mt-4" />
 
         {isLoading ? (
-          <div className="py-4 text-gray-500 font-B01-M">
-            로딩 중...
-          </div>
+          <div className="py-4 text-gray-500 font-B01-M">로딩 중...</div>
         ) : todoItems.length === 0 ? (
           <div className="py-4 text-gray-500 font-B01-M">
             아직 추가된 할 일이 없어요
           </div>
         ) : (
           <CheckList
-            lists={todoItems}
+            lists={todoItems.length > 0 ? todoItems : ['할일을 추가해주세요']}
             defaultCheckedList={defaultCheckedList}
             onChange={handleCheckChange}
             className="flex w-full flex-col items-center gap-8 py-4"
