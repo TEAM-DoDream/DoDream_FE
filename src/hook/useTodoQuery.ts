@@ -25,7 +25,6 @@ const AllOtherTodoList = async (page: number, jobId: number) => {
         page: page - 1,
       },
     });
-    console.log('데이터', response.data);
     return {
       content: response.data.data.content,
       totalPages: response.data.data.totalPages,
