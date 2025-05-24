@@ -10,9 +10,9 @@ import CalendarIcon from '@assets/icons/calendar.svg?react';
 import Button from '@common/Button';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
-// import NoDataSideBar from './components/NoDataSideBar';
 import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
+import { useAddJobMutation } from '@hook/useAddJobMutation';
 
 const JobInfo = () => {
   const navigate = useNavigate();
@@ -23,6 +23,19 @@ const JobInfo = () => {
     error,
   } = useJobDetailQuery(Number(jobId));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const addJobMutation = useAddJobMutation();
+
+  const handleAddJob = () => {
+    if (!jobId) return;
+    addJobMutation.mutate(Number(jobId), {
+      onSuccess: () => {
+        setIsModalOpen(true);
+      },
+      onError: () => {
+        alert('이미 담은 직업입니다.');
+      },
+    });
+  };
 
   if (isLoading)
     return (
@@ -109,14 +122,12 @@ const JobInfo = () => {
               color="primary"
               type="button"
               className="flex h-[60px] w-[712px] items-center justify-center rounded-2xl px-[60px] py-3 font-T05-SB"
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleAddJob}
             />
           </div>
         </div>
 
         <ProfileCard />
-
-        {/* <NoDataSideBar /> */}
       </div>
 
       <JobView jobName={jobDetail?.jobName || ''} />
