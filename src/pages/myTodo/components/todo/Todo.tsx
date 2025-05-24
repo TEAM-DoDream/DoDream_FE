@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import BackIcon from '@assets/icons/back.svg?react';
 import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
@@ -19,6 +19,19 @@ const jobOptions = ['간호 조무사', '바리스타', '요양보호사'];
 
 const Todo = () => {
   const navigate = useNavigate();
+  const alertShown = useRef(false);
+  
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    console.log(accessToken);
+    
+    if (!accessToken && !alertShown.current) {
+      alertShown.current = true;
+      alert('로그인 후 이용해주세요');
+      navigate('/');
+    }
+  }, [navigate]);
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState('요양보호사');
 
