@@ -24,6 +24,9 @@ const Mypage = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (imageSrc !== BaseImage) {
+        URL.revokeObjectURL(imageSrc);
+      }
       const imageUrl = URL.createObjectURL(file);
       setImageSrc(imageUrl);
     }
