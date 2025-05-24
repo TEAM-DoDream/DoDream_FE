@@ -1,0 +1,108 @@
+import { useMemo, useState } from 'react';
+import DropDown from '@common/DropDown';
+import ResetButton from '@common/ResetButton';
+import {
+  jobOptions,
+  districtMap,
+  cityOptions,
+} from '@utils/data/job/filterOptions.ts';
+import { useFilterStore } from '@store/filterStore';
+
+type Tag = { label: string; type: 'job' | 'location' };
+
+const Filter = () => {
+  const { job, location, setSelection, removeTag, reset } = useFilterStore();
+
+  const [locStep, setLocStep] = useState<'city' | 'district'>('city');
+  const [tempCity, setTempCity] = useState('');
+
+  const selectedCity = location.split(' ')[0] || '';
+  const selectedDistrict = location.split(' ')[1] || '';
+
+  const tags = useMemo<Tag[]>(() => {
+    const t: Tag[] = [];
+    if (job) t.push({ label: job, type: 'job' });
+    if (location.includes(' ')) t.push({ label: location, type: 'location' });
+    return t;
+  }, [job, location]);
+
+  const handleCitySelect = (city: string) => {
+    setTempCity(city);
+    if (city === selectedCity) {
+      setLocStep('district');
+    } else {
+      setSelection('location', '');
+      setLocStep('district');
+    }
+  };
+
+  const handleDistrictSelect = (dist: string) => {
+    setSelection('location', `${tempCity} ${dist}`);
+    setLocStep('city');
+  };
+
+  const handleResetAll = () => {
+    reset();
+    setLocStep('city');
+    setTempCity('');
+  };
+
+  return (
+    <div className="w-[1200px] rounded-[30px] bg-white p-[30px] shadow-lg">
+      <div className="mt-2 flex flex-col gap-4 md:flex-row">
+        <div className="w-[560px]">
+          <DropDown
+            title={'직업종류'}
+            placeholder="직업종류 선택"
+            options={jobOptions}
+            value={job}
+            onSelect={(v) => setSelection('job', v)}
+          />
+        </div>
+
+        <div className="w-[560px]">
+          <DropDown
+            title="거주지"
+            placeholder="거주지 선택"
+            options={
+              locStep === 'city' ? cityOptions : (districtMap[tempCity] ?? [])
+            }
+            value={locStep === 'city' ? selectedCity : selectedDistrict}
+            onSelect={(v) => {
+              if (locStep === 'city') handleCitySelect(v);
+              else handleDistrictSelect(v);
+            }}
+            backButton={
+              locStep === 'district'
+                ? {
+                    label: `${tempCity}`,
+                    onClick: () => setLocStep('city'),
+                  }
+                : undefined
+            }
+            keepOpenOnSelect={locStep === 'city'}
+          />
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {tags.map((tag) => (
+            <span
+              key={tag.label}
+              className="flex items-center gap-1 rounded-full border border-purple-300 bg-purple-100 px-3 py-1 text-sm text-purple-500"
+            >
+              {tag.label}
+              <button onClick={() => removeTag(tag.type)} className="text-xs">
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+        <ResetButton onClick={handleResetAll} className="ml-auto" />
+      </div>
+    </div>
+  );
+};
+
+export default Filter;

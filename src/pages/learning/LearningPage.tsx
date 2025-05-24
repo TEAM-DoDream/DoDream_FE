@@ -1,0 +1,123 @@
+import { useState } from 'react';
+import Filter from '@pages/learning/components/Filter.tsx';
+import { useAcademyInfoQuery } from '@hook/useAcademyInfoQuery.ts';
+import { AcademyItem } from '@validation/academy/academySchema.ts';
+import Img from '@assets/images/illustration_2.webp';
+import Footer from '@common/Footer.tsx';
+import LearningCard from '@pages/learning/components/LearningCard.tsx';
+import CardDetail from '@pages/learning/components/CardDetail.tsx';
+import LoadingSpinner from '@common/LoadingSpinner.tsx';
+import Pagination from '@common/Pagination.tsx';
+import DropDown from '@common/DropDown.tsx';
+import { useShallow } from 'zustand/react/shallow';
+import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
+
+const LearningPage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
+  const {
+    data = { srchList: [], scn_cnt: 0, pageNum: 0, pageSize: 0 },
+    isPending,
+  } = useAcademyInfoQuery(currentPage);
+
+  const totalPages = Math.ceil(data.scn_cnt / data.pageSize);
+  const jobs: AcademyItem[] = data.srchList;
+  const sortOptions = ['마감 임박순', '마감 여유순'];
+  const { sortBy, setSelection } = useAcademyFilterStore(
+    useShallow((s) => ({ sortBy: s.sortBy, setSelection: s.setSelection }))
+  );
+
+  const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
+  if (isPending) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="bg-[#36369A] pb-6">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4">
+              <p className="text-white font-B03-M">학원 정보</p>
+              <h1 className="text-white font-T01-B">
+                배움의 시작, 국비 지원 학원부터 알아보세요
+              </h1>
+            </div>
+
+            <img
+              className="h-auto max-w-xs lg:max-w-sm"
+              src={Img}
+              alt="일자리 이미지"
+            />
+          </div>
+          <div className="flex justify-center">
+            <Filter />
+          </div>
+        </div>
+      </div>
+      <div className="mx-auto mt-[60px] max-w-[1200px]">
+        <div className="mb-4 flex justify-between text-black font-T03-B">
+          <div className="flex content-center items-center justify-center">
+            <p className="text-purple-500 font-T03-B">{data.scn_cnt}개</p>의
+            훈련과정이 모집 중이에요
+          </div>
+          <div className="w-[140px]">
+            <DropDown
+              placeholder={sortBy}
+              options={sortOptions}
+              value={sortBy}
+              onSelect={(v) => setSelection('sortBy', v)}
+              toggleClassName="border-none font-B01-M w-[145px]"
+            />
+          </div>
+        </div>
+        <div className="mb-6 flex justify-center">
+          <div className="grid grid-cols-3 gap-4">
+            {jobs.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => setSelectedCardId(index)}
+                className="cursor-pointer"
+              >
+                <LearningCard item={item} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mx-auto mb-[80px] mt-[100px] w-fit">
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+          )}
+        </div>
+      </div>
+
+      <Footer />
+
+      {selectedCard && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedCardId(null);
+          }}
+        >
+          <CardDetail
+            item={selectedCard}
+            onClose={() => setSelectedCardId(null)}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LearningPage;
