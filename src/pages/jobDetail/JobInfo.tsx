@@ -10,7 +10,6 @@ import CalendarIcon from '@assets/icons/calendar.svg?react';
 import Button from '@common/Button';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
-// import NoDataSideBar from './components/NoDataSideBar';
 import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
 
@@ -115,8 +114,6 @@ const JobInfo = () => {
         </div>
 
         <ProfileCard />
-
-        {/* <NoDataSideBar /> */}
       </div>
 
       <JobView jobName={jobDetail?.jobName || ''} />

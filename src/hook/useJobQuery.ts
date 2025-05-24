@@ -174,7 +174,6 @@ const jobOtherDreamer = async (jobId: number) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('데이터', response.data);
     return response.data.data;
   } catch (error) {
     console.error('다른 드리머를 불러오는 것에 실패했습니다', error);
