@@ -11,7 +11,7 @@ export const useMdTodoQuery = () => {
     queryKey: ['mdTodo'],
     queryFn: async () => {
       const { data } = await api.get('/v1/my-dream/todo');
-      console.log(data.data);
+
       return TodoDataSchema.parse(data.data);
     },
     staleTime: 1000 * 60 * 5,
