@@ -78,6 +78,12 @@ const Todo = () => {
     ? todoData.todos.map((todo) => todo.completed)
     : [];
 
+  const handleAddTodo = () => {
+    if (todoData && todoData.todoGroupId) {
+      navigate(`/mytodo/add/${todoData.todoGroupId}`);
+    } 
+  };
+
   return (
     <div className="mb-[95px] mt-10 flex flex-col px-[120px]">
       <div className="flex flex-row justify-between">
@@ -144,7 +150,7 @@ const Todo = () => {
 
         <button
           className="mt-[16px] flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
-          onClick={() => navigate('/mytodo/add')}
+          onClick={handleAddTodo}
         >
           <Plus className="h-6 w-6" />
           추가하기
