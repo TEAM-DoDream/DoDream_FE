@@ -10,10 +10,9 @@ import LoadingSpinner from '@common/LoadingSpinner';
 const ProfileCard = () => {
   const navigate = useNavigate();
   const { jobId } = useParams<{ jobId: string }>();
+  const { data: DreamerList, isLoading } = useJobOtherQuery(Number(jobId));
 
   if (!jobId) return <div>존재하지 않는 직업입니다.</div>;
-
-  const { data: DreamerList, isLoading } = useJobOtherQuery(Number(jobId));
 
   if (isLoading) return <LoadingSpinner />;
 
