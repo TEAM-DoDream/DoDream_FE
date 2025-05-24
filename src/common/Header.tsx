@@ -68,7 +68,10 @@ const Header = ({ type }: ShowProps) => {
       )}
 
       {type === 'show' && isLoggedIn && (
-        <div className="flex items-center gap-2">
+        <div
+          className="flex cursor-pointer items-center gap-2"
+          onClick={() => navigate('/mypage')}
+        >
           <UserIcon className="h-10 w-10" />
           <span className="text-gray-900 font-B03-M">{nickname}님</span>
         </div>
