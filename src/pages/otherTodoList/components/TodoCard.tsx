@@ -5,8 +5,11 @@ import ReWriteIcon from '@assets/icons/edit-write.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
 
 interface TodoItem {
-  text: string;
-  checked: boolean;
+  todoId: number;
+  title: string;
+  completed: boolean;
+  isMemoExist: boolean;
+  isPublic: boolean;
 }
 
 interface TodoCardProps {
@@ -27,18 +30,18 @@ const TodoCard = ({
   const toggleCheck = (index: number) => {
     setTodoList((prev) =>
       prev.map((item, i) =>
-        i === index ? { ...item, checked: !item.checked } : item
+        i === index ? { ...item, checked: !item.completed } : item
       )
     );
   };
 
   return (
-    <div className="flex flex-col justify-between rounded-[30px] border border-gray-300 bg-white p-6">
-      <h3 className="mb-4 border-b border-gray-300 py-6 text-black font-T05-SB">
+    <div className="flex flex-col justify-between rounded-[30px] border border-gray-300 bg-white p-[30px]">
+      <div className="mb-4 border-b border-gray-300 pb-4 text-black font-T05-SB">
         {title}
-      </h3>
+      </div>
 
-      <ul className="flex-grow space-y-4">
+      <ul className="w-full flex-grow space-y-4">
         {todoList.map((item, index) => (
           <li
             key={index}
@@ -49,26 +52,26 @@ const TodoCard = ({
             <div
               onClick={() => toggleCheck(index)}
               className={`flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[8px] border ${
-                item.checked
+                item.completed
                   ? 'border-purple-300 bg-purple-150'
                   : 'border-gray-300 bg-gray-100'
               }`}
             >
-              {item.checked && <CheckIcon className="h-4 w-8 text-white" />}
+              {item.completed && <CheckIcon className="h-4 w-8 text-white" />}
             </div>
 
             <div className="flex flex-1 items-center gap-3 pl-3">
               <span
                 className={`font-B01-M ${
-                  item.checked ? 'text-gray-500' : 'text-gray-900'
+                  item.completed ? 'text-gray-500' : 'text-gray-900'
                 }`}
               >
-                {item.text}
+                {item.title}
               </span>
             </div>
 
             <div className="flex min-w-fit items-center gap-2">
-              {index % 2 === 1 && (
+              {item.isMemoExist && (
                 <button className="flex items-center gap-1 rounded-xl bg-purple-100 px-4 py-2 text-purple-500 font-B03-SB">
                   <MemoIcon className="h-4 w-4 text-purple-500" />
                   메모

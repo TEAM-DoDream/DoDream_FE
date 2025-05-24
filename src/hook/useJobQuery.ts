@@ -187,3 +187,45 @@ export const useJobOtherQuery = (jobId: number) => {
     queryFn: () => jobOtherDreamer(jobId),
   });
 };
+
+//todogroupId 각각 todos
+export interface EachTodos {
+  todoGroupId: number;
+  memberNickname: string;
+  daysAgo: number;
+  jobName: string;
+  totalView: number;
+  profileImage: string;
+  todos: [
+    {
+      todoId: number;
+      title: string;
+      completed: boolean;
+      isMemoExist: boolean;
+      isPublic: boolean;
+    },
+  ];
+}
+
+const EachTodos = async (todoGroupId: number) => {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await api.get(`/v1/todo/${todoGroupId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log('data', response.data);
+    return response.data.data;
+  } catch (error) {
+    console.error('개인 투두를 불러오는 것에 실패했습니다.', error);
+    throw error;
+  }
+};
+
+export const useEachTodosQuery = (todoGroupId: number) => {
+  return useQuery<EachTodos>({
+    queryKey: ['EachTodos', todoGroupId],
+    queryFn: () => EachTodos(todoGroupId),
+  });
+};
