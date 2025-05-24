@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import BackIcon from '@assets/icons/back.svg?react';
 import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
@@ -7,6 +7,7 @@ import Plus from '@assets/icons/plus.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery.ts';
 import EmptyTodo from './EmptyTodo';
+import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation.ts';
 
 const jobOptions = ['간호 조무사', '바리스타', '요양보호사'];
 
@@ -14,6 +15,7 @@ const Todo = () => {
   const navigate = useNavigate();
   const alertShown = useRef(false);
   const { data: todoData, isLoading } = useMdTodoQuery();
+  const { mutate: completeTodo } = useMdTodoCompleteMutation();
   
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
@@ -38,17 +40,43 @@ const Todo = () => {
   };
 
   const hasTodos = todoData && todoData.todos && todoData.todos.length > 0;
+  
+
+  const handleCheckChange = useCallback((checkedList: boolean[]) => {
+    if (!todoData || !todoData.todos) return;
+    
+
+    checkedList.forEach((isChecked, index) => {
+      if (index >= todoData.todos.length) return;
+      
+      const todo = todoData.todos[index];
+   
+      if (todo.completed !== isChecked) {
+        console.log(`체크 상태 변경: 할일 ID ${todo.todoId}, 완료 상태: ${isChecked}`);
+        completeTodo({
+          todoId: todo.todoId,
+          completed: isChecked
+        });
+      }
+    });
+  }, [todoData, completeTodo]);
 
   if (!isLoading && !hasTodos) {
     return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
   }
 
-
+ 
   const todoItems = hasTodos 
     ? todoData.todos.map(todo => ({ 
+        id: todo.todoId,
         text: todo.title,
         hasMemo: todo.isMemoExist
       }))
+    : [];
+  
+
+  const defaultCheckedList = hasTodos
+    ? todoData.todos.map(todo => todo.completed)
     : [];
 
   return (
@@ -111,6 +139,8 @@ const Todo = () => {
         ) : (
           <CheckList
             lists={todoItems}
+            defaultCheckedList={defaultCheckedList}
+            onChange={handleCheckChange}
             className="flex w-full flex-col items-center gap-8 py-4"
           />
         )}
