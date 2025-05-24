@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
 import CheckList from '@common/CheckList';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
+import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
 
 const LoginBanner = () => {
   const { data: jobList } = useBannerQuery();
@@ -16,16 +17,44 @@ const LoginBanner = () => {
   const navigate = useNavigate();
   const setSelection = useFilterStore((state) => state.setSelection);
   const { data: todoData, isLoading } = useMdTodoQuery();
+  const { mutate: completeTodo } = useMdTodoCompleteMutation();
+  const prevCheckedItemsRef = useRef<boolean[]>([]);
   
-
   const todoItems = useMemo(() => {
     if (!todoData || !todoData.todos) return [];
     
     return todoData.todos
       .filter(todo => !todo.completed)
       .slice(0, 4)
-      .map(todo => todo.title);
+      .map(todo => ({
+        id: todo.todoId,
+        text: todo.title
+      }));
   }, [todoData]);
+
+  useEffect(() => {
+    if (todoItems.length > 0) {
+      prevCheckedItemsRef.current = new Array(todoItems.length).fill(false);
+    }
+  }, [todoItems]);
+
+  const handleCheckChange = (newCheckedList: boolean[]) => {
+   
+    for (let i = 0; i < newCheckedList.length; i++) {
+      if (newCheckedList[i] && !prevCheckedItemsRef.current[i]) {
+     
+        const todoId = todoItems[i]?.id;
+        if (todoId) {
+          completeTodo({
+            todoId: todoId,
+            completed: true
+          });
+        }
+      }
+    }
+    
+    prevCheckedItemsRef.current = [...newCheckedList];
+  };
   
   return (
     <div className="flex h-[489px] w-full flex-row items-center justify-center space-x-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
@@ -34,7 +63,7 @@ const LoginBanner = () => {
 
         <div 
           className="absolute right-0 flex w-[162px] cursor-pointer items-center gap-2 rounded-full bg-white py-[6px] pl-4 pr-1"
-    
+          
         >
           <span className="text-gray-500 font-B02-SB"> 나의 할일 가기</span>
           <MyDreamArrow />
@@ -56,8 +85,9 @@ const LoginBanner = () => {
               <div className="text-white">로딩중...</div>
             ) : (
               <CheckList
-                lists={todoItems.length > 0 ? todoItems : ['할일을 추가해주세요']}
+                lists={todoItems.length > 0 ? todoItems : [{ text: '할일을 추가해주세요' }]}
                 className="my-6 flex flex-col gap-4"
+                onChange={handleCheckChange}
               />
             )}
           </div>
