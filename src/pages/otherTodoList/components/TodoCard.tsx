@@ -30,7 +30,7 @@ const TodoCard = ({
   const toggleCheck = (index: number) => {
     setTodoList((prev) =>
       prev.map((item, i) =>
-        i === index ? { ...item, checked: !item.completed } : item
+        i === index ? { ...item, completed: !item.completed } : item
       )
     );
   };

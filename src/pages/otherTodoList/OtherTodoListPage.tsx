@@ -4,11 +4,26 @@ import TodoCard from '@pages/otherTodoList/components/TodoCard.tsx';
 import Footer from '@common/Footer.tsx';
 import { useEachTodosQuery } from '@hook/useJobQuery.ts';
 import BaseImg from '@assets/images/profile.png';
+import LoadingSpinner from '@common/LoadingSpinner';
 
 const OtherTodoListPage = () => {
   const navigate = useNavigate();
   const { todoGroupId } = useParams<{ todoGroupId: string }>();
-  const { data: eachTodos } = useEachTodosQuery(Number(todoGroupId));
+  const {
+    data: eachTodos,
+    isLoading,
+    isError,
+  } = useEachTodosQuery(Number(todoGroupId));
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    <div>에러가 발생했습니다.</div>;
+  }
+
+  if (!eachTodos) return <div>데이터가 없습니다.</div>;
 
   return (
     <>
