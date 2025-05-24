@@ -6,7 +6,11 @@ import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 
-type ChecklistItem = string | { text: string; hasMemo?: boolean };
+type ChecklistItem = string | { 
+  id?: number;
+  text: string; 
+  hasMemo?: boolean;
+};
 
 interface CheckListProps {
   lists: ChecklistItem[];
@@ -31,7 +35,7 @@ const CheckList = ({
   );
   const [showToast, setShowToast] = useState<boolean>(false);
   const [lastDeleted, setLastDeleted] = useState<{
-    item: { text: string; hasMemo?: boolean };
+    item: { id?: number; text: string; hasMemo?: boolean };
     index: number;
     checked: boolean;
   } | null>(null);
