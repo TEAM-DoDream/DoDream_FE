@@ -16,7 +16,6 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: login,
     onSuccess: (res) => {
-      console.log(res);
       if (res.success) {
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
