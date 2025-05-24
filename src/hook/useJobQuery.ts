@@ -147,3 +147,44 @@ export const useNoJobViewQuery = (keyWord: string) => {
     queryFn: () => NoLoginjobView(keyWord),
   });
 };
+
+//직업상세 다른 드리머 투두
+export interface JobOtherList {
+  todoGroupId: number;
+  memberNickname: string;
+  profileImage: string;
+  regionName: string;
+  daysAgo: number;
+  jobName: string;
+  todoCount: number;
+  todos: [
+    {
+      todoId: number;
+      title: string;
+      completed: boolean;
+    },
+  ];
+}
+
+const jobOtherDreamer = async (jobId: number) => {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await api.get(`/v1/todo/other/simple/${jobId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log('데이터', response.data);
+    return response.data.data;
+  } catch (error) {
+    console.error('다른 드리머를 불러오는 것에 실패했습니다', error);
+    throw error;
+  }
+};
+
+export const useJobOtherQuery = (jobId: number) => {
+  return useQuery<JobOtherList[]>({
+    queryKey: ['jobOtherDreamer', jobId],
+    queryFn: () => jobOtherDreamer(jobId),
+  });
+};
