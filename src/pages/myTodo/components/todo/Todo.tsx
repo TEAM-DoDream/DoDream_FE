@@ -4,18 +4,34 @@ import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
 import Divider from '@common/Divider';
 import Plus from '@assets/icons/plus.svg?react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery.ts';
 import EmptyTodo from './EmptyTodo';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation.ts';
+import { useQueryClient } from '@tanstack/react-query';
 
 const jobOptions = ['간호 조무사', '바리스타', '요양보호사'];
 
 const Todo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryClient = useQueryClient();
   const alertShown = useRef(false);
-  const { data: todoData, isLoading } = useMdTodoQuery();
+  const didMount = useRef(false);
+
+  const { data: todoData, isLoading, isFetching } = useMdTodoQuery();
+
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
+
+  useEffect(() => {
+    if (didMount.current) return;
+    didMount.current = true;
+
+    if (location.pathname === '/mytodo/list') {
+      console.log('Todo 컴포넌트 최초 마운트 - refetch 실행');
+      queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
+    }
+  }, [queryClient, location.pathname]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
@@ -51,7 +67,6 @@ const Todo = () => {
         const todo = todoData.todos[index];
 
         if (todo.completed !== isChecked) {
-          
           completeTodo({
             todoId: todo.todoId,
             completed: isChecked,
@@ -81,7 +96,7 @@ const Todo = () => {
   const handleAddTodo = () => {
     if (todoData && todoData.todoGroupId) {
       navigate(`/mytodo/add/${todoData.todoGroupId}`);
-    } 
+    }
   };
 
   return (
@@ -133,7 +148,7 @@ const Todo = () => {
         <div className="text-black font-T04-SB"> 할 일 목록</div>
         <Divider className="mb-4 mt-4" />
 
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <div className="py-4 text-gray-500 font-B01-M">로딩 중...</div>
         ) : todoItems.length === 0 ? (
           <div className="py-4 text-gray-500 font-B01-M">

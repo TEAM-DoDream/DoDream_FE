@@ -7,24 +7,19 @@ import { useEffect } from "react";
 export const useMdTodoQuery = () => {
   const navigate = useNavigate();
   
-  const { data, isLoading, error } = useQuery<TodoData, Error>({
+  const result = useQuery<TodoData, Error>({
     queryKey: ['mdTodo'],
     queryFn: async () => {
       const { data } = await api.get('/v1/my-dream/todo');
-
       return TodoDataSchema.parse(data.data);
     },
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: 1,
   });
 
   useEffect(() => {
-    if (data && (!data.todos || data.todos.length === 0)) {
+    if (result.data && (!result.data.todos || result.data.todos.length === 0)) {
       navigate('/onboard');
     }
-  }, [data, navigate]);
+  }, [result.data, navigate]);
 
-  return { data, isLoading, error };
+  return result;
 };
