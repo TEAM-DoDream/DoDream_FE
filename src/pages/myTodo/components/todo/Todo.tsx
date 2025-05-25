@@ -28,7 +28,6 @@ const Todo = () => {
     didMount.current = true;
 
     if (location.pathname === '/mytodo/list') {
-      console.log('Todo 컴포넌트 최초 마운트 - refetch 실행');
       queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
     }
   }, [queryClient, location.pathname]);
