@@ -5,6 +5,7 @@ import ReWriteIcon from '@assets/icons/edit-write.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
+import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
 
 type ChecklistItem = string | { 
   id?: number;
@@ -39,6 +40,8 @@ const CheckList = ({
     index: number;
     checked: boolean;
   } | null>(null);
+  
+  const deleteTodoMutation = useDeleteTodoMutation();
 
   useEffect(() => {
     if (onChange) {
@@ -55,6 +58,11 @@ const CheckList = ({
   const handleDelete = (index: number) => {
     const deletedItem = listItems[index];
     const deletedChecked = checkedList[index];
+
+    // 서버에서 삭제 (id가 있는 경우에만)
+    if (deletedItem.id) {
+      deleteTodoMutation.mutate({ todoId: deletedItem.id });
+    }
 
     const newItems = [...listItems];
     newItems.splice(index, 1);
@@ -75,6 +83,8 @@ const CheckList = ({
 
   const handleUndoDelete = () => {
     if (!lastDeleted) return;
+
+    // 복구 시 서버 요청은 처리하지 않음 (캐시 무효화로 데이터가 다시 로드됨)
 
     const newItems = [...listItems];
     newItems.splice(lastDeleted.index, 0, lastDeleted.item);
