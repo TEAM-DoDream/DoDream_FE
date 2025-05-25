@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MyEditor from '@pages/myTodo/components/todo/MyEditor.tsx';
 import ImgUpload from '@pages/myTodo/components/todo/ImgUpload.tsx';
 import { useAddMemoMutation } from '@hook/mydream/useAddMemoMutation';
@@ -15,7 +15,12 @@ const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
   const [memoText, setMemoText] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTodoTitleEmpty, setIsTodoTitleEmpty] = useState(false);
   const { mutate: addMemo } = useAddMemoMutation();
+
+  useEffect(() => {
+    setIsTodoTitleEmpty(!todoTitle.trim());
+  }, [todoTitle]);
 
   const handleMemoTextChange = (text: string) => {
     setMemoText(text);
@@ -37,7 +42,7 @@ const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
     }
 
     setIsSubmitting(true);
-    
+
     addMemo(
       {
         todoGroupId,
@@ -77,10 +82,12 @@ const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
       <div className="flex w-full items-stretch justify-center gap-[20px]">
         <button
           className={`flex h-12 w-full items-center justify-center rounded-[16px] ${
-            isSubmitting ? 'bg-purple-300' : 'bg-purple-500 hover:bg-purple-600'
+            isSubmitting || isTodoTitleEmpty
+              ? 'bg-purple-300'
+              : 'bg-purple-500 hover:bg-purple-600'
           } py-[14px] text-white font-T05-SB`}
           onClick={handleSaveMemo}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isTodoTitleEmpty}
         >
           {isSubmitting ? '저장 중...' : '메모 저장하기'}
         </button>
