@@ -1,11 +1,14 @@
 import Button from '@common/Button';
 import QuitImage from '@assets/images/quitmodalimg.webp';
+import { useQuitMuataion } from '@hook/mypage/useQuitMutation';
 
 interface QuitProps {
   onClose: () => void;
 }
 
 const Quit = ({ onClose }: QuitProps) => {
+  const { mutate: quit } = useQuitMuataion(onClose);
+
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
       <div className="flex w-[564px] flex-col items-center justify-center rounded-[30px] bg-white px-[30px] pb-[30px] pt-10">
@@ -30,6 +33,7 @@ const Quit = ({ onClose }: QuitProps) => {
           />
           <Button
             text="탈퇴하기"
+            onClick={() => quit()}
             color="primary"
             className="flex w-full items-center justify-center rounded-[14px] px-10 py-[18px] text-purple-100 font-T05-SB"
           />
