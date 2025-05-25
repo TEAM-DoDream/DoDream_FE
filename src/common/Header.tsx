@@ -2,6 +2,7 @@ import Logo from '@assets/icons/mobileLogo.svg?react';
 import Button from './Button';
 import UserIcon from '@assets/icons/profile.svg?react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useUserStore } from '@store/useUserStore';
 
 interface ShowProps {
   type: 'show' | 'hide';
@@ -35,7 +36,7 @@ const Header = ({ type }: ShowProps) => {
   const pathname = location.pathname;
 
   const accessToken = localStorage.getItem('accessToken');
-  const nickname = localStorage.getItem('nickname');
+  const nickname = useUserStore((state) => state.nickname);
   const isLoggedIn = Boolean(accessToken);
 
   return (
