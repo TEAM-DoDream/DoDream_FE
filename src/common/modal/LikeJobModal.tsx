@@ -25,7 +25,7 @@ const LikeJobModal = ({ onClose }: LikeJobModalProps) => {
         <Divider className="mt-[30px]" />
 
         <div className="mt-3 flex flex-row gap-[10px]">
-          <Warning className="h-5 w-5" />
+          <Warning className="h-7 w-7" />
           <div className="text-gray-500 font-B02-M">
             담은 직업을 삭제하시면 [나의 할 일]에 포함되어 있는 할 일 목록들이
             모두 삭제됩니다
