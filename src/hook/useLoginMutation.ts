@@ -7,7 +7,7 @@ import { useUserStore } from '@store/useUserStore';
 
 export const useLoginMutation = () => {
   const navigate = useNavigate();
-  const { setRegionName } = useUserStore();
+  const { setUser } = useUserStore();
   const login = async (data: LoginInput): Promise<LoginResponse> => {
     const response = await api.post(`/v1/member/auth/login`, data);
     return response.data;
@@ -21,7 +21,10 @@ export const useLoginMutation = () => {
         localStorage.setItem('refreshToken', res.data.refreshToken);
         localStorage.setItem('nickname', res.data.nickname);
         localStorage.setItem('memberId', res.data.memberId);
-        setRegionName(res.data.regionName);
+        setUser({
+          nickname: res.data?.nickname || '',
+          regionName: res.data?.regionName || '',
+        });
         navigate('/');
       } else {
         alert('로그인에 실패했습니다. 다시 시도해주세요.');
