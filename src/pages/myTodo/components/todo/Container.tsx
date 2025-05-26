@@ -2,25 +2,51 @@ import { useState, useEffect } from 'react';
 import MyEditor from '@pages/myTodo/components/todo/MyEditor.tsx';
 import ImgUpload from '@pages/myTodo/components/todo/ImgUpload.tsx';
 import { useAddMemoMutation } from '@hook/mydream/useAddMemoMutation';
+import { useUpdateMemoMutation } from '@hook/mydream/useUpdateMemoMutation';
 import { useNavigate } from 'react-router-dom';
+
+interface TodoDetailType {
+  todoId: number;
+  title: string;
+  isPublic: boolean;
+  memoText: string;
+  images: { imageUrl: string }[];
+}
 
 interface ContainerProps {
   todoTitle: string;
   isPublic: boolean;
   todoGroupId?: number;
+  todoId?: number;
+  isEdit?: boolean;
+  todoDetail?: TodoDetailType | null;
 }
 
-const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
+const Container = ({
+  todoTitle,
+  isPublic,
+  todoGroupId,
+  todoId,
+  isEdit = false,
+  todoDetail,
+}: ContainerProps) => {
   const navigate = useNavigate();
   const [memoText, setMemoText] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTodoTitleEmpty, setIsTodoTitleEmpty] = useState(false);
   const { mutate: addMemo } = useAddMemoMutation();
+  const { mutate: updateMemo } = useUpdateMemoMutation();
 
   useEffect(() => {
     setIsTodoTitleEmpty(!todoTitle.trim());
   }, [todoTitle]);
+
+  useEffect(() => {
+    if (isEdit && todoDetail) {
+      setMemoText(todoDetail.memoText || '');
+    }
+  }, [isEdit, todoDetail]);
 
   const handleMemoTextChange = (text: string) => {
     setMemoText(text);
@@ -36,36 +62,63 @@ const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
       return;
     }
 
-    if (!todoGroupId) {
-      alert('todoGroupId가 없습니다.');
-      return;
-    }
-
     setIsSubmitting(true);
 
-    addMemo(
-      {
-        todoGroupId,
-        todoTitle,
-        isPublic,
-        memoText: memoText || undefined,
-        images: images.length > 0 ? images : undefined,
-      },
-      {
-        onSuccess: () => {
-          alert('메모가 저장되었습니다.');
-          navigate('/mytodo');
+    if (isEdit && todoId) {
+      updateMemo(
+        {
+          todoId,
+          todoTitle,
+          isPublic,
+          memoText: memoText || undefined,
+          images: images.length > 0 ? images : undefined,
         },
-        onError: (error) => {
-          console.error('메모 저장 중 오류 발생:', error);
-          alert('메모 저장에 실패했습니다.');
-          setIsSubmitting(false);
-        },
-        onSettled: () => {
-          setIsSubmitting(false);
-        },
+        {
+          onSuccess: () => {
+            alert('메모가 업데이트되었습니다.');
+            navigate('/mytodo');
+          },
+          onError: (error) => {
+            console.error('메모 업데이트 중 오류 발생:', error);
+            alert('메모 업데이트에 실패했습니다.');
+            setIsSubmitting(false);
+          },
+          onSettled: () => {
+            setIsSubmitting(false);
+          },
+        }
+      );
+    } else {
+      if (!todoGroupId) {
+        alert('todoGroupId가 없습니다.');
+        setIsSubmitting(false);
+        return;
       }
-    );
+
+      addMemo(
+        {
+          todoGroupId,
+          todoTitle,
+          isPublic,
+          memoText: memoText || undefined,
+          images: images.length > 0 ? images : undefined,
+        },
+        {
+          onSuccess: () => {
+            alert('메모가 저장되었습니다.');
+            navigate('/mytodo');
+          },
+          onError: (error) => {
+            console.error('메모 저장 중 오류 발생:', error);
+            alert('메모 저장에 실패했습니다.');
+            setIsSubmitting(false);
+          },
+          onSettled: () => {
+            setIsSubmitting(false);
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -76,6 +129,28 @@ const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
         </div>
         <div className="flex-1">
           <ImgUpload onImagesChange={handleImagesChange} />
+          {isEdit && todoDetail?.images && todoDetail.images.length > 0 && (
+            <div className="mt-4 rounded-lg bg-white p-3">
+              <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
+              <div className="flex flex-wrap gap-2">
+                {todoDetail.images.map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative h-16 w-16 overflow-hidden rounded-md"
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt={`기존 이미지 ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-gray-500">
+                새 이미지를 업로드하면 기존 이미지는 대체됩니다.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -89,7 +164,11 @@ const Container = ({ todoTitle, isPublic, todoGroupId }: ContainerProps) => {
           onClick={handleSaveMemo}
           disabled={isSubmitting || isTodoTitleEmpty}
         >
-          {isSubmitting ? '저장 중...' : '메모 저장하기'}
+          {isSubmitting
+            ? '저장 중...'
+            : isEdit
+              ? '메모 수정하기'
+              : '메모 저장하기'}
         </button>
       </div>
     </div>
