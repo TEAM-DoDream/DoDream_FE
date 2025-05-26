@@ -2,25 +2,43 @@ import { useState } from 'react';
 import GoIcon from '@assets/icons/go.svg?react';
 import Number1 from '@assets/icons/number.svg?react';
 import Number2 from '@assets/icons/number2.svg?react';
+import { useFloatingAddJob } from '@hook/floating/FloatingAddJob';
+import { useFloatingSubmitMutation } from '@hook/floating/FloatingButtonMutation';
 
 interface FloatingModalProps {
   onClose: () => void;
-  onAddTask: (task: { text: string; category: string }) => void;
+  onAddTask: () => void;
 }
 
 const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const [taskText, setTaskText] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('요양보호사');
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-  const categories = ['요양보호사', '수의테크니션', '심리상담사', '사회복지사'];
+  const { data: addjobs } = useFloatingAddJob();
+  const { mutate } = useFloatingSubmitMutation();
 
   const handleSubmit = () => {
-    if (taskText.trim()) {
-      onAddTask({ text: taskText, category: selectedCategory });
-      console.log('제출됨');
-      setTaskText('');
-      onClose();
-    }
+    if (!taskText.trim() || selectedCategory === null) return;
+
+    mutate(
+      {
+        todoGroupId: selectedCategory,
+        todoTitle: taskText,
+        isPublic: true,
+      },
+      {
+        onSuccess: () => {
+          setTaskText('');
+          setSelectedCategory(null);
+          onAddTask();
+          onClose();
+        },
+        onError: (err) => {
+          console.error('제출 실패', err);
+          alert('할 일 추가에 실패했습니다. 다시 시도해주세요.');
+        },
+      }
+    );
   };
 
   return (
@@ -34,27 +52,26 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
           </div>
         </div>
 
-        <div className="mt-[30px] flex flex-col overflow-x-auto no-scrollbar">
+        <div className="mt-[30px] flex flex-col">
           <div className="mb-4 flex flex-row items-center gap-2">
             <Number1 />
             <div className="text-black font-T05-SB">
-              {' '}
-              할 일 추가할 직업을 선택해주세요{' '}
+              할 일 추가할 직업을 선택해주세요
             </div>
           </div>
 
-          <div className="flex flex-nowrap gap-2 pb-[30px]">
-            {categories.map((label, idx) => (
+          <div className="flex flex-nowrap gap-2 overflow-x-auto pb-[30px] no-scrollbar">
+            {addjobs?.map((addjob) => (
               <div
-                key={idx}
-                onClick={() => setSelectedCategory(label)}
+                key={addjob.todoGroupId}
+                onClick={() => setSelectedCategory(addjob.todoGroupId)}
                 className={`cursor-pointer whitespace-nowrap rounded-[10px] p-2 font-B03-SB ${
-                  selectedCategory === label
+                  selectedCategory === addjob.todoGroupId
                     ? 'border-[0.8px] border-purple-500 bg-purple-100 text-purple-500 shadow-shadow2'
                     : 'bg-gray-100 text-gray-500'
                 }`}
               >
-                {label}
+                {addjob.jobName}
               </div>
             ))}
           </div>
