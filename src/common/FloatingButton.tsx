@@ -10,8 +10,7 @@ const FloatingButton = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleAddTask = (task: { text: string; category: string }) => {
-    console.log('추가됨:', task);
+  const handleAddTask = () => {
     setIsModal(false);
     setShowToast(true);
 
