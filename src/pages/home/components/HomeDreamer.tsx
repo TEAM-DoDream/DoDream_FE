@@ -1,11 +1,16 @@
 import Arrow from '@assets/icons/arrow.svg?react';
 import DreamerCard from './DreamerCard';
-import Dreamer from '@utils/data/home/DreamerDummy';
 import { useNavigate } from 'react-router-dom';
+import { useDreamerQuery } from '@hook/home/useDreamerQuery';
+import { usePopularDreamer } from '@hook/home/useNoLoginDreamerQuery';
 
 const HomeDreamer = () => {
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem('accessToken');
+
+  const { data: homeDreamer } = useDreamerQuery();
+  const { data: popluarDreamer } = usePopularDreamer();
+
   return (
     <div>
       <div className="mb-[50px] flex items-center justify-between">
@@ -24,19 +29,31 @@ const HomeDreamer = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        {Dreamer.map((dream, index) => (
-          <DreamerCard
-            key={index}
-            regionName={dream.regionName}
-            job={dream.job}
-            nickname={dream.nickname}
-            day={dream.day}
-            todo={dream.todo}
-            profile={dream.profile}
-            todotext={dream.todotext}
-            doneList={dream.doneList}
-          />
-        ))}
+        {isLoggedIn
+          ? homeDreamer?.map((dream) => (
+              <DreamerCard
+                key={dream.todoGroupId}
+                regionName={dream.regionName}
+                jobName={dream.jobName}
+                memberNickname={dream.memberNickname}
+                daysAgo={dream.daysAgo}
+                todoCount={dream.todoCount}
+                profileImage={dream.profileImage}
+                todos={dream.todos}
+              />
+            ))
+          : popluarDreamer?.map((popluar) => (
+              <DreamerCard
+                key={popluar.todoGroupId}
+                regionName={popluar.regionName}
+                jobName={popluar.jobName}
+                memberNickname={popluar.memberNickname}
+                daysAgo={popluar.daysAgo}
+                todoCount={popluar.todoCount}
+                profileImage={popluar.profileImage}
+                todos={popluar.todos}
+              />
+            ))}
       </div>
     </div>
   );
