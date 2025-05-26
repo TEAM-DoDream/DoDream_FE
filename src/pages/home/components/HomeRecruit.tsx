@@ -62,7 +62,7 @@ const HomeRecruit = () => {
           recruitData.map((data) => (
             <div
               key={data.id}
-              className="flex h-auto w-[384px] cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] hover:shadow-shadow2"
+              className="flex min-h-[312px] w-[384px] cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] hover:shadow-shadow2"
             >
               <div
                 className="flex w-full flex-col items-end"
@@ -76,7 +76,7 @@ const HomeRecruit = () => {
               <div className="mt-4 flex h-10 items-center justify-center rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
                 {data.jobName}
               </div>
-              <div className="mt-2 self-stretch text-gray-900 font-T05-SB">
+              <div className="mt-2 flex-grow text-gray-900 font-T05-SB">
                 {data.title}
               </div>
 
