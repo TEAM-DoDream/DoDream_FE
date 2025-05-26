@@ -9,11 +9,11 @@ export const TodoSchema = z.object({
 });
 
 export const TodoDataSchema = z.object({
-  todoGroupId: z.number(),
-  memberNickname: z.string(),
-  daysAgo: z.number(),
-  jobName: z.string(),
-  totalView: z.number(),
+  todoGroupId: z.number().nullable(),
+  memberNickname: z.string().nullable(),
+  daysAgo: z.number().nullable(),
+  jobName: z.string().nullable(),
+  totalView: z.number().nullable(),
   todos: z.array(TodoSchema),
 });
 
