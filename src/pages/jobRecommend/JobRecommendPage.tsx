@@ -27,10 +27,6 @@ const JobRecommendPage = () => {
 
   useEffect(() => {
     if (!parseResult.success || jobResults.length === 0) {
-      console.error(
-        'Invalid job data:',
-        parseResult.success ? 'Empty array' : parseResult.error
-      );
       alert('추천 결과가 존재하지 않습니다.');
       navigate('/');
     }
@@ -56,13 +52,11 @@ const JobRecommendPage = () => {
     addJob(jobId, {
       onSuccess: () => {
         setShowToast(true);
-        setTimeout(() => {
-          setShowToast(false);
-        }, 3000);
+        setTimeout(() => setShowToast(false), 3000);
       },
       onError: (error) => {
-        console.error('직업 담기 실패:', error);
         alert('직업 담기에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
       },
     });
   };
@@ -89,7 +83,10 @@ const JobRecommendPage = () => {
         ))}
       </div>
 
-      {isModalOpen && <AddJobModal onClose={handleCloseModal} />}
+      {isModalOpen && selectedJobId !== null && (
+        <AddJobModal jobId={selectedJobId} onClose={handleCloseModal} />
+      )}
+
       <div className="mt-8 flex gap-2">
         {jobResults.map((_, index) => (
           <div
@@ -97,12 +94,12 @@ const JobRecommendPage = () => {
             className={`h-4 w-4 rounded-full transition-colors duration-300 ${
               hoveredIndex === index ? 'bg-purple-500' : 'bg-gray-300'
             }`}
-          ></div>
+          />
         ))}
       </div>
 
       {showToast && (
-        <div className="fixed bottom-10 left-1/2 z-50 -translate-x-1/2 transform">
+        <div className="fixed bottom-10 left-1/2 z-50 -translate-x-1/2">
           <ToastModal
             icon={<Check className="h-6 w-6 text-white" />}
             text="직업이 추가되었습니다"
