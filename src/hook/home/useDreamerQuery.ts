@@ -9,13 +9,11 @@ export interface HomeDreamer {
   daysAgo: number;
   jobName: string;
   todoCount: number;
-  todos: [
-    {
-      todoId: number;
-      title: string;
-      completed: boolean;
-    },
-  ];
+  todos: {
+    todoId: number;
+    title: string;
+    completed: boolean;
+  }[];
 }
 
 const Dreamer = async () => {
