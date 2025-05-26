@@ -1,8 +1,8 @@
 import Logo from '@assets/icons/mobileLogo.svg?react';
 import Button from './Button';
-import UserIcon from '@assets/icons/profile.svg?react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUserStore } from '@store/useUserStore';
+import BaseImage from '@assets/images/profile.png';
 
 interface ShowProps {
   type: 'show' | 'hide';
@@ -37,6 +37,7 @@ const Header = ({ type }: ShowProps) => {
 
   const accessToken = localStorage.getItem('accessToken');
   const nickname = useUserStore((state) => state.nickname);
+  const profileImage = useUserStore((state) => state.userImage);
   const isLoggedIn = Boolean(accessToken);
 
   return (
@@ -73,7 +74,11 @@ const Header = ({ type }: ShowProps) => {
           className="flex cursor-pointer items-center gap-2"
           onClick={() => navigate('/mypage')}
         >
-          <UserIcon className="h-10 w-10" />
+          <img
+            src={profileImage || BaseImage}
+            alt="프로필이미지"
+            className="h-10 w-10 rounded-full"
+          />
           <span className="text-gray-900 font-B03-M">{nickname}님</span>
         </div>
       )}
