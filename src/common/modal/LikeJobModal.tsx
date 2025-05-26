@@ -4,7 +4,7 @@ import Warning from '@assets/icons/warning.svg?react';
 import SmallCancel from '@assets/icons/purplecancel.svg?react';
 import Button from '@common/Button';
 import { useGetInfo } from '@hook/mypage/useMypageQuery';
-import { useDeleteJob } from '@hook/mypage/usedeletejob';
+import { useDeleteJob } from '@hook/mypage/useRemoveJob';
 
 interface LikeJobModalProps {
   onClose: () => void;

@@ -1,13 +1,13 @@
 import Button from '@common/Button';
 import QuitImage from '@assets/images/quitmodalimg.webp';
-import { useQuitMuataion } from '@hook/mypage/useQuitMutation';
+import { useQuitMutaion } from '@hook/mypage/useQuitMutation';
 
 interface QuitProps {
   onClose: () => void;
 }
 
 const Quit = ({ onClose }: QuitProps) => {
-  const { mutate: quit } = useQuitMuataion(onClose);
+  const { mutate: quit } = useQuitMutaion(onClose);
 
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
