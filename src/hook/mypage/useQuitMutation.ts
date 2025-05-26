@@ -17,10 +17,11 @@ const Quit = async () => {
     return response.data.data;
   } catch (error) {
     console.error('탈퇴 실패', error);
+    throw error;
   }
 };
 
-export const useQuitMuataion = (onClose: () => void) => {
+export const useQuitMutaion = (onClose: () => void) => {
   const logout = useLogout();
   const navigate = useNavigate();
 
