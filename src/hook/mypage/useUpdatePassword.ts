@@ -17,7 +17,7 @@ export const useUpdatePasswordMutation = (onClose: () => void) => {
       }
     },
     onError: (error) => {
-      alert(error);
+      console.error('비밀번호 변경에 실패했습니다.', error);
     },
   });
 };

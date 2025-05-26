@@ -9,13 +9,12 @@ export const useEditNicknameMutation = () => {
     mutationFn: (payload: NicknameProps) =>
       api.put('/v1/member/nickname', payload),
     onSuccess: (response) => {
-      if (response.data.success) {
-      } else {
+      if (!response.data.success) {
         alert('닉네임 변경에 실패했습니다.');
       }
     },
     onError: (error) => {
-      alert(error);
+      alert(error.message || '닉네임 변경 중 오류가 발생했습니다.');
     },
   });
 };

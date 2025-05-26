@@ -16,7 +16,7 @@ export const useUpdateRegionMutation = () => {
       }
     },
     onError: (error) => {
-      alert(error);
+      console.error('지역 업데이트 에러가 발생했습니다.', error);
     },
   });
 };
