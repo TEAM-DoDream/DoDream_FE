@@ -17,16 +17,12 @@ export const useMdIsPublicMutation = () => {
       todoGroupId: number;
       isPublic: boolean;
     }) => {
-      try {
-        const { data } = await api.patch(
-          `/v1/my-dream/todo/${todoGroupId}/public-state`,
-          { isPublic }
-        );
+      const { data } = await api.patch(
+        `/v1/my-dream/todo/${todoGroupId}/public-state`,
+        { isPublic }
+      );
 
-        return data.data as TodoPublicResponse;
-      } catch (error) {
-        throw error;
-      }
+      return data.data as TodoPublicResponse;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publicState'] });
