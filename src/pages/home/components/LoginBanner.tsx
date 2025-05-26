@@ -46,8 +46,7 @@ const LoginBanner = () => {
     <div className="flex h-[489px] w-full items-center justify-center gap-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
       <div className="relative flex gap-6">
         <LoginHomeCard />
-
-        <div className="absolute right-0 flex w-[162px] cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-1">
+        <div className="absolute right-0 flex w-[162px] cursor-pointer items-center gap-2 rounded-full bg-white py-[6px] pl-4 pr-1">
           <span
             className="text-gray-500 font-B02-SB"
             onClick={() => navigate('/mytodo')}
@@ -61,12 +60,12 @@ const LoginBanner = () => {
           <span className="text-white font-B02-M">
             {todoData ? `${todoData.daysAgo}일째 꿈꾸는중` : '꿈꾸는중'}
           </span>
-          <div className="mt-2 text-white font-T01-B">
+          <div className="mt-[10px] text-white font-T01-B">
             {todoData?.jobName ?? '직업 준비중'}
           </div>
         </div>
 
-        <div className="absolute bottom-[60px] left-[30px]">
+        <div className="absolute bottom-0 left-[30px] top-[135px] flex items-center justify-center">
           {isLoading ? (
             <div className="text-white">로딩중...</div>
           ) : (
