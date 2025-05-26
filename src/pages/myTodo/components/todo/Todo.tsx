@@ -4,27 +4,42 @@ import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
 import Divider from '@common/Divider';
 import Plus from '@assets/icons/plus.svg?react';
-import { useNavigate } from 'react-router-dom';
-
-const list = [
-  // { text: '고용24에서 인근 요양보호사 과정 검색하기', hasMemo: true },
-  { text: '지역 교육기관 전화로 일정 문의하기' },
-  { text: '지원서 작성용 사진 준비하기', hasMemo: true },
-  { text: '건강검진 일정 잡기' },
-  { text: '인터넷으로 접수하기', hasMemo: true },
-  { text: '제출 서류 준비 완료 확인' },
-];
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
+import EmptyTodo from './EmptyTodo';
+import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const jobOptions = ['간호 조무사', '바리스타', '요양보호사'];
 
 const Todo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryClient = useQueryClient();
   const alertShown = useRef(false);
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
+  const { data: todoData, isLoading, isFetching } = useMdTodoQuery();
+  const { mutate: completeTodo } = useMdTodoCompleteMutation();
 
-    if (!accessToken && !alertShown.current) {
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (todoData?.todos) {
+      setCheckedIds(
+        todoData.todos.filter((t) => t.completed).map((t) => t.todoId)
+      );
+    }
+  }, [todoData]);
+
+  useEffect(() => {
+    if (location.pathname === '/mytodo/list') {
+      queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
+    }
+  }, [queryClient, location.pathname]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token && !alertShown.current) {
       alertShown.current = true;
       alert('로그인 후 이용해주세요');
       navigate('/');
@@ -33,38 +48,57 @@ const Todo = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState('요양보호사');
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
-
+  const toggleDropdown = () => setIsDropdownOpen((o) => !o);
   const handleSelect = (job: string) => {
     setSelectedJob(job);
     setIsDropdownOpen(false);
   };
 
+  const hasTodos = !!todoData?.todos?.length;
+  const todoItems =
+    todoData?.todos.map((t) => ({
+      id: t.todoId,
+      text: t.title,
+      hasMemo: t.isMemoExist,
+    })) || [];
+
+  const handleCheckChange = (newIds: number[]) => {
+    const added = newIds.filter((id) => !checkedIds.includes(id));
+    const removed = checkedIds.filter((id) => !newIds.includes(id));
+
+    added.forEach((todoId) => completeTodo({ todoId, completed: true }));
+    removed.forEach((todoId) => completeTodo({ todoId, completed: false }));
+
+    setCheckedIds(newIds);
+  };
+
+  const handleAddTodo = () => {
+    if (todoData?.todoGroupId) {
+      navigate(`/mytodo/add/${todoData.todoGroupId}`);
+    }
+  };
+
+  if (!isLoading && !hasTodos) {
+    return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
+  }
+
   return (
     <div className="mb-[95px] mt-10 flex flex-col px-[120px]">
-      <div className="flex flex-row justify-between">
-        <div className="relative flex flex-col items-start">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="relative">
           <div
-            className="flex cursor-pointer flex-row items-center gap-[10px]"
+            className="flex cursor-pointer items-center gap-2 text-gray-900 font-T02-B"
             onClick={toggleDropdown}
           >
-            <div className="text-gray-900 font-T02-B">{selectedJob}</div>
-            <BackIcon
-              className={`transition-transform duration-200 ${
-                isDropdownOpen ? '-rotate-90' : '-rotate-90'
-              }`}
-            />
+            {todoData?.jobName || selectedJob}
+            <BackIcon className="-rotate-90 transition-transform" />
           </div>
-
           {isDropdownOpen && (
-            <div className="absolute top-[100%] z-10 mt-[14px] w-[366px] rounded-2xl border-[1.4px] bg-white p-2 shadow-shadow4">
+            <div className="absolute top-full mt-2 w-[366px] rounded-2xl border bg-white p-2 shadow">
               {jobOptions.map((job) => (
                 <div
                   key={job}
-                  className={`cursor-pointer gap-[10px] px-5 py-6 ${
+                  className={`cursor-pointer px-5 py-6 ${
                     job === selectedJob
                       ? 'text-purple-500 font-B01-SB'
                       : 'text-gray-400 font-B01-M'
@@ -77,10 +111,9 @@ const Todo = () => {
             </div>
           )}
         </div>
-
-        <div className="flex flex-row items-center gap-[6px]">
+        <div className="flex items-center gap-2 text-gray-500 font-B03-M">
           <Eye />
-          <div className="text-gray-500 font-B03-M"> 조회수 NNNN </div>
+          조회수 {todoData?.totalView ?? 0}
         </div>
       </div>
 
@@ -88,20 +121,24 @@ const Todo = () => {
         <div className="text-black font-T04-SB"> 할 일 목록</div>
         <Divider className="mb-4 mt-4" />
 
-        {list.length === 0 ? (
+        {isLoading || isFetching ? (
+          <div className="py-4 text-gray-500 font-B01-M">로딩 중...</div>
+        ) : todoItems.length === 0 ? (
           <div className="py-4 text-gray-500 font-B01-M">
             아직 추가된 할 일이 없어요
           </div>
         ) : (
           <CheckList
-            lists={list}
+            lists={todoItems}
+            checkedIds={checkedIds}
+            onChange={handleCheckChange}
             className="flex w-full flex-col items-center gap-8 py-4"
           />
         )}
 
         <button
           className="mt-[16px] flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
-          onClick={() => navigate('/mytodo/add')}
+          onClick={handleAddTodo}
         >
           <Plus className="h-6 w-6" />
           추가하기

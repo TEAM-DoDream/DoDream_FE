@@ -8,35 +8,51 @@ import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
 import CheckList from '@common/CheckList';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
+import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
 
 const LoginBanner = () => {
   const { data: jobList } = useBannerQuery();
-  const regionName = useUserStore((state) => state.regionName);
+  const regionName = useUserStore((s) => s.regionName);
   const navigate = useNavigate();
-  const setSelection = useFilterStore((state) => state.setSelection);
+  const setSelection = useFilterStore((s) => s.setSelection);
   const { data: todoData, isLoading } = useMdTodoQuery();
-  
+  const { mutate: completeTodo } = useMdTodoCompleteMutation();
+
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
   const todoItems = useMemo(() => {
-    if (!todoData || !todoData.todos) return [];
-    
-    return todoData.todos
-      .filter(todo => !todo.completed)
-      .slice(0, 4)
-      .map(todo => todo.title);
+    return (
+      todoData?.todos
+        .filter((t) => !t.completed)
+        .slice(0, 4)
+        .map((t) => ({ id: t.todoId, text: t.title })) ?? []
+    );
   }, [todoData]);
-  
-  return (
-    <div className="flex h-[489px] w-full flex-row items-center justify-center space-x-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
-      <div className="relative flex flex-row gap-6">
-        <LoginHomeCard />
 
-        <div 
-          className="absolute right-0 flex w-[162px] cursor-pointer items-center gap-2 rounded-full bg-white py-[6px] pl-4 pr-1"
-    
-        >
-          <span className="text-gray-500 font-B02-SB"> 나의 할일 가기</span>
+  useEffect(() => {
+    setCheckedIds([]);
+  }, [todoItems.length]);
+
+  const handleCheckChange = (newIds: number[]) => {
+    const added = newIds.filter((id) => !checkedIds.includes(id));
+    added.forEach((todoId) => completeTodo({ todoId, completed: true }));
+    setCheckedIds(newIds);
+  };
+
+  const displayedItems = todoItems.filter((i) => !checkedIds.includes(i.id!));
+
+  return (
+    <div className="flex h-[489px] w-full items-center justify-center gap-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
+      <div className="relative flex gap-6">
+        <LoginHomeCard />
+        <div className="absolute right-0 flex w-[162px] cursor-pointer items-center gap-2 rounded-full bg-white py-[6px] pl-4 pr-1">
+          <span
+            className="text-gray-500 font-B02-SB"
+            onClick={() => navigate('/mytodo')}
+          >
+            나의 할일 가기
+          </span>
           <MyDreamArrow />
         </div>
 
@@ -44,62 +60,53 @@ const LoginBanner = () => {
           <span className="text-white font-B02-M">
             {todoData ? `${todoData.daysAgo}일째 꿈꾸는중` : '꿈꾸는중'}
           </span>
-
           <div className="mt-[10px] text-white font-T01-B">
-            {todoData && todoData.jobName ? `${todoData.jobName} 시작하는 중` : '직업 준비중'}
+            {todoData?.jobName ?? '직업 준비중'}
           </div>
         </div>
 
-        <div className="absolute">
-          <div className="absolute bottom-0 left-[30px] top-[255px] flex items-center justify-center">
-            {isLoading ? (
-              <div className="text-white">로딩중...</div>
-            ) : (
-              <CheckList
-                lists={todoItems.length > 0 ? todoItems : ['할일을 추가해주세요']}
-                className="my-6 flex flex-col gap-4"
-              />
-            )}
-          </div>
+        <div className="absolute bottom-0 left-[30px] top-[135px] flex items-center justify-center">
+          {isLoading ? (
+            <div className="text-white">로딩중...</div>
+          ) : (
+            <CheckList
+              lists={
+                displayedItems.length
+                  ? displayedItems
+                  : [{ text: '할일을 추가해주세요' }]
+              }
+              checkedIds={checkedIds}
+              onChange={handleCheckChange}
+              className="flex flex-col gap-4"
+            />
+          )}
         </div>
       </div>
 
-      <div className="flex h-[379px] w-[440px] flex-col items-start rounded-[30px] border border-gray-300 bg-white p-[30px]">
-        <div className="flex w-full flex-row items-start justify-between">
+      <div className="flex h-[379px] w-[440px] flex-col gap-5 rounded-[30px] border bg-white p-8">
+        <div className="flex w-full items-center justify-between">
           <img src={Bell} alt="Bell" className="h-[60px] w-[60px]" />
           <button
-            type="button"
-            className="flex cursor-pointer flex-row items-center"
+            className="flex items-center text-gray-500 font-B02-SB"
             onClick={() => {
               setSelection('location', regionName);
               navigate('/jobsearch');
             }}
           >
-            <div className="text-gray-500 font-B02-SB"> 채용 정보 보기 </div>
-            <Arrow />
+            채용 정보 보기 <Arrow />
           </button>
         </div>
 
-        <span className="mt-5 text-gray-900 font-T01-B">
-          {' '}
-          {regionName} 채용 현황
-        </span>
-
-        <div className="mt-5 flex flex-col items-center justify-center">
-          <div className="flex flex-col gap-5">
-            {jobList &&
-              jobList.map((job) => (
-                <div
-                  key={job['job-name']}
-                  className="flex flex-row items-center gap-4"
-                >
-                  <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                    {job['job-name']}
-                  </div>
-                  <div className="text-gray-900 font-T05-SB">{job.count}건</div>
-                </div>
-              ))}
-          </div>
+        <span className="text-gray-900 font-T01-B">{regionName} 채용 현황</span>
+        <div className="flex flex-col gap-5">
+          {jobList?.map((job) => (
+            <div key={job['job-name']} className="flex items-center gap-4">
+              <div className="rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
+                {job['job-name']}
+              </div>
+              <div className="text-gray-900 font-T05-SB">{job.count}건</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
