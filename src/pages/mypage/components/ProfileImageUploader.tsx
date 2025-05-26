@@ -3,6 +3,7 @@ import BaseImage from '@assets/images/profile.png';
 import Camera from '@assets/icons/camera.svg?react';
 import Trash from '@assets/icons/profile_delete.svg?react';
 import { useUploadImageMutation } from '@hook/mypage/useUploadImage';
+import { useUserStore } from '@store/useUserStore';
 
 interface ProfileImageUploaderProps {
   imageUrl?: string;
@@ -11,9 +12,10 @@ interface ProfileImageUploaderProps {
 const ProfileImageUploader = ({ imageUrl }: ProfileImageUploaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadMutation = useUploadImageMutation();
+  const setUserImage = useUserStore((state) => state.setUserImage);
 
   const [imageSrc, setImageSrc] = useState(imageUrl || BaseImage);
-  const isDefaultImage = imageSrc === BaseImage;
+  const [isDefaultImage, setIsDefaultImage] = useState(!imageUrl);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,6 +30,7 @@ const ProfileImageUploader = ({ imageUrl }: ProfileImageUploaderProps) => {
         if (uploadedUrl) {
           console.log(uploadedUrl);
           setImageSrc(uploadedUrl);
+          setUserImage(uploadedUrl);
         } else {
           alert('업로드는 되었지만 이미지 URL을 받지 못했습니다.');
         }
@@ -36,7 +39,15 @@ const ProfileImageUploader = ({ imageUrl }: ProfileImageUploaderProps) => {
   };
 
   useEffect(() => {
-    if (imageUrl) setImageSrc(imageUrl);
+    if (imageUrl) {
+      setImageSrc(imageUrl);
+      setIsDefaultImage(false);
+      setUserImage(imageUrl);
+    } else {
+      setImageSrc(BaseImage);
+      setIsDefaultImage(true);
+      setUserImage('');
+    }
   }, [imageUrl]);
 
   const handleResetImage = () => {

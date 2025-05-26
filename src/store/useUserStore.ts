@@ -6,7 +6,13 @@ interface UserStore {
   setRegionName: (regionName: string) => void;
   nickname: string;
   setNickname: (nickname: string) => void;
-  setUser: (user: { regionName: string; nickname: string }) => void;
+  userImage: string;
+  setUserImage: (userImage: string) => void;
+  setUser: (user: {
+    regionName: string;
+    nickname: string;
+    userImage: string;
+  }) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -14,8 +20,10 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       regionName: '',
       nickname: '',
+      userImage: '',
       setRegionName: (regionName) => set({ regionName }),
       setNickname: (nickname) => set({ nickname }),
+      setUserImage: (userImage) => set({ userImage }),
       setUser: (user) => set(user),
     }),
     {
