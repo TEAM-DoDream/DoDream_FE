@@ -31,7 +31,7 @@ const PopularDreamer = async () => {
   }
 };
 
-export const usePoplularDreamer = () => {
+export const usePopularDreamer = () => {
   return useQuery<PopularDreamer[]>({
     queryKey: ['PopularDreamer'],
     queryFn: PopularDreamer,

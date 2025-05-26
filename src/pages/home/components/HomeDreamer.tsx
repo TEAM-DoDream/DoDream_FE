@@ -2,14 +2,14 @@ import Arrow from '@assets/icons/arrow.svg?react';
 import DreamerCard from './DreamerCard';
 import { useNavigate } from 'react-router-dom';
 import { useDreamerQuery } from '@hook/home/useDreamerQuery';
-import { usePoplularDreamer } from '@hook/home/useNoLoginDreamerQuery';
+import { usePopularDreamer } from '@hook/home/useNoLoginDreamerQuery';
 
 const HomeDreamer = () => {
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem('accessToken');
 
   const { data: homeDreamer } = useDreamerQuery();
-  const { data: popluarDreamer } = usePoplularDreamer();
+  const { data: popluarDreamer } = usePopularDreamer();
 
   return (
     <div>
