@@ -23,9 +23,9 @@ const TodoListPage = () => {
     : undefined;
 
   const { data: todoData } = useMdTodoQuery();
-  const apiTodoGroupId = todoData?.todoGroupId;
 
-  const todoGroupId = urlTodoGroupIdNum || apiTodoGroupId;
+  const todoGroupId: number | undefined =
+    urlTodoGroupIdNum ?? todoData?.todoGroupId ?? undefined;
 
   const mdTodoDetail = useMdTodoDetail();
 

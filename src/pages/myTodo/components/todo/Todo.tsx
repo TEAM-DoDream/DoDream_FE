@@ -62,7 +62,6 @@ const Todo = () => {
       hasMemo: t.isMemoExist,
     })) || [];
 
-  // 체크 변경: ID 배열을 받아 추가/제거된 것만 mutation
   const handleCheckChange = (newIds: number[]) => {
     const added = newIds.filter((id) => !checkedIds.includes(id));
     const removed = checkedIds.filter((id) => !newIds.includes(id));
@@ -73,21 +72,18 @@ const Todo = () => {
     setCheckedIds(newIds);
   };
 
-  // 추가하기
   const handleAddTodo = () => {
     if (todoData?.todoGroupId) {
       navigate(`/mytodo/add/${todoData.todoGroupId}`);
     }
   };
 
-  // 렌더
   if (!isLoading && !hasTodos) {
     return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
   }
 
   return (
     <div className="mb-[95px] mt-10 flex flex-col px-[120px]">
-      {/* 상단: 직업 드롭다운 & 조회수 */}
       <div className="mb-6 flex items-center justify-between">
         <div className="relative">
           <div
