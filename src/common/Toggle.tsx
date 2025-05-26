@@ -1,11 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const ToggleButton = () => {
-  const [isOn, setIsOn] = useState(false);
+interface ToggleButtonProps {
+  initialState?: boolean;
+  todoGroupId?: number;
+  onToggle?: (isPublic: boolean) => void;
+}
+
+const ToggleButton = ({
+  initialState = false,
+  todoGroupId,
+  onToggle,
+}: ToggleButtonProps) => {
+  const [isOn, setIsOn] = useState(initialState);
+
+  useEffect(() => {
+    setIsOn(initialState);
+  }, [initialState]);
+
+  const handleToggle = async () => {
+    const newState = !isOn;
+    setIsOn(newState);
+
+    if (todoGroupId && onToggle) {
+      onToggle(newState);
+    }
+  };
 
   return (
     <button
-      onClick={() => setIsOn(!isOn)}
+      onClick={handleToggle}
       className={`flex h-[24px] w-[46px] items-center rounded-full p-1 duration-300 ${
         isOn ? 'bg-purple-500' : 'bg-gray-400'
       }`}

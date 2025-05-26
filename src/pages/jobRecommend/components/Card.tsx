@@ -4,10 +4,11 @@ interface CardProps {
   title: string;
   description: string;
   imageUrl: string;
+  jobId: number;
   personality?: string;
   strong?: string;
   condition?: string;
-  onClick?: () => void;
+  onClick?: (jobId: number) => void;
   onHover?: () => void;
   onLeave?: () => void;
   nickname?: string | null;
@@ -17,6 +18,7 @@ const Card = ({
   title,
   description,
   imageUrl,
+  jobId,
   personality,
   condition,
   onHover,
@@ -114,7 +116,7 @@ const Card = ({
           <button
             data-testid="card-save-button"
             className="rounded-[12px] bg-purple-100 px-10 py-4 text-purple-500 font-B03-SB"
-            onClick={onClick}
+            onClick={() => onClick && onClick(jobId)}
           >
             담기
           </button>

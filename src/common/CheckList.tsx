@@ -1,96 +1,119 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Check from '@assets/icons/check.svg?react';
 import MemoIcon from '@assets/icons/memo.svg?react';
 import ReWriteIcon from '@assets/icons/edit-write.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
+import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
 
-type ChecklistItem = string | { text: string; hasMemo?: boolean };
+type ChecklistItem =
+  | string
+  | {
+      id?: number;
+      text: string;
+      hasMemo?: boolean;
+    };
 
 interface CheckListProps {
   lists: ChecklistItem[];
-  defaultCheckedList?: boolean[];
+  checkedIds?: number[];
   className?: string;
-  onChange?: (checkedList: boolean[]) => void;
+  onChange?: (checkedIds: number[]) => void;
 }
 
 const CheckList = ({
   lists,
-  defaultCheckedList,
+  checkedIds = [],
   className = '',
   onChange,
 }: CheckListProps) => {
+  const navigate = useNavigate();
   const normalized = lists.map((item) =>
     typeof item === 'string' ? { text: item } : item
   );
 
   const [listItems, setListItems] = useState(normalized);
-  const [checkedList, setCheckedList] = useState<boolean[]>(
-    defaultCheckedList ?? new Array(normalized.length).fill(false)
-  );
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState(false);
   const [lastDeleted, setLastDeleted] = useState<{
-    item: { text: string; hasMemo?: boolean };
+    item: { id?: number; text: string; hasMemo?: boolean };
     index: number;
     checked: boolean;
   } | null>(null);
 
-  useEffect(() => {
-    if (onChange) {
-      onChange(checkedList);
-    }
-  }, [checkedList, onChange]);
+  const deleteTodoMutation = useDeleteTodoMutation();
 
-  const toggleCheck = (index: number) => {
-    const newList = [...checkedList];
-    newList[index] = !newList[index];
-    setCheckedList(newList);
+  const toggleCheck = (id?: number) => {
+    if (id === undefined) return;
+    let next: number[];
+    if (checkedIds.includes(id)) {
+      next = checkedIds.filter((x) => x !== id);
+    } else {
+      next = [...checkedIds, id];
+    }
+    onChange?.(next);
   };
 
   const handleDelete = (index: number) => {
-    const deletedItem = listItems[index];
-    const deletedChecked = checkedList[index];
+    const deleted = listItems[index];
+    const deletedId = deleted.id;
+    const wasChecked = deletedId ? checkedIds.includes(deletedId) : false;
+
+    if (deletedId) {
+      deleteTodoMutation.mutate({ todoId: deletedId });
+    }
 
     const newItems = [...listItems];
     newItems.splice(index, 1);
     setListItems(newItems);
 
-    const newChecked = [...checkedList];
-    newChecked.splice(index, 1);
-    setCheckedList(newChecked);
+    if (deletedId) {
+      onChange?.(checkedIds.filter((x) => x !== deletedId));
+    }
 
-    setLastDeleted({ item: deletedItem, index, checked: deletedChecked });
+    setLastDeleted({ item: deleted, index, checked: wasChecked });
     setShowToast(true);
-
     setTimeout(() => {
       setShowToast(false);
       setLastDeleted(null);
     }, 2500);
   };
 
-  const handleUndoDelete = () => {
+  const handleUndo = () => {
     if (!lastDeleted) return;
+    const { item, index, checked } = lastDeleted;
 
     const newItems = [...listItems];
-    newItems.splice(lastDeleted.index, 0, lastDeleted.item);
+    newItems.splice(index, 0, item);
     setListItems(newItems);
 
-    const newChecked = [...checkedList];
-    newChecked.splice(lastDeleted.index, 0, lastDeleted.checked);
-    setCheckedList(newChecked);
+    if (item.id !== undefined) {
+      let next = [...checkedIds];
+      if (checked) next.push(item.id);
+      else next = next.filter((x) => x !== item.id);
+      onChange?.(next);
+    }
 
     setShowToast(false);
     setLastDeleted(null);
   };
 
+  const handleEdit = (index: number) => {
+    const item = listItems[index];
+    if (item.id) {
+      navigate(`/mytodo/edit/${item.id}`);
+    }
+  };
+
   return (
     <div className={className}>
-      {listItems.map(({ text, hasMemo }, index) => {
-        const done = checkedList[index];
+      {listItems.map(({ text, hasMemo, id }, idx) => {
+        const done = id !== undefined && checkedIds.includes(id);
+
         return (
           <div
-            key={index}
+            key={id ?? idx}
             className="flex w-full items-center justify-between gap-2"
           >
             <div className="flex w-full items-center gap-2">
@@ -100,11 +123,10 @@ const CheckList = ({
                     ? 'border-purple-300 bg-purple-150 text-purple-600'
                     : 'border-gray-300 bg-gray-100 text-transparent'
                 } cursor-pointer transition-colors duration-150`}
-                onClick={() => toggleCheck(index)}
+                onClick={() => toggleCheck(id)}
               >
                 {done && <Check className="h-[19px] w-[19px]" />}
               </div>
-
               <span
                 className={`truncate font-B02-M ${
                   done ? 'text-gray-500' : 'text-gray-800'
@@ -120,14 +142,16 @@ const CheckList = ({
                   <MemoIcon className="h-[18px] w-[18px] text-purple-500" />
                   메모
                 </button>
-
                 <div className="flex flex-row gap-[5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                  <button className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB">
+                  <button
+                    onClick={() => handleEdit(idx)}
+                    className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
+                  >
                     <ReWriteIcon className="h-[18px] w-[18px]" />
                     편집
                   </button>
                   <button
-                    onClick={() => handleDelete(index)}
+                    onClick={() => handleDelete(idx)}
                     className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
                   >
                     <TrashIcon className="h-[18px] w-[18px]" />
@@ -140,13 +164,13 @@ const CheckList = ({
         );
       })}
 
-      {showToast && (
+      {showToast && lastDeleted && (
         <div className="fixed top-[130px] z-50 items-center">
           <ToastModal
             icon={<Info className="h-6 w-6 text-white" />}
-            text="할일목록 1개가 삭제되었습니다"
+            text="할일 목록 1개가 삭제되었습니다"
             undoText="삭제취소"
-            onUndo={handleUndoDelete}
+            onUndo={handleUndo}
             width="w-[469px]"
           />
         </div>
