@@ -19,8 +19,10 @@ export const useAcademyInfoQuery = (pageNum: number) => {
   );
   const BaseUrl = import.meta.env.VITE_BASE_URL;
 
+  const trainingType = trainingCourse || '이론 위주';
+
   return useQuery<AcademyListResponse, Error>({
-    queryKey: ['academyList', pageNum, job, location, trainingCourse, sortBy],
+    queryKey: ['academyList', pageNum, job, location, trainingType, sortBy],
 
     queryFn: async () => {
       const res = await axios.get(`${BaseUrl}/v1/training/list`, {
@@ -28,7 +30,7 @@ export const useAcademyInfoQuery = (pageNum: number) => {
           pageNum: String(pageNum),
           jobName: job || undefined,
           regionName: location || undefined,
-          type: trainingCourse || undefined,
+          type: trainingType,
           sortBy: sortBy || undefined,
         },
       });
