@@ -6,12 +6,15 @@ import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
+import { useNavigate } from 'react-router-dom';
 
-type ChecklistItem = string | { 
-  id?: number;
-  text: string; 
-  hasMemo?: boolean;
-};
+type ChecklistItem =
+  | string
+  | {
+      id?: number;
+      text: string;
+      hasMemo?: boolean;
+    };
 
 interface CheckListProps {
   lists: ChecklistItem[];
@@ -26,6 +29,7 @@ const CheckList = ({
   className = '',
   onChange,
 }: CheckListProps) => {
+  const navigate = useNavigate();
   const normalized = lists.map((item) =>
     typeof item === 'string' ? { text: item } : item
   );
@@ -40,7 +44,7 @@ const CheckList = ({
     index: number;
     checked: boolean;
   } | null>(null);
-  
+
   const deleteTodoMutation = useDeleteTodoMutation();
 
   useEffect(() => {
@@ -59,7 +63,6 @@ const CheckList = ({
     const deletedItem = listItems[index];
     const deletedChecked = checkedList[index];
 
-    // 서버에서 삭제 (id가 있는 경우에만)
     if (deletedItem.id) {
       deleteTodoMutation.mutate({ todoId: deletedItem.id });
     }
@@ -81,10 +84,15 @@ const CheckList = ({
     }, 2500);
   };
 
+  const handleEdit = (index: number) => {
+    const item = listItems[index];
+    if (item.id) {
+      navigate(`/mytodo/edit/${item.id}`);
+    }
+  };
+
   const handleUndoDelete = () => {
     if (!lastDeleted) return;
-
-    // 복구 시 서버 요청은 처리하지 않음 (캐시 무효화로 데이터가 다시 로드됨)
 
     const newItems = [...listItems];
     newItems.splice(lastDeleted.index, 0, lastDeleted.item);
@@ -136,7 +144,10 @@ const CheckList = ({
                 </button>
 
                 <div className="flex flex-row gap-[5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                  <button className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB">
+                  <button
+                    onClick={() => handleEdit(index)}
+                    className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
+                  >
                     <ReWriteIcon className="h-[18px] w-[18px]" />
                     편집
                   </button>
