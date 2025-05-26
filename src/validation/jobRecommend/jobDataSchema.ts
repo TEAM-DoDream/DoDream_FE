@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const jobDataSchema = z.object({
+  jobId: z.number(),
   jobTitle: z.string(),
   jobDescription: z.string(),
   imageUrl: z.string(),

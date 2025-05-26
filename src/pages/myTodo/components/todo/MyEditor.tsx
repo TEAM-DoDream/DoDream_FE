@@ -1,12 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LinkEditor from '@utils/preview/LinkEditor.tsx';
 import CautionIcon from '@assets/icons/caution.svg?react';
 import AutoTextArea from '@pages/myTodo/components/todo/AutoTextArea.tsx';
 
 const MAX_LENGTH = 5000;
 
-const MyEditor = () => {
-  const [value, setValue] = useState('');
+interface MyEditorProps {
+  value: string;
+  onChange: (text: string) => void;
+}
+
+const MyEditor = ({ value, onChange }: MyEditorProps) => {
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const handleChange = (newValue: string) => {
+    setLocalValue(newValue);
+    onChange(newValue);
+  };
 
   return (
     <div className="flex h-full w-[602px] flex-col overflow-y-auto rounded-2xl border bg-white p-6">
@@ -14,7 +28,7 @@ const MyEditor = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">메모하기</h2>
           <div className="mt-2 text-right text-sm text-gray-400">
-            {value.length}/{MAX_LENGTH}
+            {localValue.length}/{MAX_LENGTH}
           </div>
         </div>
         <p className="mb-4 mt-1 flex items-center text-sm text-gray-400">
@@ -22,7 +36,11 @@ const MyEditor = () => {
           하나의 메모당, 하나의 링크만 붙일 수 있어요
         </p>
       </div>
-      <AutoTextArea value={value} onChange={setValue} maxLength={MAX_LENGTH} />
+      <AutoTextArea
+        value={localValue}
+        onChange={handleChange}
+        maxLength={MAX_LENGTH}
+      />
       <div className="mt-4">
         <h2 className="text-lg font-bold text-gray-900">링크 미리보기</h2>
         <LinkEditor />

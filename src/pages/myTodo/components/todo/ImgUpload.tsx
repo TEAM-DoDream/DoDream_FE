@@ -1,24 +1,35 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import AddImgIcon from '@assets/icons/AddImg.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
 
-const ImgUpload = () => {
+interface ImgUploadProps {
+  onImagesChange: (images: File[]) => void;
+}
+
+const ImgUpload = ({ onImagesChange }: ImgUploadProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [images, setImages] = useState<string[]>([]);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [fileImages, setFileImages] = useState<File[]>([]);
+
+  useEffect(() => {
+    onImagesChange(fileImages);
+  }, [fileImages, onImagesChange]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
-    const newImages: string[] = [];
+    const newFiles = Array.from(files);
+    setFileImages((prev) => [...prev, ...newFiles]);
 
-    Array.from(files).forEach((file) => {
+    const newPreviewImages: string[] = [];
+    newFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
-          newImages.push(reader.result as string);
-          if (newImages.length === files.length) {
-            setImages((prev) => [...prev, ...newImages]);
+          newPreviewImages.push(reader.result as string);
+          if (newPreviewImages.length === newFiles.length) {
+            setPreviewImages((prev) => [...prev, ...newPreviewImages]);
           }
         }
       };
@@ -27,7 +38,8 @@ const ImgUpload = () => {
   };
 
   const handleDelete = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
+    setFileImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -51,12 +63,12 @@ const ImgUpload = () => {
         />
       </div>
       <div className="mt-4 flex flex-1 flex-col gap-3">
-        {images.length === 0 ? (
+        {previewImages.length === 0 ? (
           <span className="text-gray-500 font-B02-M">
             아직 첨부된 이미지가 없어요
           </span>
         ) : (
-          images.map((src, idx) => (
+          previewImages.map((src, idx) => (
             <div key={idx} className="relative w-full">
               <img
                 src={src}
