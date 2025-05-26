@@ -34,6 +34,7 @@ const FloatingSubmit = async ({
     return response.data.data;
   } catch (error) {
     console.error('할일을 추가하는데 실패했습니다.', error);
+    throw error;
   }
 };
 

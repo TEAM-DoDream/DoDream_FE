@@ -35,6 +35,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
         },
         onError: (err) => {
           console.error('제출 실패', err);
+          alert('할 일 추가에 실패했습니다. 다시 시도해주세요.');
         },
       }
     );

@@ -18,13 +18,10 @@ const FloatingAddJob = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('데이터', response.data);
+
     return response.data.data;
   } catch (error) {
-    console.error(
-      '타유저 투두 리스트 목록 조회하는데 에러가 발생했습니다.',
-      error
-    );
+    console.error('직업 목록을 가져오는데 에러가 발생했습니다.', error);
     throw error;
   }
 };
