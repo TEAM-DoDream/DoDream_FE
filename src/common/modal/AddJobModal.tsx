@@ -4,7 +4,7 @@ import Button from '@common/Button';
 import Cancel from '@assets/icons/bigcancel.svg?react';
 
 interface AddJobModalProps {
-  jobId: number;
+  jobId?: number;
   onClose: () => void;
 }
 
