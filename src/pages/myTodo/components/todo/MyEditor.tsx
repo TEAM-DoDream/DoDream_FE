@@ -13,7 +13,6 @@ interface MyEditorProps {
 const MyEditor = ({ value, onChange }: MyEditorProps) => {
   const [localValue, setLocalValue] = useState(value);
 
-  // 외부에서 전달된 value가 변경되면 로컬 상태 업데이트
   useEffect(() => {
     setLocalValue(value);
   }, [value]);
@@ -37,7 +36,11 @@ const MyEditor = ({ value, onChange }: MyEditorProps) => {
           하나의 메모당, 하나의 링크만 붙일 수 있어요
         </p>
       </div>
-      <AutoTextArea value={localValue} onChange={handleChange} maxLength={MAX_LENGTH} />
+      <AutoTextArea
+        value={localValue}
+        onChange={handleChange}
+        maxLength={MAX_LENGTH}
+      />
       <div className="mt-4">
         <h2 className="text-lg font-bold text-gray-900">링크 미리보기</h2>
         <LinkEditor />

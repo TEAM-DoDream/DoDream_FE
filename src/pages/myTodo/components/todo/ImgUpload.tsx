@@ -22,7 +22,6 @@ const ImgUpload = ({ onImagesChange }: ImgUploadProps) => {
     const newFiles = Array.from(files);
     setFileImages((prev) => [...prev, ...newFiles]);
 
-    // 미리보기 이미지 생성
     const newPreviewImages: string[] = [];
     newFiles.forEach((file) => {
       const reader = new FileReader();
