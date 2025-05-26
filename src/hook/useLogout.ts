@@ -9,7 +9,7 @@ const useLogout = () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('nickname');
     localStorage.removeItem('memberId');
-    localStorage.removeItem('regionName');
+    localStorage.removeItem('userStore');
     navigate('/');
   }, [navigate]);
 
