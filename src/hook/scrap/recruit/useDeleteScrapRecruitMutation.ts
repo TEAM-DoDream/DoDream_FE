@@ -11,7 +11,7 @@ const deleteScrapRecruit = async ({ id }: DeleteScrapRecruitParams) => {
     throw new Error('인증 토큰이 없습니다. 로그인 후 다시 시도해주세요.');
   }
 
-  const response = await api.delete(`/v1/scrap/training/${id}`, {
+  const response = await api.delete(`/v1/scrap/recruit/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -29,7 +29,7 @@ export const useDeleteScrapRecruitMutation = () => {
   return useMutation({
     mutationFn: deleteScrapRecruit,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['scrapRecruit'] });
+      queryClient.invalidateQueries({ queryKey: ['scrapRecruits'] });
     },
     onError: (error) => {
       console.error('스크랩 삭제 중 오류 발생:', error);
