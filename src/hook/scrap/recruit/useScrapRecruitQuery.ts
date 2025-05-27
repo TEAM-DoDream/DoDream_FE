@@ -21,12 +21,12 @@ export const useScrapRecruitQuery = (params: ScrapRecruitQueryParams) => {
       if (!token)
         throw new Error('인증 토큰이 없습니다. 로그인 후 다시 시도해주세요.');
 
-      const url =
-        `/v1/scrap/recruit/list?pageNum=${pageNum}` +
-        `&sortBy=${encodeURIComponent(sortBy)}` +
-        (locName ? `&locName=${encodeURIComponent(locName)}` : '');
-
-      const response = await api.get(url, {
+      const response = await api.get('/v1/scrap/recruit/list', {
+        params: {
+          pageNum,
+          sortBy,
+          ...(locName && { locName }),
+        },
         headers: {
           Authorization: `Bearer ${token}`,
         },
