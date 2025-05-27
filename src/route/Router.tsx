@@ -47,8 +47,8 @@ const Router = () => {
             <Route path="edit/:todoId" element={<TodoListPage />} />
             <Route path="scrap" element={<ScrapPage />}>
               <Route index element={<Navigate to="/mytodo/scrap/job" replace />} />
-              <Route path="job" element={<ScrapPage activeTab="job" />} />
-              <Route path="edu" element={<ScrapPage activeTab="edu" />} />
+              <Route path="job" element={<ScrapPage />} />
+              <Route path="edu" element={<ScrapPage />} />
             </Route>
           </Route>
           <Route path="/mypage" element={<Mypage />} />
