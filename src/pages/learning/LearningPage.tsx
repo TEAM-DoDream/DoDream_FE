@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Filter from '@pages/learning/components/Filter.tsx';
 import { useAcademyInfoQuery } from '@hook/useAcademyInfoQuery.ts';
 import { AcademyItem } from '@validation/academy/academySchema.ts';
@@ -11,6 +11,9 @@ import Pagination from '@common/Pagination.tsx';
 import DropDown from '@common/DropDown.tsx';
 import { useShallow } from 'zustand/react/shallow';
 import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
+import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
+import { useScrapTrainingMutation } from '@hook/scrap/training/useScrapTrainingMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const LearningPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,9 +26,57 @@ const LearningPage = () => {
   const totalPages = Math.ceil(data.scn_cnt / data.pageSize);
   const jobs: AcademyItem[] = data.srchList;
   const sortOptions = ['마감 임박순', '마감 여유순'];
-  const { sortBy, setSelection } = useAcademyFilterStore(
-    useShallow((s) => ({ sortBy: s.sortBy, setSelection: s.setSelection }))
+  const { sortBy, trainingCourse, setSelection } = useAcademyFilterStore(
+    useShallow((s) => ({
+      sortBy: s.sortBy,
+      trainingCourse: s.trainingCourse,
+      setSelection: s.setSelection,
+    }))
   );
+
+  const trainingType = trainingCourse || '이론 위주';
+  const queryClient = useQueryClient();
+
+  const trainingIds = useMemo(() => jobs.map((job) => job.trprId), [jobs]);
+
+  const { data: scrapCheckData } = useScrapCheckQuery({
+    category: 'TRAINING',
+    idList: trainingIds,
+  });
+
+  const scrapStatusMap = useMemo(() => {
+    if (!scrapCheckData?.data) return {};
+
+    const statusMap: Record<string, boolean> = {};
+    scrapCheckData.data.forEach((item, index) => {
+      if (trainingIds[index]) {
+        statusMap[trainingIds[index]] = item.isScrap;
+      }
+    });
+
+    return statusMap;
+  }, [scrapCheckData, trainingIds]);
+
+  const { mutate: toggleScrap } = useScrapTrainingMutation();
+
+  const handleScrapClick = (item: AcademyItem, isScrap: boolean) => {
+    toggleScrap(
+      {
+        trprId: item.trprId,
+        trprDegr: item.trprDegr,
+        trainstCstId: item.trainstCstId,
+        traStartDate: item.traStartDate,
+        traEndDate: item.traEndDate,
+        type: trainingType as '이론 위주' | '실습 위주',
+        isScrap,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['scrapCheck'] });
+        },
+      }
+    );
+  };
 
   const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
   if (isPending) {
@@ -83,7 +134,17 @@ const LearningPage = () => {
                 onClick={() => setSelectedCardId(index)}
                 className="cursor-pointer"
               >
-                <LearningCard item={item} />
+                <LearningCard
+                  item={item}
+                  isScrap={scrapStatusMap[item.trprId] || false}
+                  onScrapClick={(e) => {
+                    e.stopPropagation();
+                    handleScrapClick(
+                      item,
+                      scrapStatusMap[item.trprId] || false
+                    );
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -113,6 +174,13 @@ const LearningPage = () => {
           <CardDetail
             item={selectedCard}
             onClose={() => setSelectedCardId(null)}
+            isScrap={scrapStatusMap[selectedCard.trprId] || false}
+            onScrapClick={() =>
+              handleScrapClick(
+                selectedCard,
+                scrapStatusMap[selectedCard.trprId] || false
+              )
+            }
           />
         </div>
       )}
