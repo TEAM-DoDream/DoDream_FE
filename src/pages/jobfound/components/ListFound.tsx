@@ -82,7 +82,7 @@ const ListFound = ({ page, setTotalPages }: ListFoundProps) => {
                     <UserIcon className="h-6 w-6" />
                     <div className="text-gray-500 font-B03-M">
                       {' '}
-                      100명이 준비중{' '}
+                      {item.todoGroupNum}명이 준비중{' '}
                     </div>
                   </div>
                 </div>
