@@ -9,7 +9,7 @@ export const ScrapTrainingItemSchema = z.object({
   trprDegr: z.string(),
   traDuration: z.string(),
   realMan: z.string(),
-  titleLink: z.string().url().or(z.literal('')),
+  titleLink: z.string(),
 });
 
 export type ScrapTrainingItem = z.infer<typeof ScrapTrainingItemSchema>;
