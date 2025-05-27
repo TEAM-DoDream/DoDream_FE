@@ -7,6 +7,7 @@ import ScrapListSection from '@pages/myTodo/components/scrap/ScrapListSection.ts
 import ScrapEmptyState from '@pages/myTodo/components/scrap/ScrapEmptyState.tsx';
 import { useScrapTrainingQuery } from '@hook/scrap/training/useScrapTrainingQuery.ts';
 import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
+import { useScrapRecruitQuery } from '@hook/scrap/recruit/useScrapRecruitQuery.ts';
 
 const ScrapPage = () => {
   const navigate = useNavigate();
@@ -42,16 +43,28 @@ const ScrapPage = () => {
     locName: eduRegion === '지역 선택' ? undefined : eduRegion,
   });
 
-  const jobs: ScrapTrainingItem[] = [];
+  const {
+    data: jobScrapData,
+    isLoading: isJobScrapLoading,
+    error: jobScrapError,
+  } = useScrapRecruitQuery({
+    pageNum: jobPage - 1,
+    sortBy: jobSort as '최신 순' | '오래된 순',
+    locName: jobRegion === '지역 선택' ? undefined : jobRegion,
+  });
+
   const edus: ScrapTrainingItem[] = eduScrapData?.data.content ?? [];
+  const jobs = jobScrapData?.data.content ?? [];
 
   const displayData = activeTab === 'job' ? jobs : edus;
-  const isLoading = activeTab === 'edu' && isEduScrapLoading;
-  const error = activeTab === 'edu' ? eduScrapError : null;
+  const isLoading = activeTab === 'edu' ? isEduScrapLoading : isJobScrapLoading;
+  const error = activeTab === 'edu' ? eduScrapError : jobScrapError;
   const currentPage = activeTab === 'job' ? jobPage : eduPage;
   const setCurrentPage = activeTab === 'job' ? setJobPage : setEduPage;
   const totalPages =
-    activeTab === 'edu' ? (eduScrapData?.data.totalPages ?? 0) : 0;
+    activeTab === 'edu'
+      ? (eduScrapData?.data.totalPages ?? 0)
+      : (jobScrapData?.data.totalPages ?? 0);
   const currentSort = activeTab === 'job' ? jobSort : eduSort;
   const setCurrentSort = activeTab === 'job' ? setJobSort : setEduSort;
   const currentRegion = activeTab === 'job' ? jobRegion : eduRegion;
@@ -81,6 +94,7 @@ const ScrapPage = () => {
             currentPage={currentPage}
             onPageChange={setCurrentPage}
             totalPages={totalPages}
+            type={activeTab}
           />
         ) : (
           !isLoading &&
