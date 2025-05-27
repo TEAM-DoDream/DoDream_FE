@@ -20,6 +20,8 @@ const JobSearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+
   const { sortBy, setSelection } = useFilterStore(
     useShallow((s) => ({ sortBy: s.sortBy, setSelection: s.setSelection }))
   );
@@ -41,7 +43,7 @@ const JobSearchPage = () => {
   const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
 
   const scrapStatusMap = useMemo(() => {
-    if (!scrapCheckData?.data) return {};
+    if (!isLoggedIn || !scrapCheckData?.data) return {};
 
     const statusMap: Record<string, boolean> = {};
     scrapCheckData.data.forEach((item, index) => {
@@ -51,11 +53,16 @@ const JobSearchPage = () => {
     });
 
     return statusMap;
-  }, [scrapCheckData, jobIds]);
+  }, [scrapCheckData, jobIds, isLoggedIn]);
 
   const queryClient = useQueryClient();
 
   const handleScrapClick = (id: string, isScrap: boolean) => {
+    if (!isLoggedIn) {
+      alert('로그인 후 이용해주세요.');
+      return;
+    }
+
     scrapRecruit(
       { id, isScrap },
       {
@@ -124,7 +131,7 @@ const JobSearchPage = () => {
               >
                 <RecruitCard
                   item={item}
-                  isScrap={scrapStatusMap[item.id] || false}
+                  isScrap={isLoggedIn && (scrapStatusMap[item.id] || false)}
                   onScrapClick={handleScrapClick}
                 />
               </div>
@@ -150,7 +157,7 @@ const JobSearchPage = () => {
           <CardDetail
             item={selectedCard}
             onClose={() => setSelectedCardId(null)}
-            isScrap={scrapStatusMap[selectedCard.id] || false}
+            isScrap={isLoggedIn && (scrapStatusMap[selectedCard.id] || false)}
           />
         </div>
       )}

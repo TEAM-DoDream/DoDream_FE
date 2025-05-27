@@ -34,6 +34,8 @@ const LearningPage = () => {
     }))
   );
 
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+
   const trainingType = trainingCourse || '이론 위주';
   const queryClient = useQueryClient();
 
@@ -45,7 +47,7 @@ const LearningPage = () => {
   });
 
   const scrapStatusMap = useMemo(() => {
-    if (!scrapCheckData?.data) return {};
+    if (!isLoggedIn || !scrapCheckData?.data) return {};
 
     const statusMap: Record<string, boolean> = {};
     scrapCheckData.data.forEach((item, index) => {
@@ -55,11 +57,16 @@ const LearningPage = () => {
     });
 
     return statusMap;
-  }, [scrapCheckData, trainingIds]);
+  }, [scrapCheckData, trainingIds, isLoggedIn]);
 
   const { mutate: toggleScrap } = useScrapTrainingMutation();
 
   const handleScrapClick = (item: AcademyItem, isScrap: boolean) => {
+    if (!isLoggedIn) {
+      alert('로그인 후 이용해주세요.');
+      return;
+    }
+
     toggleScrap(
       {
         trprId: item.trprId,
@@ -136,7 +143,7 @@ const LearningPage = () => {
               >
                 <LearningCard
                   item={item}
-                  isScrap={scrapStatusMap[item.trprId] || false}
+                  isScrap={isLoggedIn && (scrapStatusMap[item.trprId] || false)}
                   onScrapClick={(e) => {
                     e.stopPropagation();
                     handleScrapClick(
@@ -174,7 +181,9 @@ const LearningPage = () => {
           <CardDetail
             item={selectedCard}
             onClose={() => setSelectedCardId(null)}
-            isScrap={scrapStatusMap[selectedCard.trprId] || false}
+            isScrap={
+              isLoggedIn && (scrapStatusMap[selectedCard.trprId] || false)
+            }
             onScrapClick={() =>
               handleScrapClick(
                 selectedCard,
