@@ -53,7 +53,7 @@ const OnBoardingPage = () => {
           />
         )}
 
-        <div className="mt-auto">
+        <div className="mt-[20px]">
           <Navigation
             onPrev={handlePrev}
             onNext={handleNext}
