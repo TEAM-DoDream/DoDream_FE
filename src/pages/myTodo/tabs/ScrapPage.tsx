@@ -5,7 +5,7 @@ import ScrapTabSelector from '@pages/myTodo/components/scrap/ScrapTabSelector.ts
 import SortAndRegionFilter from '@pages/myTodo/components/scrap/SortAndRegionFilter.tsx';
 import ScrapListSection from '@pages/myTodo/components/scrap/ScrapListSection.tsx';
 import ScrapEmptyState from '@pages/myTodo/components/scrap/ScrapEmptyState.tsx';
-import { useScrapTrainingQuery } from '@hook/scrap/useScrapTrainingQuery.ts';
+import { useScrapTrainingQuery } from '@hook/scrap/training/useScrapTrainingQuery.ts';
 import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
 
 const ScrapPage = () => {

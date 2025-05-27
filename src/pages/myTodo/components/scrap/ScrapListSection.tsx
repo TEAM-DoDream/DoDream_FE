@@ -1,7 +1,7 @@
 import Pagination from '@common/Pagination';
 import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
 import ScrappedItemCard from './ScrappedItemCard';
-import { useDeleteScrapTrainingMutation } from '@hook/scrap/useDeleteScrapTrainingMutation';
+import { useDeleteScrapTrainingMutation } from '@hook/scrap/training/useDeleteScrapTrainingMutation.ts';
 
 interface Props {
   jobs: ScrapTrainingItem[];
@@ -10,8 +10,14 @@ interface Props {
   totalPages: number;
 }
 
-const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props) => {
-  const { mutate: deleteScrapTraining, isPending: isDeleting } = useDeleteScrapTrainingMutation();
+const ScrapListSection = ({
+  jobs,
+  currentPage,
+  onPageChange,
+  totalPages,
+}: Props) => {
+  const { mutate: deleteScrapTraining, isPending: isDeleting } =
+    useDeleteScrapTrainingMutation();
 
   const handleCardClick = (item: ScrapTrainingItem) => {
     console.log('Card clicked:', item);
@@ -23,9 +29,8 @@ const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props
   const handleLikeClick = (item: ScrapTrainingItem) => {
     if (confirm('스크랩을 삭제하시겠습니까?')) {
       deleteScrapTraining(
-        { 
-
-          trprId: item.trprId
+        {
+          trprId: item.trprId,
         },
         {
           onSuccess: () => {
@@ -34,7 +39,7 @@ const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props
           onError: (error) => {
             console.error('스크랩 삭제 실패:', error);
             alert('스크랩 삭제에 실패했습니다. 다시 시도해주세요.');
-          }
+          },
         }
       );
     }
@@ -44,10 +49,10 @@ const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props
     <>
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {jobs.map((job) => (
-          <ScrappedItemCard 
-            key={job.scrapId} 
-            item={job} 
-            onCardClick={handleCardClick} 
+          <ScrappedItemCard
+            key={job.scrapId}
+            item={job}
+            onCardClick={handleCardClick}
             onLikeClick={handleLikeClick}
             isDeleting={isDeleting}
           />
