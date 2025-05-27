@@ -1,15 +1,37 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
 import HeartIcon from '@assets/icons/like.svg?react';
+import PurpleLike from '@assets/icons/purplelike.svg?react';
 import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
 import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMutation.ts';
+import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
+import { useState, useEffect } from 'react';
 
 interface CardDetailProps {
   item: RecruitItem;
   onClose: () => void;
+  isScrap?: boolean;
 }
 
-const CardDetail = ({ item, onClose }: CardDetailProps) => {
+const CardDetail = ({
+  item,
+  onClose,
+  isScrap: propIsScrap,
+}: CardDetailProps) => {
+  const [isScrap, setIsScrap] = useState(propIsScrap || false);
   const { mutate: scrapRecruit } = useScrapRecruitMutation();
+
+  const { data: scrapCheckData } = useScrapCheckQuery({
+    category: 'RECRUIT',
+    idList: [item.id],
+  });
+
+  useEffect(() => {
+    if (scrapCheckData?.data && scrapCheckData.data.length > 0) {
+      setIsScrap(scrapCheckData.data[0].isScrap);
+    } else if (propIsScrap !== undefined) {
+      setIsScrap(propIsScrap);
+    }
+  }, [scrapCheckData, propIsScrap]);
 
   const details = [
     {
@@ -27,7 +49,14 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
   ];
 
   const handleScrap = () => {
-    scrapRecruit(item.id);
+    scrapRecruit(
+      { id: item.id, isScrap },
+      {
+        onSuccess: (response) => {
+          setIsScrap(response.data.isScrap);
+        },
+      }
+    );
   };
 
   return (
@@ -59,12 +88,16 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
       </div>
 
       <div className="mt-8 flex justify-end gap-4">
-        <button 
-          className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50"
+        <button
+          className={`flex items-center gap-2 rounded-xl border ${isScrap ? 'border-purple-500 bg-purple-50' : 'border-purple-500 bg-white'} px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50`}
           onClick={handleScrap}
         >
-          <HeartIcon className="h-5 w-5" />
-          담기
+          {isScrap ? (
+            <PurpleLike className="h-5 w-5" />
+          ) : (
+            <HeartIcon className="h-5 w-5" />
+          )}
+          {isScrap ? '담기 취소' : '담기'}
         </button>
         <a
           href={item.url}
