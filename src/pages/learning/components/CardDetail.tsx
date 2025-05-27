@@ -1,17 +1,18 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
 import HeartIcon from '@assets/icons/like.svg?react';
-import {
-  useScrapTrainingMutation,
-  ScrapTrainingResponse,
-} from '@hook/scrap/training/useScrapTrainingMutation.ts';
-import { useState } from 'react';
+import PurpleLike from '@assets/icons/purplelike.svg?react';
+import { useState, useEffect } from 'react';
 import { useAcademyFilterStore } from '@store/academyFilterStore';
 import { useShallow } from 'zustand/react/shallow';
+import { useScrapTrainingMutation } from '@hook/scrap/training/useScrapTrainingMutation';
 
 interface CardDetailProps {
   item: AcademyItem;
   onClose: () => void;
+  isScrap?: boolean;
+  onScrapClick?: () => void;
 }
+
 interface AcademyItem {
   address: string;
   realMan: string;
@@ -26,43 +27,50 @@ interface AcademyItem {
   trprId: string;
 }
 
-const CardDetail = ({ item, onClose }: CardDetailProps) => {
-  const [isScraped, setIsScraped] = useState(false);
-  const { mutate: scrapTraining, isPending: isScrapLoading } =
-    useScrapTrainingMutation();
+const CardDetail = ({ item, onClose, isScrap: propIsScrap = false, onScrapClick }: CardDetailProps) => {
+  const [isScraped, setIsScraped] = useState(propIsScrap);
+  const { mutate: toggleScrap, isPending: isScrapLoading } = useScrapTrainingMutation();
+
+  useEffect(() => {
+    setIsScraped(propIsScrap);
+  }, [propIsScrap]);
 
   const { trainingCourse } = useAcademyFilterStore(
     useShallow((s) => ({ trainingCourse: s.trainingCourse }))
   );
   const trainingType = trainingCourse || '이론 위주';
-  console.log(trainingType);
-  const handleScrap = () => {
-    if (isScrapLoading) return;
 
-    scrapTraining(
-      {
-        trprId: item.trprId,
-        trprDegr: item.trprDegr,
-        trainstCstId: item.trainstCstId,
-        traStartDate: item.traStartDate,
-        traEndDate: item.traEndDate,
-        type: trainingType as '이론 위주' | '실습 위주',
-      },
-      {
-        onSuccess: (response: ScrapTrainingResponse) => {
-          if (response.success) {
-            setIsScraped(true);
-            alert('교육과정이 스크랩되었습니다.');
-          } else {
-            alert(response.message || '스크랩에 실패했습니다.');
-          }
+  const handleScrap = () => {
+    if (onScrapClick) {
+      onScrapClick();
+    } else {
+      if (isScrapLoading) return;
+
+      toggleScrap(
+        {
+          trprId: item.trprId,
+          trprDegr: item.trprDegr,
+          trainstCstId: item.trainstCstId,
+          traStartDate: item.traStartDate,
+          traEndDate: item.traEndDate,
+          type: trainingType as '이론 위주' | '실습 위주',
+          isScrap: isScraped
         },
-        onError: (error) => {
-          alert('스크랩 중 오류가 발생했습니다.');
-          console.error('스크랩 오류:', error);
-        },
-      }
-    );
+        {
+          onSuccess: (response) => {
+            if (response.success) {
+              setIsScraped(!isScraped);
+            } else {
+              alert(response.message || '스크랩 작업에 실패했습니다.');
+            }
+          },
+          onError: (error) => {
+            alert('스크랩 작업 중 오류가 발생했습니다.');
+            console.error('스크랩 오류:', error);
+          },
+        }
+      );
+    }
   };
 
   const details = [
@@ -100,17 +108,15 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
         <div className="flex gap-4">
           <button
             onClick={handleScrap}
-            disabled={isScrapLoading || isScraped}
-            className={`flex items-center gap-2 rounded-xl border px-[28px] py-[18px] font-T05-SB ${
-              isScraped
-                ? 'cursor-default border-transparent bg-purple-300 text-white'
-                : isScrapLoading
-                  ? 'cursor-wait border-purple-300 bg-purple-100 text-purple-500'
-                  : 'border-purple-500 bg-white text-purple-500 hover:bg-purple-50'
-            } `}
+            disabled={isScrapLoading}
+            className={`flex items-center gap-2 rounded-xl border ${isScraped ? 'border-purple-500 bg-purple-50' : 'border-purple-500 bg-white'} px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50 ${isScrapLoading ? 'cursor-wait opacity-70' : ''}`}
           >
-            <HeartIcon className={`h-5 w-5 ${isScraped ? 'text-white' : ''}`} />
-            {isScrapLoading ? '담는 중…' : isScraped ? '담기 완료' : '담기'}
+            {isScraped ? (
+              <PurpleLike className="h-5 w-5" />
+            ) : (
+              <HeartIcon className="h-5 w-5" />
+            )}
+            {isScrapLoading ? '처리 중...' : isScraped ? '담기 취소' : '담기'}
           </button>
 
           <a
