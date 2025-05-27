@@ -22,7 +22,7 @@ const ScrapListSection = ({
 }: Props) => {
   const { mutate: deleteScrapTraining, isPending: isDeletingTraining } =
     useDeleteScrapTrainingMutation();
-  
+
   const { mutate: deleteScrapRecruit, isPending: isDeletingRecruit } =
     useDeleteScrapRecruitMutation();
 
@@ -51,7 +51,7 @@ const ScrapListSection = ({
           },
           {
             onSuccess: () => {
-              console.log('교육 스크랩이 성공적으로 삭제되었습니다.');
+              alert('교육 스크랩이 성공적으로 삭제되었습니다.');
             },
             onError: (error) => {
               console.error('교육 스크랩 삭제 실패:', error);
