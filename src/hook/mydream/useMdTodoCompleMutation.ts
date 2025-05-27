@@ -18,8 +18,20 @@ export const useMdTodoCompleteMutation = () => {
       return data.data as TodoCompleteResponse;
     },
     onSuccess: () => {
-     
-      queryClient.invalidateQueries({ queryKey: ['mdTodo'] });
+      // 모든 관련 쿼리 무효화
+      queryClient.invalidateQueries({ 
+        queryKey: ['mdTodo']
+      });
+      
+      // todoGroup 쿼리도 무효화
+      queryClient.invalidateQueries({
+        queryKey: ['todoGroup']
+      });
+      
+      // mdJobs 쿼리도 무효화
+      queryClient.invalidateQueries({
+        queryKey: ['mdJobs']
+      });
     },
   });
 };
