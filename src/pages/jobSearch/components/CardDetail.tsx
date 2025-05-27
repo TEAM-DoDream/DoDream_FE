@@ -1,6 +1,7 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
 import HeartIcon from '@assets/icons/like.svg?react';
 import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
+import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMutation.ts';
 
 interface CardDetailProps {
   item: RecruitItem;
@@ -8,6 +9,8 @@ interface CardDetailProps {
 }
 
 const CardDetail = ({ item, onClose }: CardDetailProps) => {
+  const { mutate: scrapRecruit } = useScrapRecruitMutation();
+
   const details = [
     {
       label: '마감일',
@@ -22,6 +25,10 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
     },
     { label: '고용형태', value: item.jobTypeName, color: 'text-gray-900' },
   ];
+
+  const handleScrap = () => {
+    scrapRecruit(item.id);
+  };
 
   return (
     <div className="relative w-full max-w-2xl rounded-2xl bg-white px-6 py-8">
@@ -52,7 +59,10 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
       </div>
 
       <div className="mt-8 flex justify-end gap-4">
-        <button className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50">
+        <button 
+          className="flex items-center gap-2 rounded-xl border border-purple-500 bg-white px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50"
+          onClick={handleScrap}
+        >
           <HeartIcon className="h-5 w-5" />
           담기
         </button>
