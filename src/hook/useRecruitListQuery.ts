@@ -31,12 +31,12 @@ export const useRecruitListQuery = (
           sortBy: sortBy || undefined,
         },
       });
-      // API 가 { success, timestamp, data: { … } } 형태라면
+
       const payload = res.data.data;
-      // zod 로 검증 + 파싱
+
       return RecruitListResponseSchema.parse(payload);
     },
-    // 옵션은 취향대로
+
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

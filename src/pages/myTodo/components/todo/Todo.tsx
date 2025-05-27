@@ -9,34 +9,30 @@ import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import EmptyTodo from './EmptyTodo';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
 import { useQueryClient } from '@tanstack/react-query';
-
-const jobOptions = ['간호 조무사', '바리스타', '요양보호사'];
+import { useMdJobsQuery } from '@hook/todo/useTdJobsQuery';
+import { useTodoGroupQuery } from '@hook/todo/useTodoGroupQuery';
 
 const Todo = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
   const alertShown = useRef(false);
+  
+  const [refreshCounter, setRefreshCounter] = useState(0);
 
-  const { data: todoData, isLoading, isFetching } = useMdTodoQuery();
+  const { data: todoData, isLoading: isTodoLoading } = useMdTodoQuery();
+  const { data: jobsData, isLoading: isJobsLoading } = useMdJobsQuery();
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  
+  const {
+    data: selectedTodoGroup,
+    isLoading: isGroupLoading,
+    refetch: refetchTodoGroup,
+  } = useTodoGroupQuery(selectedJobId || undefined);
+  
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
-
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    if (todoData?.todos) {
-      setCheckedIds(
-        todoData.todos.filter((t) => t.completed).map((t) => t.todoId)
-      );
-    }
-  }, [todoData]);
-
-  useEffect(() => {
-    if (location.pathname === '/mytodo/list') {
-      queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
-    }
-  }, [queryClient, location.pathname]);
-
+  
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token && !alertShown.current) {
@@ -44,23 +40,72 @@ const Todo = () => {
       alert('로그인 후 이용해주세요');
       navigate('/');
     }
-  }, [navigate]);
+    
+    if (todoData?.todoGroupId && selectedJobId === null) {
+      setSelectedJobId(todoData.todoGroupId);
+    } else if (jobsData && Array.isArray(jobsData) && jobsData.length > 0 && selectedJobId === null) {
+      setSelectedJobId(jobsData[0].todoGroupId);
+    }
+  }, [todoData, jobsData, selectedJobId, navigate]);
+
+  useEffect(() => {
+    if (selectedTodoGroup?.todos) {
+      setCheckedIds(
+        selectedTodoGroup.todos.filter((t) => t.completed).map((t) => t.todoId)
+      );
+    } else if (todoData?.todos) {
+      setCheckedIds(
+        todoData.todos.filter((t) => t.completed).map((t) => t.todoId)
+      );
+    }
+  }, [selectedTodoGroup, todoData]);
+
+  useEffect(() => {
+    if (selectedJobId) {
+      queryClient.invalidateQueries({ queryKey: ['todoGroup', selectedJobId] });
+      refetchTodoGroup();
+    }
+    
+    if (location.pathname === '/mytodo/list') {
+      if (selectedJobId) {
+        queryClient.refetchQueries({
+          queryKey: ['todoGroup', selectedJobId],
+          exact: true,
+        });
+      } else {
+        queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
+      }
+    }
+  }, [selectedJobId, queryClient, refetchTodoGroup, refreshCounter, location.pathname]);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState('요양보호사');
   const toggleDropdown = () => setIsDropdownOpen((o) => !o);
-  const handleSelect = (job: string) => {
-    setSelectedJob(job);
+  
+  const handleSelect = (jobId: number) => {
+    if (jobId === selectedJobId) {
+      setRefreshCounter((prev) => prev + 1);
+      queryClient.invalidateQueries({ queryKey: ['todoGroup', jobId] });
+      refetchTodoGroup();
+    } else {
+      if (selectedJobId) {
+        queryClient.removeQueries({ queryKey: ['todoGroup', selectedJobId] });
+      }
+      setSelectedJobId(jobId);
+    }
     setIsDropdownOpen(false);
   };
 
-  const hasTodos = !!todoData?.todos?.length;
-  const todoItems =
-    todoData?.todos.map((t) => ({
-      id: t.todoId,
-      text: t.title,
-      hasMemo: t.isMemoExist,
-    })) || [];
+  const todoItems = selectedTodoGroup?.todos
+    ? selectedTodoGroup.todos.map((t) => ({
+        id: t.todoId,
+        text: t.title,
+        hasMemo: t.isMemoExist,
+      }))
+    : todoData?.todos.map((t) => ({
+        id: t.todoId,
+        text: t.title,
+        hasMemo: t.isMemoExist,
+      })) || [];
 
   const handleCheckChange = (newIds: number[]) => {
     const added = newIds.filter((id) => !checkedIds.includes(id));
@@ -73,14 +118,43 @@ const Todo = () => {
   };
 
   const handleAddTodo = () => {
-    if (todoData?.todoGroupId) {
+    if (selectedJobId) {
+      navigate(`/mytodo/add/${selectedJobId}`);
+    } else if (todoData?.todoGroupId) {
       navigate(`/mytodo/add/${todoData.todoGroupId}`);
     }
   };
 
-  if (!isLoading && !hasTodos) {
+  const handleRefresh = () => {
+    setRefreshCounter((prev) => prev + 1);
+
+    if (selectedJobId) {
+      queryClient.invalidateQueries({ queryKey: ['todoGroup', selectedJobId] });
+      refetchTodoGroup();
+    } else {
+      queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
+    }
+  };
+
+  if (isJobsLoading || (isTodoLoading && !todoData)) {
+    return (
+      <div className="py-4 text-gray-500 font-B01-M">
+        직업 목록을 불러오는 중...
+      </div>
+    );
+  }
+
+  if (!jobsData || !Array.isArray(jobsData) || jobsData.length === 0) {
     return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
   }
+
+  const selectedJobName = Array.isArray(jobsData)
+    ? jobsData.find((job) => job.todoGroupId === selectedJobId)?.jobName ||
+      todoData?.jobName ||
+      ''
+    : todoData?.jobName || '';
+
+  const totalView = selectedTodoGroup?.totalView ?? todoData?.totalView ?? 0;
 
   return (
     <div className="mb-[95px] mt-10 flex flex-col px-[120px]">
@@ -90,30 +164,40 @@ const Todo = () => {
             className="flex cursor-pointer items-center gap-2 text-gray-900 font-T02-B"
             onClick={toggleDropdown}
           >
-            {todoData?.jobName || selectedJob}
-            <BackIcon className="-rotate-90 transition-transform" />
+            {selectedJobName}
+            <BackIcon
+              className={`transition-transform ${isDropdownOpen ? 'rotate-90' : '-rotate-90'}`}
+            />
           </div>
-          {isDropdownOpen && (
-            <div className="absolute top-full mt-2 w-[366px] rounded-2xl border bg-white p-2 shadow">
-              {jobOptions.map((job) => (
+          {isDropdownOpen && Array.isArray(jobsData) && jobsData.length > 0 && (
+            <div className="absolute top-full z-10 mt-2 w-[366px] rounded-2xl border bg-white p-2 shadow">
+              {jobsData.map((job) => (
                 <div
-                  key={job}
+                  key={job.todoGroupId}
                   className={`cursor-pointer px-5 py-6 ${
-                    job === selectedJob
+                    job.todoGroupId === selectedJobId
                       ? 'text-purple-500 font-B01-SB'
                       : 'text-gray-400 font-B01-M'
                   }`}
-                  onClick={() => handleSelect(job)}
+                  onClick={() => handleSelect(job.todoGroupId)}
                 >
-                  {job}
+                  {job.jobName}
                 </div>
               ))}
             </div>
           )}
         </div>
-        <div className="flex items-center gap-2 text-gray-500 font-B03-M">
-          <Eye />
-          조회수 {todoData?.totalView ?? 0}
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={handleRefresh}
+            className="mr-2 text-gray-500 font-B03-M hover:text-purple-500"
+          >
+            새로고침
+          </button>
+          <div className="flex items-center gap-2 text-gray-500 font-B03-M">
+            <Eye />
+            조회수 {totalView}
+          </div>
         </div>
       </div>
 
@@ -121,7 +205,7 @@ const Todo = () => {
         <div className="text-black font-T04-SB"> 할 일 목록</div>
         <Divider className="mb-4 mt-4" />
 
-        {isLoading || isFetching ? (
+        {isGroupLoading ? (
           <div className="py-4 text-gray-500 font-B01-M">로딩 중...</div>
         ) : todoItems.length === 0 ? (
           <div className="py-4 text-gray-500 font-B01-M">
