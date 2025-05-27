@@ -13,6 +13,15 @@ export const ScrapRecruitItemSchema = z.object({
   url: z.string(),
 });
 
+const SortSchema = z.union([
+  z.object({
+    empty: z.boolean(),
+    sorted: z.boolean(),
+    unsorted: z.boolean(),
+  }),
+  z.array(z.any()),
+]);
+
 export const ScrapRecruitListResponseSchema = z.object({
   success: z.boolean(),
   timestamp: z.string(),
@@ -22,19 +31,11 @@ export const ScrapRecruitListResponseSchema = z.object({
     size: z.number(),
     content: z.array(ScrapRecruitItemSchema),
     number: z.number(),
-    sort: z.object({
-      empty: z.boolean(),
-      sorted: z.boolean(),
-      unsorted: z.boolean(),
-    }),
+    sort: SortSchema,
     numberOfElements: z.number(),
     pageable: z.object({
       offset: z.number(),
-      sort: z.object({
-        empty: z.boolean(),
-        sorted: z.boolean(),
-        unsorted: z.boolean(),
-      }),
+      sort: SortSchema,
       paged: z.boolean(),
       unpaged: z.boolean(),
       pageNumber: z.number(),
