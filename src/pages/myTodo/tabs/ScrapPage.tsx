@@ -112,11 +112,7 @@ const ScrapPage = () => {
         <AddressModal
           onClose={(region) => {
             if (region) {
-              if (activeTab === 'job') {
-                setCurrentRegion(region);
-              } else {
-                setCurrentRegion(region);
-              }
+              setCurrentRegion(region);
             }
             setIsModalOpen(false);
           }}
