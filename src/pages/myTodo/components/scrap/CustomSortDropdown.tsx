@@ -25,11 +25,11 @@ const CustomSortDropdown = ({
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
-  const options = ['최신순', '오래된 순'];
+  const options = ['최신 순', '오래된 순'];
 
   return (
     <div
-      className="relative ml-4 flex h-[50px] w-[100px] content-center"
+      className="relative ml-4 flex h-[50px] w-[120px] content-center"
       ref={dropdownRef}
     >
       <button
