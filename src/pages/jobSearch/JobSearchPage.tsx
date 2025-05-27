@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Filter from '@pages/jobSearch/components/Filter';
 import RecruitCard from '@pages/jobSearch/components/RecruitCard';
 import CardDetail from '@pages/jobSearch/components/CardDetail';
@@ -10,6 +10,9 @@ import LoadingSpinner from '@common/LoadingSpinner';
 import DropDown from '@common/DropDown';
 import { useFilterStore } from '@store/filterStore';
 import { useShallow } from 'zustand/react/shallow';
+import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
+import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const sortOptions = ['마감 임박순', '마감 여유순'];
 
@@ -24,9 +27,44 @@ const JobSearchPage = () => {
   const { data = { job: [], count: 0, total: 0, start: 0 }, isPending } =
     useRecruitListQuery(currentPage);
 
-  const totalPages = Math.ceil(Number(data.total || 0) / (data.count || 10));
   const jobs = data.job;
+  const jobIds = useMemo(() => jobs.map((job) => job.id), [jobs]);
+
+  const { data: scrapCheckData } = useScrapCheckQuery({
+    category: 'RECRUIT',
+    idList: jobIds,
+  });
+
+  const { mutate: scrapRecruit } = useScrapRecruitMutation();
+
+  const totalPages = Math.ceil(Number(data.total || 0) / (data.count || 10));
   const selectedCard = selectedCardId !== null ? jobs[selectedCardId] : null;
+
+  const scrapStatusMap = useMemo(() => {
+    if (!scrapCheckData?.data) return {};
+
+    const statusMap: Record<string, boolean> = {};
+    scrapCheckData.data.forEach((item, index) => {
+      if (jobIds[index]) {
+        statusMap[jobIds[index]] = item.isScrap;
+      }
+    });
+
+    return statusMap;
+  }, [scrapCheckData, jobIds]);
+
+  const queryClient = useQueryClient();
+
+  const handleScrapClick = (id: string, isScrap: boolean) => {
+    scrapRecruit(
+      { id, isScrap },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['scrapCheck'] });
+        },
+      }
+    );
+  };
 
   if (isPending) {
     return (
@@ -84,7 +122,11 @@ const JobSearchPage = () => {
                 onClick={() => setSelectedCardId(index)}
                 className="cursor-pointer"
               >
-                <RecruitCard item={item} />
+                <RecruitCard
+                  item={item}
+                  isScrap={scrapStatusMap[item.id] || false}
+                  onScrapClick={handleScrapClick}
+                />
               </div>
             ))}
           </div>
@@ -108,6 +150,7 @@ const JobSearchPage = () => {
           <CardDetail
             item={selectedCard}
             onClose={() => setSelectedCardId(null)}
+            isScrap={scrapStatusMap[selectedCard.id] || false}
           />
         </div>
       )}
