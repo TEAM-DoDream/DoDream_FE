@@ -30,7 +30,6 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
   const [isScraped, setIsScraped] = useState(false);
   const { mutate: scrapTraining, isPending: isScrapLoading } =
     useScrapTrainingMutation();
-  //  const { mutate: scrapTraining, isLoading: isScrapLoading } = useScrapTrainingMutation();
 
   const { trainingCourse } = useAcademyFilterStore(
     useShallow((s) => ({ trainingCourse: s.trainingCourse }))
@@ -39,7 +38,6 @@ const CardDetail = ({ item, onClose }: CardDetailProps) => {
   console.log(trainingType);
   const handleScrap = () => {
     if (isScrapLoading) return;
-    // +   if (isScrapLoading || isScraped) return;
 
     scrapTraining(
       {
