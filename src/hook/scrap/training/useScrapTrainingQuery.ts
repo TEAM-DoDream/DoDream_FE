@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   ScrapTrainingListResponseSchema,
   ScrapTrainingListResponse,
-} from '@validation/scrap/scrapSchema';
+} from '@validation/scrap/scrapSchema.ts';
 
 interface ScrapTrainingQueryParams {
   pageNum: number;

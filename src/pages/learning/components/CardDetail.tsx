@@ -1,6 +1,9 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
 import HeartIcon from '@assets/icons/like.svg?react';
-import { useScrapTrainingMutation, ScrapTrainingResponse } from '../../../hook/scrap/useScrapTrainingMutation';
+import {
+  useScrapTrainingMutation,
+  ScrapTrainingResponse,
+} from '@hook/scrap/training/useScrapTrainingMutation.ts';
 import { useState } from 'react';
 import { useAcademyFilterStore } from '@store/academyFilterStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -25,17 +28,18 @@ interface AcademyItem {
 
 const CardDetail = ({ item, onClose }: CardDetailProps) => {
   const [isScraped, setIsScraped] = useState(false);
- const { mutate: scrapTraining, isPending: isScrapLoading } = useScrapTrainingMutation();
-//  const { mutate: scrapTraining, isLoading: isScrapLoading } = useScrapTrainingMutation();
+  const { mutate: scrapTraining, isPending: isScrapLoading } =
+    useScrapTrainingMutation();
+  //  const { mutate: scrapTraining, isLoading: isScrapLoading } = useScrapTrainingMutation();
 
   const { trainingCourse } = useAcademyFilterStore(
     useShallow((s) => ({ trainingCourse: s.trainingCourse }))
   );
   const trainingType = trainingCourse || '이론 위주';
-console.log(trainingType)
+  console.log(trainingType);
   const handleScrap = () => {
-  if (isScrapLoading) return;
-// +   if (isScrapLoading || isScraped) return;
+    if (isScrapLoading) return;
+    // +   if (isScrapLoading || isScraped) return;
 
     scrapTraining(
       {
@@ -73,7 +77,7 @@ console.log(trainingType)
   return (
     <div className="relative w-full max-w-2xl rounded-2xl bg-white px-6 py-8">
       <button
-        className="absolute right-4 top-4 hover:bg-gray-200 rounded-[10px]"
+        className="absolute right-4 top-4 rounded-[10px] hover:bg-gray-200"
         onClick={onClose}
       >
         <CancelIcon className="h-8 w-8 text-[#676F7B]" />
@@ -96,25 +100,19 @@ console.log(trainingType)
           수강료 {item.realMan}
         </div>
         <div className="flex gap-4">
-
           <button
             onClick={handleScrap}
             disabled={isScrapLoading || isScraped}
-            className={`
-              flex items-center gap-2 rounded-xl border px-[28px] py-[18px] font-T05-SB
-              ${isScraped
-                ? 'bg-purple-300 text-white border-transparent cursor-default'
+            className={`flex items-center gap-2 rounded-xl border px-[28px] py-[18px] font-T05-SB ${
+              isScraped
+                ? 'cursor-default border-transparent bg-purple-300 text-white'
                 : isScrapLoading
-                ? 'bg-purple-100 text-purple-500 border-purple-300 cursor-wait'
-                : 'bg-white text-purple-500 border-purple-500 hover:bg-purple-50'}
-            `}
+                  ? 'cursor-wait border-purple-300 bg-purple-100 text-purple-500'
+                  : 'border-purple-500 bg-white text-purple-500 hover:bg-purple-50'
+            } `}
           >
             <HeartIcon className={`h-5 w-5 ${isScraped ? 'text-white' : ''}`} />
-            {isScrapLoading
-              ? '담는 중…'
-              : isScraped
-              ? '담기 완료'
-              : '담기'}
+            {isScrapLoading ? '담는 중…' : isScraped ? '담기 완료' : '담기'}
           </button>
 
           <a
