@@ -1,6 +1,7 @@
 import Pagination from '@common/Pagination';
-import {  ScrapTrainingItem } from '@validation/scrap/scrapSchema'; 
+import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
 import ScrappedItemCard from './ScrappedItemCard';
+import { useDeleteScrapTrainingMutation } from '@hook/scrap/useDeleteScrapTrainingMutation';
 
 interface Props {
   jobs: ScrapTrainingItem[];
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props) => {
+  const { mutate: deleteScrapTraining, isPending: isDeleting } = useDeleteScrapTrainingMutation();
+
   const handleCardClick = (item: ScrapTrainingItem) => {
     console.log('Card clicked:', item);
     if (item.titleLink) {
@@ -18,7 +21,23 @@ const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props
   };
 
   const handleLikeClick = (item: ScrapTrainingItem) => {
-    console.log('Like clicked (attempt to unscrap):', item.scrapId);
+    if (confirm('스크랩을 삭제하시겠습니까?')) {
+      deleteScrapTraining(
+        { 
+
+          trprId: item.trprId
+        },
+        {
+          onSuccess: () => {
+            console.log('스크랩이 성공적으로 삭제되었습니다.');
+          },
+          onError: (error) => {
+            console.error('스크랩 삭제 실패:', error);
+            alert('스크랩 삭제에 실패했습니다. 다시 시도해주세요.');
+          }
+        }
+      );
+    }
   };
 
   return (
@@ -29,7 +48,8 @@ const ScrapListSection = ({ jobs, currentPage, onPageChange, totalPages }: Props
             key={job.scrapId} 
             item={job} 
             onCardClick={handleCardClick} 
-            onLikeClick={handleLikeClick} 
+            onLikeClick={handleLikeClick}
+            isDeleting={isDeleting}
           />
         ))}
       </div>

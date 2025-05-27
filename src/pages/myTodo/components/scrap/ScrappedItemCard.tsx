@@ -5,12 +5,14 @@ interface ScrappedItemCardProps {
   item: ScrapTrainingItem;
   onCardClick?: (item: ScrapTrainingItem) => void;
   onLikeClick?: (item: ScrapTrainingItem) => void;
+  isDeleting?: boolean;
 }
 
 const ScrappedItemCard = ({
   item,
   onCardClick,
   onLikeClick,
+  isDeleting = false,
 }: ScrappedItemCardProps) => {
   const handleCardClick = () => {
     if (onCardClick) {
@@ -22,7 +24,7 @@ const ScrappedItemCard = ({
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onLikeClick) {
+    if (!isDeleting && onLikeClick) {
       onLikeClick(item);
     }
 
@@ -50,8 +52,12 @@ const ScrappedItemCard = ({
           type="button"
           onClick={handleLikeClick}
           aria-label="스크랩 취소"
+          disabled={isDeleting}
+          className={isDeleting ? 'cursor-not-allowed opacity-50' : ''}
         >
-          <Like className="h-6 w-6 text-purple-500 hover:text-purple-700" />
+          <Like
+            className={`h-6 w-6 ${isDeleting ? 'text-gray-400' : 'text-purple-500 hover:text-purple-700'}`}
+          />
         </button>
       </div>
 
