@@ -100,11 +100,8 @@ const CardDetail = ({ item, onClose, isScrap: propIsScrap = false, onScrapClick 
           </div>
         ))}
       </div>
-
-      <div className="mt-8 flex items-center justify-between">
-        <div className="text-xl text-purple-500 font-T05-SB">
-          수강료 {item.realMan}
-        </div>
+      <div className="mt-8 flex justify-end gap-4">
+       
         <div className="flex gap-4">
           <button
             onClick={handleScrap}
