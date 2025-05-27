@@ -1,13 +1,16 @@
 import Pagination from '@common/Pagination';
 import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
+import { ScrapRecruitItem } from '@validation/scrap/scrapRecruitSchema';
 import ScrappedItemCard from './ScrappedItemCard';
 import { useDeleteScrapTrainingMutation } from '@hook/scrap/training/useDeleteScrapTrainingMutation.ts';
+import { useDeleteScrapRecruitMutation } from '@hook/scrap/recruit/useDeleteScrapRecruitMutation.ts';
 
 interface Props {
-  jobs: ScrapTrainingItem[];
+  jobs: ScrapTrainingItem[] | ScrapRecruitItem[];
   currentPage: number;
   onPageChange: (page: number) => void;
   totalPages: number;
+  type?: 'job' | 'edu';
 }
 
 const ScrapListSection = ({
@@ -15,33 +18,63 @@ const ScrapListSection = ({
   currentPage,
   onPageChange,
   totalPages,
+  type = 'edu',
 }: Props) => {
-  const { mutate: deleteScrapTraining, isPending: isDeleting } =
+  const { mutate: deleteScrapTraining, isPending: isDeletingTraining } =
     useDeleteScrapTrainingMutation();
+  
+  const { mutate: deleteScrapRecruit, isPending: isDeletingRecruit } =
+    useDeleteScrapRecruitMutation();
 
-  const handleCardClick = (item: ScrapTrainingItem) => {
-    console.log('Card clicked:', item);
-    if (item.titleLink) {
-      window.open(item.titleLink, '_blank', 'noopener,noreferrer');
+  const isDeleting = type === 'edu' ? isDeletingTraining : isDeletingRecruit;
+
+  const handleCardClick = (item: ScrapTrainingItem | ScrapRecruitItem) => {
+    if (type === 'edu') {
+      const trainingItem = item as ScrapTrainingItem;
+      if (trainingItem.titleLink) {
+        window.open(trainingItem.titleLink, '_blank', 'noopener,noreferrer');
+      }
+    } else {
+      const recruitItem = item as ScrapRecruitItem;
+      if (recruitItem.url) {
+        window.open(recruitItem.url, '_blank', 'noopener,noreferrer');
+      }
     }
   };
 
-  const handleLikeClick = (item: ScrapTrainingItem) => {
+  const handleLikeClick = (item: ScrapTrainingItem | ScrapRecruitItem) => {
     if (confirm('스크랩을 삭제하시겠습니까?')) {
-      deleteScrapTraining(
-        {
-          trprId: item.trprId,
-        },
-        {
-          onSuccess: () => {
-            console.log('스크랩이 성공적으로 삭제되었습니다.');
+      if (type === 'edu') {
+        deleteScrapTraining(
+          {
+            trprId: (item as ScrapTrainingItem).trprId,
           },
-          onError: (error) => {
-            console.error('스크랩 삭제 실패:', error);
-            alert('스크랩 삭제에 실패했습니다. 다시 시도해주세요.');
+          {
+            onSuccess: () => {
+              console.log('교육 스크랩이 성공적으로 삭제되었습니다.');
+            },
+            onError: (error) => {
+              console.error('교육 스크랩 삭제 실패:', error);
+              alert('스크랩 삭제에 실패했습니다. 다시 시도해주세요.');
+            },
+          }
+        );
+      } else {
+        deleteScrapRecruit(
+          {
+            id: (item as ScrapRecruitItem).id,
           },
-        }
-      );
+          {
+            onSuccess: () => {
+              console.log('채용 스크랩이 성공적으로 삭제되었습니다.');
+            },
+            onError: (error) => {
+              console.error('채용 스크랩 삭제 실패:', error);
+              alert('스크랩 삭제에 실패했습니다. 다시 시도해주세요.');
+            },
+          }
+        );
+      }
     }
   };
 
@@ -52,6 +85,7 @@ const ScrapListSection = ({
           <ScrappedItemCard
             key={job.scrapId}
             item={job}
+            type={type}
             onCardClick={handleCardClick}
             onLikeClick={handleLikeClick}
             isDeleting={isDeleting}
