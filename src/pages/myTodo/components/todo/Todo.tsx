@@ -17,78 +17,55 @@ const Todo = () => {
   const location = useLocation();
   const queryClient = useQueryClient();
   const alertShown = useRef(false);
-
-  // 강제 리렌더링을 위한 카운터
+  
   const [refreshCounter, setRefreshCounter] = useState(0);
 
   const { data: todoData, isLoading: isTodoLoading } = useMdTodoQuery();
-
   const { data: jobsData, isLoading: isJobsLoading } = useMdJobsQuery();
-
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
-
+  
   const {
     data: selectedTodoGroup,
     isLoading: isGroupLoading,
     refetch: refetchTodoGroup,
   } = useTodoGroupQuery(selectedJobId || undefined);
-
+  
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
-
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
-
-  // 디버깅을 위한 로그 추가
+  
   useEffect(() => {
-    console.log('jobsData:', jobsData);
-    console.log('selectedJobId:', selectedJobId);
-    console.log('selectedTodoGroup:', selectedTodoGroup);
-    console.log('refreshCounter:', refreshCounter);
-  }, [jobsData, selectedJobId, selectedTodoGroup, refreshCounter]);
-
-  // 초기 로딩 시 todoData에서 todoGroupId가 있으면 해당 ID로 설정
-  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token && !alertShown.current) {
+      alertShown.current = true;
+      alert('로그인 후 이용해주세요');
+      navigate('/');
+    }
+    
     if (todoData?.todoGroupId && selectedJobId === null) {
       setSelectedJobId(todoData.todoGroupId);
-    }
-  }, [todoData, selectedJobId]);
-
-  // 직업 목록이 로드되었을 때 초기 직업 설정
-  useEffect(() => {
-    if (
-      jobsData &&
-      Array.isArray(jobsData) &&
-      jobsData.length > 0 &&
-      selectedJobId === null
-    ) {
+    } else if (jobsData && Array.isArray(jobsData) && jobsData.length > 0 && selectedJobId === null) {
       setSelectedJobId(jobsData[0].todoGroupId);
     }
-  }, [jobsData, selectedJobId]);
+  }, [todoData, jobsData, selectedJobId, navigate]);
 
   useEffect(() => {
-    // 선택된 직업의 Todo 그룹 데이터가 있는 경우
     if (selectedTodoGroup?.todos) {
       setCheckedIds(
         selectedTodoGroup.todos.filter((t) => t.completed).map((t) => t.todoId)
       );
-    }
-    // 기본 Todo 데이터가 있는 경우 (초기 로딩 시)
-    else if (todoData?.todos) {
+    } else if (todoData?.todos) {
       setCheckedIds(
         todoData.todos.filter((t) => t.completed).map((t) => t.todoId)
       );
     }
   }, [selectedTodoGroup, todoData]);
 
-  // 선택된 직업 ID가 변경될 때마다 데이터 새로고침
   useEffect(() => {
     if (selectedJobId) {
-      // 캐시를 무효화하고 새로운 데이터를 가져옴
       queryClient.invalidateQueries({ queryKey: ['todoGroup', selectedJobId] });
       refetchTodoGroup();
     }
-  }, [selectedJobId, queryClient, refetchTodoGroup, refreshCounter]);
-
-  useEffect(() => {
+    
     if (location.pathname === '/mytodo/list') {
       if (selectedJobId) {
         queryClient.refetchQueries({
@@ -99,31 +76,17 @@ const Todo = () => {
         queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
       }
     }
-  }, [queryClient, location.pathname, selectedJobId]);
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token && !alertShown.current) {
-      alertShown.current = true;
-      alert('로그인 후 이용해주세요');
-      navigate('/');
-    }
-  }, [navigate]);
+  }, [selectedJobId, queryClient, refetchTodoGroup, refreshCounter, location.pathname]);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdown = () => setIsDropdownOpen((o) => !o);
-
+  
   const handleSelect = (jobId: number) => {
-    // 같은 직업을 선택하더라도 데이터를 강제로 다시 불러옴
     if (jobId === selectedJobId) {
-      console.log('같은 직업 선택됨, 데이터 강제 새로고침');
-      // 강제 리렌더링을 위해 카운터 증가
       setRefreshCounter((prev) => prev + 1);
-      // 캐시를 무효화하고 새로운 데이터를 가져옴
       queryClient.invalidateQueries({ queryKey: ['todoGroup', jobId] });
       refetchTodoGroup();
     } else {
-      // 이전 데이터 캐시 제거
       if (selectedJobId) {
         queryClient.removeQueries({ queryKey: ['todoGroup', selectedJobId] });
       }
@@ -132,7 +95,6 @@ const Todo = () => {
     setIsDropdownOpen(false);
   };
 
-  // 현재 표시할 Todo 아이템 결정
   const todoItems = selectedTodoGroup?.todos
     ? selectedTodoGroup.todos.map((t) => ({
         id: t.todoId,
@@ -163,13 +125,10 @@ const Todo = () => {
     }
   };
 
-  // 수동 새로고침 버튼
   const handleRefresh = () => {
-    // 강제 리렌더링을 위해 카운터 증가
     setRefreshCounter((prev) => prev + 1);
 
     if (selectedJobId) {
-      // 캐시를 무효화하고 새로운 데이터를 가져옴
       queryClient.invalidateQueries({ queryKey: ['todoGroup', selectedJobId] });
       refetchTodoGroup();
     } else {
@@ -177,7 +136,6 @@ const Todo = () => {
     }
   };
 
-  // 로딩 중 표시
   if (isJobsLoading || (isTodoLoading && !todoData)) {
     return (
       <div className="py-4 text-gray-500 font-B01-M">
@@ -186,19 +144,16 @@ const Todo = () => {
     );
   }
 
-  // 직업이 없는 경우
   if (!jobsData || !Array.isArray(jobsData) || jobsData.length === 0) {
     return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
   }
 
-  // 현재 선택된 직업 이름 가져오기
   const selectedJobName = Array.isArray(jobsData)
     ? jobsData.find((job) => job.todoGroupId === selectedJobId)?.jobName ||
       todoData?.jobName ||
       ''
     : todoData?.jobName || '';
 
-  // 현재 표시할 조회수
   const totalView = selectedTodoGroup?.totalView ?? todoData?.totalView ?? 0;
 
   return (
@@ -233,7 +188,7 @@ const Todo = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <button 
             onClick={handleRefresh}
             className="mr-2 text-gray-500 font-B03-M hover:text-purple-500"
           >
