@@ -1,15 +1,18 @@
 import Like from '@assets/icons/like.svg?react';
 import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
+import { ScrapRecruitItem } from '@validation/scrap/scrapRecruitSchema';
 
 interface ScrappedItemCardProps {
-  item: ScrapTrainingItem;
-  onCardClick?: (item: ScrapTrainingItem) => void;
-  onLikeClick?: (item: ScrapTrainingItem) => void;
+  item: ScrapTrainingItem | ScrapRecruitItem;
+  type: 'edu' | 'job';
+  onCardClick?: (item: ScrapTrainingItem | ScrapRecruitItem) => void;
+  onLikeClick?: (item: ScrapTrainingItem | ScrapRecruitItem) => void;
   isDeleting?: boolean;
 }
 
 const ScrappedItemCard = ({
   item,
+  type,
   onCardClick,
   onLikeClick,
   isDeleting = false,
@@ -17,8 +20,10 @@ const ScrappedItemCard = ({
   const handleCardClick = () => {
     if (onCardClick) {
       onCardClick(item);
-    } else if (item.titleLink) {
+    } else if (type === 'edu' && 'titleLink' in item) {
       window.open(item.titleLink, '_blank', 'noopener,noreferrer');
+    } else if (type === 'job' && 'url' in item) {
+      window.open(item.url, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -27,17 +32,37 @@ const ScrappedItemCard = ({
     if (!isDeleting && onLikeClick) {
       onLikeClick(item);
     }
-
-    console.log('Like clicked for:', item.scrapId);
   };
 
-  const tags = [
-    item.address,
-    item.trprDegr ? `` : '',
-    item.traDuration ? `${item.traDuration}` : '',
-  ].filter(Boolean);
+  const renderTags = () => {
+    if (type === 'edu' && 'address' in item) {
+      return [
+        item.address,
+        'trprDegr' in item && item.trprDegr ? '' : '',
+        'traDuration' in item && item.traDuration ? `${item.traDuration}` : '',
+      ].filter(Boolean);
+    } else if (type === 'job') {
+      return [
+        'locationName' in item ? item.locationName : '',
+        'jobTypeName' in item ? item.jobTypeName : '',
+        'experienceLevel' in item ? item.experienceLevel : '',
+      ].filter(Boolean);
+    }
+    return [];
+  };
+
+  const renderSubtitle = () => {
+    if (type === 'edu' && 'subTitle' in item) {
+      return item.subTitle;
+    } else if (type === 'job' && 'companyName' in item) {
+      return item.companyName;
+    }
+    return '';
+  };
 
   const displayCost =
+    type === 'edu' &&
+    'realMan' in item &&
     item.realMan &&
     item.realMan !== '0' &&
     item.realMan.replace(/[^0-9]/g, '') !== '0';
@@ -45,25 +70,32 @@ const ScrappedItemCard = ({
   return (
     <div
       onClick={handleCardClick}
-      className="flex h-[330px] w-full cursor-pointer flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-6 transition-shadow hover:shadow-[0px_4px_12px_rgba(0,0,0,0.08)]"
+      className="flex h-[330px] w-full cursor-pointer flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-6 transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
     >
-      <div className="flex items-start justify-end">
+      <div className="flex items-start justify-between">
+        {type === 'job' && 'deadline' in item && (
+          <span className="rounded-[10px] bg-purple-100 px-3 py-1 text-purple-500 font-B01-B">
+            {item.deadline === 'D-0' ? 'D-day' : item.deadline}
+          </span>
+        )}
         <button
           type="button"
           onClick={handleLikeClick}
           aria-label="스크랩 취소"
           disabled={isDeleting}
-          className={isDeleting ? 'cursor-not-allowed opacity-50' : ''}
+          className={isDeleting ? 'cursor-not-allowed opacity-50' : 'ml-auto'}
         >
           <Like
-            className={`h-6 w-6 ${isDeleting ? 'text-gray-400' : 'text-purple-500 hover:text-purple-700'}`}
+            className={`h-6 w-6 ${
+              isDeleting ? 'text-gray-400' : 'text-purple-500 hover:text-purple-700'
+            }`}
           />
         </button>
       </div>
 
       <div>
         <div className="mt-[12px] text-gray-500 font-B03-M">
-          {item.subTitle}
+          {renderSubtitle()}
         </div>
 
         <h3
@@ -73,11 +105,11 @@ const ScrappedItemCard = ({
           {item.title}
         </h3>
 
-        <div className="mt-[16px] flex flex-wrap gap-0.5">
-          {tags.map((tag, index) => (
+        <div className="mt-[16px] flex flex-wrap gap-1">
+          {renderTags().map((tag, index) => (
             <span
               key={`${tag}-${index}`}
-              className="whitespace-nowrap px-2 py-1 text-gray-500 font-B03-M"
+              className="rounded-md px-2 py-1 text-gray-500 font-B03-M"
             >
               # {tag}
             </span>
@@ -85,10 +117,17 @@ const ScrappedItemCard = ({
         </div>
       </div>
 
-      <div className="mt-auto flex justify-end">
-        {displayCost && (
+      <div className="mt-auto flex justify-between items-center">
+        {displayCost && type === 'edu' && 'realMan' in item && (
           <div className="rounded-[10px] bg-purple-50 px-4 py-2">
             <span className="text-purple-500 font-B01-B">{item.realMan}</span>
+          </div>
+        )}
+
+        {type === 'job' && 'expiration-date' in item && (
+          <div className="text-sm text-gray-500 font-B03-M ml-auto">
+            마감일 <span className="text-gray-300 mx-1">|</span>{' '}
+            <span className="text-purple-500">{item['expiration-date']}</span>
           </div>
         )}
       </div>
