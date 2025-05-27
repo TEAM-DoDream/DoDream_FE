@@ -27,9 +27,16 @@ interface AcademyItem {
   trprId: string;
 }
 
-const CardDetail = ({ item, onClose, isScrap: propIsScrap = false, onScrapClick }: CardDetailProps) => {
+const CardDetail = ({
+  item,
+  onClose,
+  isScrap: propIsScrap = false,
+  onScrapClick,
+}: CardDetailProps) => {
   const [isScraped, setIsScraped] = useState(propIsScrap);
-  const { mutate: toggleScrap, isPending: isScrapLoading } = useScrapTrainingMutation();
+  const { mutate: toggleScrap, isPending: isScrapLoading } =
+    useScrapTrainingMutation();
+  const isLoggedIn = !!localStorage.getItem('accessToken');
 
   useEffect(() => {
     setIsScraped(propIsScrap);
@@ -44,7 +51,7 @@ const CardDetail = ({ item, onClose, isScrap: propIsScrap = false, onScrapClick 
     if (onScrapClick) {
       onScrapClick();
     } else {
-      if (isScrapLoading) return;
+      if (isScrapLoading || !isLoggedIn) return;
 
       toggleScrap(
         {
@@ -54,7 +61,7 @@ const CardDetail = ({ item, onClose, isScrap: propIsScrap = false, onScrapClick 
           traStartDate: item.traStartDate,
           traEndDate: item.traEndDate,
           type: trainingType as '이론 위주' | '실습 위주',
-          isScrap: isScraped
+          isScrap: isScraped,
         },
         {
           onSuccess: (response) => {
@@ -100,20 +107,39 @@ const CardDetail = ({ item, onClose, isScrap: propIsScrap = false, onScrapClick 
           </div>
         ))}
       </div>
-      <div className="mt-8 flex justify-end gap-4">
-       
+
+      <div className="mt-8 flex items-center justify-between">
+        <div className="text-xl text-purple-500 font-T05-SB">
+          수강료 {item.realMan}
+        </div>
         <div className="flex gap-4">
           <button
             onClick={handleScrap}
-            disabled={isScrapLoading}
-            className={`flex items-center gap-2 rounded-xl border ${isScraped ? 'border-purple-500 bg-purple-50' : 'border-purple-500 bg-white'} px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50 ${isScrapLoading ? 'cursor-wait opacity-70' : ''}`}
+            disabled={isScrapLoading || !isLoggedIn}
+            className={`flex items-center gap-2 rounded-xl border px-[28px] py-[18px] text-purple-500 font-T05-SB ${
+              !isLoggedIn
+                ? 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400'
+                : isScraped
+                  ? 'border-purple-500 bg-purple-50'
+                  : 'border-purple-500 bg-white hover:bg-purple-50'
+            } ${isScrapLoading ? 'cursor-wait opacity-70' : ''}`}
           >
             {isScraped ? (
-              <PurpleLike className="h-5 w-5" />
+              <PurpleLike
+                className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
+              />
             ) : (
-              <HeartIcon className="h-5 w-5" />
+              <HeartIcon
+                className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
+              />
             )}
-            {isScrapLoading ? '처리 중...' : isScraped ? '담기 취소' : '담기'}
+            {isScrapLoading
+              ? '처리 중...'
+              : !isLoggedIn
+                ? '담기'
+                : isScraped
+                  ? '담기 취소'
+                  : '담기'}
           </button>
 
           <a

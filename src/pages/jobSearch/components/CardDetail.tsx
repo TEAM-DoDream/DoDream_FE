@@ -19,6 +19,7 @@ const CardDetail = ({
 }: CardDetailProps) => {
   const [isScrap, setIsScrap] = useState(propIsScrap || false);
   const { mutate: scrapRecruit } = useScrapRecruitMutation();
+  const isLoggedIn = !!localStorage.getItem('accessToken');
 
   const { data: scrapCheckData } = useScrapCheckQuery({
     category: 'RECRUIT',
@@ -49,6 +50,8 @@ const CardDetail = ({
   ];
 
   const handleScrap = () => {
+    if (!isLoggedIn) return;
+
     scrapRecruit(
       { id: item.id, isScrap },
       {
@@ -89,15 +92,26 @@ const CardDetail = ({
 
       <div className="mt-8 flex justify-end gap-4">
         <button
-          className={`flex items-center gap-2 rounded-xl border ${isScrap ? 'border-purple-500 bg-purple-50' : 'border-purple-500 bg-white'} px-[28px] py-[18px] text-purple-500 font-T05-SB hover:bg-purple-50`}
+          className={`flex items-center gap-2 rounded-xl border px-[28px] py-[18px] font-T05-SB ${
+            !isLoggedIn
+              ? 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400'
+              : isScrap
+                ? 'border-purple-500 bg-purple-50 text-purple-500'
+                : 'border-purple-500 bg-white text-purple-500 hover:bg-purple-50'
+          }`}
           onClick={handleScrap}
+          disabled={!isLoggedIn}
         >
           {isScrap ? (
-            <PurpleLike className="h-5 w-5" />
+            <PurpleLike
+              className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
+            />
           ) : (
-            <HeartIcon className="h-5 w-5" />
+            <HeartIcon
+              className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
+            />
           )}
-          {isScrap ? '담기 취소' : '담기'}
+          {!isLoggedIn ? '담기' : isScrap ? '담기 취소' : '담기'}
         </button>
         <a
           href={item.url}

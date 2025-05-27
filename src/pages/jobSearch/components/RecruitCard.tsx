@@ -9,6 +9,8 @@ interface RecruitCardProps {
 }
 
 const RecruitCard = ({ item, isScrap = false, onScrapClick }: RecruitCardProps) => {
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+  
   const handleScrapClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -26,8 +28,8 @@ const RecruitCard = ({ item, isScrap = false, onScrapClick }: RecruitCardProps) 
         <button
           type="button"
           onClick={handleScrapClick}
-          aria-label="관심 채용 공고 담기"
-          className="ml-auto"
+          aria-label={isLoggedIn ? "관심 채용 공고 담기" : "로그인 필요"}
+          className={`ml-auto ${!isLoggedIn ? 'cursor-not-allowed opacity-50' : ''}`}
         >
           {isScrap ? (
             <PurpleLike className="h-6 w-6" />
