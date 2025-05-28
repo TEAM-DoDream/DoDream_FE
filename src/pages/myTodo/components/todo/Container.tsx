@@ -21,6 +21,7 @@ interface ContainerProps {
   isEdit?: boolean;
   todoDetail?: TodoDetailType | null;
   memoDetail?: TodoDetailType | null;
+  isMemoView?: boolean;
 }
 
 const Container = ({
@@ -31,6 +32,7 @@ const Container = ({
   isEdit = false,
   todoDetail,
   memoDetail,
+  isMemoView = false,
 }: ContainerProps) => {
   const navigate = useNavigate();
   const [memoText, setMemoText] = useState('');
@@ -50,7 +52,15 @@ const Container = ({
       setMemoText(memoDetail.memoText || '');
       setTitle(memoDetail.title || '');
     }
-  }, [isEdit, memoDetail]);
+    else if (isEdit && todoDetail) {
+      setMemoText(todoDetail.memoText || '');
+      setTitle(todoDetail.title || '');
+    }
+  }, [isEdit, memoDetail, todoDetail]);
+
+  useEffect(() => {
+    setTitle(todoTitle);
+  }, [todoTitle]);
 
   const handleMemoTextChange = (text: string) => {
     setMemoText(text);
@@ -125,7 +135,7 @@ const Container = ({
     }
   };
 
-  const isReadOnly = !isEdit && !!memoDetail;
+  const isReadOnly = isMemoView && !isEdit;
 
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
@@ -140,7 +150,6 @@ const Container = ({
         <div className="flex-1">
           <ImgUpload onImagesChange={handleImagesChange} />
           {isEdit &&
-            memoDetail &&
             todoDetail?.images &&
             todoDetail.images.length > 0 && (
               <div className="mt-4 rounded-lg bg-white p-3">
@@ -181,7 +190,9 @@ const Container = ({
             ? '저장 중...'
             : isEdit
               ? '메모 수정하기'
-              : '메모 저장하기'}
+              : isReadOnly
+                ? '메모 보기'
+                : '메모 저장하기'}
         </button>
       </div>
     </div>
