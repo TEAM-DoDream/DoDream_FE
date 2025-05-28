@@ -43,6 +43,8 @@ const Container = ({
   const { mutate: addMemo } = useAddMemoMutation();
   const { mutate: updateMemo } = useUpdateMemoMutation();
 
+  const isReadOnly = isMemoView && !isEdit;
+
   useEffect(() => {
     setIsTodoTitleEmpty(!title.trim());
   }, [title]);
@@ -51,8 +53,7 @@ const Container = ({
     if (!isEdit && memoDetail) {
       setMemoText(memoDetail.memoText || '');
       setTitle(memoDetail.title || '');
-    }
-    else if (isEdit && todoDetail) {
+    } else if (isEdit && todoDetail) {
       setMemoText(todoDetail.memoText || '');
       setTitle(todoDetail.title || '');
     }
@@ -135,8 +136,6 @@ const Container = ({
     }
   };
 
-  const isReadOnly = isMemoView && !isEdit;
-
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
       <div className="flex w-full items-stretch justify-center gap-[20px]">
@@ -148,31 +147,32 @@ const Container = ({
           />
         </div>
         <div className="flex-1">
-          <ImgUpload onImagesChange={handleImagesChange} />
-          {isEdit &&
-            todoDetail?.images &&
-            todoDetail.images.length > 0 && (
-              <div className="mt-4 rounded-lg bg-white p-3">
-                <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
-                <div className="flex flex-wrap gap-2">
-                  {todoDetail.images.map((img, index) => (
-                    <div
-                      key={index}
-                      className="relative h-16 w-16 overflow-hidden rounded-md"
-                    >
-                      <img
-                        src={img.imageUrl}
-                        alt={`기존 이미지 ${index + 1}`}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-2 text-xs text-gray-500">
-                  새 이미지를 업로드하면 기존 이미지는 대체됩니다.
-                </p>
+          <ImgUpload
+            onImagesChange={handleImagesChange}
+            readOnly={isReadOnly}
+          />
+          {isEdit && todoDetail?.images && todoDetail.images.length > 0 && (
+            <div className="mt-4 rounded-lg bg-white p-3">
+              <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
+              <div className="flex flex-wrap gap-2">
+                {todoDetail.images.map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative h-16 w-16 overflow-hidden rounded-md"
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt={`기존 이미지 ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
-            )}
+              <p className="mt-2 text-xs text-gray-500">
+                새 이미지를 업로드하면 기존 이미지는 대체됩니다.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
