@@ -95,6 +95,7 @@ const OtherTodoMemoPage = () => {
                 value={memoData.memoText}
                 onChange={() => {}}
                 readOnly={true}
+                link={memoData.link}
               />
             </div>
             <div className="flex-1">

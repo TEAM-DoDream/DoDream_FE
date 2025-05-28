@@ -5,6 +5,7 @@ interface UpdateMemoRequest {
   todoTitle: string;
   isPublic: boolean;
   memoText?: string;
+  link?: string;
   images?: File[];
 }
 
@@ -22,6 +23,7 @@ export const useUpdateMemoMutation = () => {
       todoTitle, 
       isPublic, 
       memoText, 
+      link,
       images 
     }: UpdateMemoRequest & { todoId: number }) => {
    
@@ -31,6 +33,10 @@ export const useUpdateMemoMutation = () => {
       
       if (memoText) {
         formData.append('memoText', memoText);
+      }
+      
+      if (link) {
+        formData.append('link', link);
       }
       
       if (images && images.length > 0) {

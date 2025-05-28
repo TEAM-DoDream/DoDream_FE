@@ -9,9 +9,11 @@ interface MyEditorProps {
   value: string;
   onChange: (text: string) => void;
   readOnly?: boolean;
+  link?: string;
+  onLinkChange?: (url: string) => void;
 }
 
-const MyEditor = ({ value, onChange, readOnly = false }: MyEditorProps) => {
+const MyEditor = ({ value, onChange, readOnly = false, link = '', onLinkChange }: MyEditorProps) => {
   const [localValue, setLocalValue] = useState(value);
 
   useEffect(() => {
@@ -21,6 +23,13 @@ const MyEditor = ({ value, onChange, readOnly = false }: MyEditorProps) => {
   const handleChange = (newValue: string) => {
     setLocalValue(newValue);
     onChange(newValue);
+  };
+
+  // LinkEditor에서 URL이 변경될 때 호출될 함수
+  const handleLinkChange = (url: string) => {
+    if (onLinkChange) {
+      onLinkChange(url);
+    }
   };
 
   return (
@@ -45,7 +54,7 @@ const MyEditor = ({ value, onChange, readOnly = false }: MyEditorProps) => {
       />
       <div className="mt-4">
         <h2 className="text-lg font-bold text-gray-900">링크 미리보기</h2>
-        <LinkEditor readOnly={readOnly} />
+        <LinkEditor readOnly={readOnly} initialUrl={link} onUrlChange={handleLinkChange} />
       </div>
     </div>
   );

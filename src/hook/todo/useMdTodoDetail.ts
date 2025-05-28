@@ -9,9 +9,10 @@ export const useMdTodoDetail = () => {
   return async (todoId: number): Promise<TodoDetailData> => {
     try {
       const { data } = await api.get(`/v1/my-dream/todo/${todoId}`);
+
       return TodoDetailSchema.parse(data.data);
     } catch (error: unknown) {
-      const axiosError = error as AxiosError<{code?: string}>;
+      const axiosError = error as AxiosError<{ code?: string }>;
       const status = axiosError.response?.status;
       const code = axiosError.response?.data?.code;
 
