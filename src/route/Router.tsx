@@ -18,6 +18,7 @@ import TodoListPage from '@pages/myTodo/tabs/TodoListPage.tsx';
 import ScrapPage from '@pages/myTodo/tabs/ScrapPage.tsx';
 import Todo from '@pages/myTodo/components/todo/Todo';
 import Mypage from '@pages/mypage/Mypage';
+import RequireLogin from '@utils/RequireLogin';
 
 const Router = () => {
   return (
@@ -43,6 +44,14 @@ const Router = () => {
           />
           <Route path="/othertodo/memo/:todoId" element={<OtherTodoMemoPage />} />
           <Route path="/mytodo" element={<MyTodoPage />}>
+          <Route
+            path="/mytodo"
+            element={
+              <RequireLogin>
+                <MyTodoPage />
+              </RequireLogin>
+            }
+          >
             <Route index element={<Navigate to="/mytodo/list" replace />} />
             <Route path="list" element={<Todo />} />
             <Route path="add/:todoGroupId" element={<TodoListPage />} />
