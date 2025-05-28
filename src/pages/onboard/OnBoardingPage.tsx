@@ -25,6 +25,16 @@ const OnBoardingPage = () => {
     mutate(buildPayload());
   };
 
+  // 자격증 관련 질문인지 확인
+  const isLastLicenseQuestion = 
+    currentQuestionData?.question === '자격증이 필요한 일도 괜찮으신가요?';
+  
+  // 스텝퍼 표시를 위한 값 계산
+  const displayStep = isLastLicenseQuestion ? stepQuestions.length - 1 : curStep;
+  const displayQuestionIndex = isLastLicenseQuestion 
+    ? (stepQuestions[stepQuestions.length - 1].questions?.length || 1) - 1 
+    : curQuestionIndex;
+
   return (
     <div className="relative min-h-screen bg-white px-4 py-10">
       {isPending && (
@@ -36,8 +46,8 @@ const OnBoardingPage = () => {
       <div className="flex justify-center">
         <div className="w-full max-w-[1500px]">
           <Stepper
-            curStep={curStep}
-            curQuestionIndex={curQuestionIndex}
+            curStep={displayStep}
+            curQuestionIndex={displayQuestionIndex}
             steps={stepInfo}
           />
         </div>
@@ -61,7 +71,7 @@ const OnBoardingPage = () => {
             disableNext={
               curStep < stepQuestions.length - 1 && !currentQuestionData
             }
-            isLast={curStep === stepQuestions.length - 1}
+            isLast={isLastLicenseQuestion || curStep === stepQuestions.length - 1}
             onSubmit={handleSubmit}
           />
         </div>
