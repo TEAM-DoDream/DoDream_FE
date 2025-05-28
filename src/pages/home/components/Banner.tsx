@@ -5,17 +5,32 @@ import Bell from '@assets/images/bell.webp';
 import { useNoBannerQuery } from '@hook/useHomeQuery';
 import { useNavigate } from 'react-router-dom';
 
-const Banner = () => {
+interface BannerProps {
+  goToOnboard?: boolean;
+}
+
+const Banner = ({ goToOnboard = false }: BannerProps) => {
   const { data: jobList } = useNoBannerQuery();
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (goToOnboard) {
+      navigate('/onboard');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="flex h-[489px] w-full flex-row items-center justify-center space-x-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
       <div className="relative flex flex-row gap-6">
         <HomeCard />
 
-        <div className="absolute right-0 flex cursor-pointer items-center rounded-full bg-white py-[6px] pl-4 pr-1">
-          <span className="text-gray-500 font-B02-SB">직업 찾으러 가기</span>
+        <div
+          className="absolute right-0 flex cursor-pointer items-center rounded-full bg-white py-[6px] pl-4 pr-1"
+          onClick={handleClick}
+        >
+          <div className="text-gray-500 font-B02-SB">직업 추천받기</div>
           <MyDreamArrow />
         </div>
 
