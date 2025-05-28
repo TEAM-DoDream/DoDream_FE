@@ -14,9 +14,9 @@ const ProfileCard = () => {
 
   if (!jobId) return <div>존재하지 않는 직업입니다.</div>;
 
-  if (isLoading) return <LoadingSpinner />;
-
   if (!DreamerList || DreamerList.length === 0) return <NoDataSideBar />;
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="mt-[66px] flex h-auto w-[444px] flex-col items-start rounded-[30px] bg-white p-[30px]">
