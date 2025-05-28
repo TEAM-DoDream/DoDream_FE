@@ -106,6 +106,13 @@ const CheckList = ({
     }
   };
 
+  const handleViewMemo = (index: number) => {
+    const item = listItems[index];
+    if (item.id) {
+      navigate(`/mytodo/memo/${item.id}`);
+    }
+  };
+
   return (
     <div className={className}>
       {listItems.map(({ text, hasMemo, id }, idx) => {
@@ -138,7 +145,10 @@ const CheckList = ({
 
             {hasMemo && (
               <div className="group ml-auto flex min-w-fit items-center gap-[5px]">
-                <button className="flex items-center gap-[6px] rounded-[10px] bg-purple-100 px-3 py-2 text-purple-500 font-B03-SB">
+                <button 
+                  className="flex items-center gap-[6px] rounded-[10px] bg-purple-100 px-3 py-2 text-purple-500 font-B03-SB"
+                  onClick={() => handleViewMemo(idx)}
+                >
                   <MemoIcon className="h-[18px] w-[18px] text-purple-500" />
                   메모
                 </button>
