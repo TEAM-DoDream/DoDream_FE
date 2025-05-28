@@ -33,9 +33,21 @@ const TodoListPage = () => {
   const [isPublic, setIsPublic] = useState(false);
   const [todoTitle, setTodoTitle] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const [initialDataSet, setInitialDataSet] = useState(false);
 
   const isMemoView = location.pathname.includes('/memo');
   const isReadOnly = isMemoView && !isEdit;
+
+  const currentTodoItem = todoData?.todos?.find(
+    (todo) => todo.todoId === todoIdNum
+  );
+
+  useEffect(() => {
+    if (todoIdNum && currentTodoItem && !initialDataSet) {
+      setTodoTitle(currentTodoItem.title || '');
+      setInitialDataSet(true);
+    }
+  }, [todoIdNum, currentTodoItem, initialDataSet]);
 
   useEffect(() => {
     const pathParts = location.pathname.split('/');
@@ -45,9 +57,29 @@ const TodoListPage = () => {
 
   const { data: todoDetail, isLoading: isEditLoading } = useQuery({
     queryKey: ['todoDetail', todoIdNum, 'edit'],
-    queryFn: () => (todoIdNum ? mdTodoDetail(todoIdNum) : null),
-    enabled: !!todoIdNum && isEdit,
+    queryFn: async () => {
+      try {
+        if (!todoIdNum) return null;
+        return await mdTodoDetail(todoIdNum);
+      } catch (error) {
+        console.error('Todo 상세 정보 조회 중 오류 발생:', error);
+
+        if (currentTodoItem) {
+          return {
+            todoId: todoIdNum,
+            title: currentTodoItem.title || '',
+            isPublic: false,
+            memoText: '',
+            images: [],
+          };
+        }
+
+        return null;
+      }
+    },
+    enabled: !!todoIdNum,
     staleTime: 1000 * 60 * 5,
+    retry: 1,
   });
 
   const { data: myMemoDetail, isLoading: isMyMemoLoading } = useQuery({
@@ -93,6 +125,18 @@ const TodoListPage = () => {
 
   const isLoading = isEditLoading || isMyMemoLoading;
 
+  const customTodoDetail =
+    todoDetail ||
+    (todoIdNum && currentTodoItem
+      ? {
+          todoId: todoIdNum,
+          title: currentTodoItem.title || '',
+          isPublic: false,
+          memoText: '',
+          images: [],
+        }
+      : null);
+
   return (
     <div className="mx-[120px] mt-10 bg-gray-50 px-5 py-4">
       <div className="mb-4 flex max-w-[1010px] flex-col gap-2">
@@ -131,7 +175,7 @@ const TodoListPage = () => {
           todoGroupId={todoGroupId}
           todoId={todoIdNum}
           isEdit={isEdit}
-          todoDetail={todoDetail as TodoDetailData | null}
+          todoDetail={customTodoDetail as TodoDetailData | null}
           memoDetail={myMemoDetail as TodoDetailData | null}
           isMemoView={isMemoView}
         />
