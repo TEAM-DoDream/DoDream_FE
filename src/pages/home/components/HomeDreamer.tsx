@@ -33,6 +33,7 @@ const HomeDreamer = () => {
           ? homeDreamer?.map((dream) => (
               <DreamerCard
                 key={dream.todoGroupId}
+                todogroupId={dream.todoGroupId}
                 regionName={dream.regionName}
                 jobName={dream.jobName}
                 memberNickname={dream.memberNickname}
@@ -45,6 +46,7 @@ const HomeDreamer = () => {
           : popluarDreamer?.map((popluar) => (
               <DreamerCard
                 key={popluar.todoGroupId}
+                todogroupId={popluar.todoGroupId}
                 regionName={popluar.regionName}
                 jobName={popluar.jobName}
                 memberNickname={popluar.memberNickname}
