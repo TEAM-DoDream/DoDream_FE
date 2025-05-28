@@ -77,7 +77,7 @@ const LoginBanner = () => {
               }
               checkedIds={checkedIds}
               onChange={handleCheckChange}
-              className="flex flex-col gap-4"
+              className="flex w-[691px] flex-col gap-4 overflow-hidden text-ellipsis whitespace-nowrap"
             />
           )}
         </div>
