@@ -22,6 +22,15 @@ const AutoTextArea = ({
   const [videoId, setVideoId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!value) return;
+
+    const match = value.match(youtubeRegex);
+    if (match) {
+      setVideoId(match[1]);
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (editorRef.current && editorRef.current.innerText !== value) {
       editorRef.current.innerText = value;
     }
