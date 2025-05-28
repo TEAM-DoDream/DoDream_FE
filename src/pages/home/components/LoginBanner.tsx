@@ -46,7 +46,7 @@ const LoginBanner = () => {
     <div className="flex h-[489px] w-full items-center justify-center gap-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
       <div className="relative flex gap-6">
         <LoginHomeCard />
-        <div className="absolute right-0 flex w-[162px] cursor-pointer items-center gap-2 rounded-full bg-white py-[6px] pl-4 pr-1">
+        <div className="absolute right-0 flex cursor-pointer items-center gap-2 rounded-full bg-white py-[6px] pl-4 pr-1">
           <span
             className="text-gray-500 font-B02-SB"
             onClick={() => navigate('/mytodo')}
@@ -77,13 +77,13 @@ const LoginBanner = () => {
               }
               checkedIds={checkedIds}
               onChange={handleCheckChange}
-              className="flex flex-col gap-4"
+              className="flex w-[655px] flex-col gap-4 overflow-hidden text-ellipsis whitespace-nowrap"
             />
           )}
         </div>
       </div>
 
-      <div className="flex h-[379px] w-[440px] flex-col gap-5 rounded-[30px] border bg-white p-8">
+      <div className="flex h-[379px] w-[480px] flex-col gap-5 rounded-[30px] border bg-white p-8">
         <div className="flex w-full items-center justify-between">
           <img src={Bell} alt="Bell" className="h-[60px] w-[60px]" />
           <button
@@ -97,7 +97,9 @@ const LoginBanner = () => {
           </button>
         </div>
 
-        <span className="text-gray-900 font-T01-B">{regionName} 채용 현황</span>
+        <span className="truncate text-gray-900 font-T01-B">
+          {regionName} 채용 현황
+        </span>
         <div className="flex flex-col gap-5">
           {jobList?.map((job) => (
             <div key={job['job-name']} className="flex items-center gap-4">

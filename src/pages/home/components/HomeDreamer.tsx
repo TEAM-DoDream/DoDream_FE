@@ -28,7 +28,7 @@ const HomeDreamer = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid cursor-pointer grid-cols-3 gap-6">
         {isLoggedIn
           ? homeDreamer?.map((dream) => (
               <DreamerCard

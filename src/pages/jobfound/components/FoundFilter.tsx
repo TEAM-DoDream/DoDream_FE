@@ -15,11 +15,7 @@ const workTimeOptions = [
   '이벤트성',
   '탄력 근무',
 ];
-const bodyActivityOptions = [
-  '정적인 활동',
-  '가벼운 활동',
-  '움직임이 많은 활동',
-];
+const bodyActivityOptions = ['낮은 활동량', '중간 활동량', '높은 활동량'];
 
 const FoundFilter = () => {
   const { require, workTime, bodyActivity, setSelection, removeTag, reset } =
