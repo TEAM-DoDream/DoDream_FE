@@ -6,6 +6,7 @@ interface ToastProps {
   undoText?: string;
   onUndo?: () => void;
   width?: string;
+  variant?: 'success' | 'error';
 }
 
 const ToastModal = ({
@@ -14,10 +15,13 @@ const ToastModal = ({
   undoText,
   onUndo,
   width = 'min-w-[320px]',
+  variant = 'success',
 }: ToastProps) => {
+  const bgColor = variant === 'error' ? 'bg-red-600' : 'bg-gray-800';
+
   return (
     <div
-      className={`flex items-center justify-between rounded-full bg-gray-800 px-[24px] py-[14px] shadow-shadow4 ${width}`}
+      className={`flex items-center justify-between rounded-full ${bgColor} px-[24px] py-[14px] shadow-shadow4 ${width}`}
     >
       <div className="flex items-center gap-[10px]">
         {icon && <div className="text-white">{icon}</div>}

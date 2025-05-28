@@ -5,6 +5,7 @@ export const TodoDetailSchema = z.object({
   title: z.string(),
   isPublic: z.boolean(),
   memoText: z.string(),
+  link: z.string(),
   images: z.array(
     z.object({
       imageId: z.number(),

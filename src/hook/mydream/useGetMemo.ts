@@ -6,6 +6,7 @@ export interface GetMemoProps {
   title: string;
   isPublic: boolean;
   memoText: string;
+  link?: string;
   images: {
     imageId: number;
     imageUrl: string;

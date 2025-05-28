@@ -15,6 +15,7 @@ const addJob = async (jobId: number) => {
     return response.data.data;
   } catch (error) {
     console.error('직업을 담는데 실패했습니다.:', error);
+    throw error;
   }
 };
 
