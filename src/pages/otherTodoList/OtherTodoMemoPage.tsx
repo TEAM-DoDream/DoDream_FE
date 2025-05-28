@@ -25,7 +25,7 @@ const OtherTodoMemoPage = () => {
     if (!isMemoLoading) {
       setIsLoading(false);
     }
-    
+
     if (error) {
       alert('메모를 불러오는 데 실패했습니다. 다시 시도해주세요.');
       navigate(-1);
@@ -70,7 +70,7 @@ const OtherTodoMemoPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center px-4">
       <div className="w-full max-w-[1010px] pt-[40px]">
-   
+
         <div className="mb-6 flex items-center justify-start gap-4">
           <div className="flex items-center">
             <button
