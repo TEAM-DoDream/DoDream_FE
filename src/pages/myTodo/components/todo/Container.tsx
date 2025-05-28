@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import MyEditor from '@pages/myTodo/components/todo/MyEditor.tsx';
-import ImgUpload from '@pages/myTodo/components/todo/ImgUpload.tsx';
 import { useAddMemoMutation } from '@hook/mydream/useAddMemoMutation';
 import { useUpdateMemoMutation } from '@hook/mydream/useUpdateMemoMutation';
 import { useNavigate } from 'react-router-dom';
+import MyEditor from './MyEditor';
+import ImgUpload from './ImgUpload';
 
 interface TodoDetailType {
   todoId: number;
@@ -20,6 +20,7 @@ interface ContainerProps {
   todoId?: number;
   isEdit?: boolean;
   todoDetail?: TodoDetailType | null;
+  memoDetail?: TodoDetailType | null;
 }
 
 const Container = ({
@@ -29,24 +30,27 @@ const Container = ({
   todoId,
   isEdit = false,
   todoDetail,
+  memoDetail,
 }: ContainerProps) => {
   const navigate = useNavigate();
   const [memoText, setMemoText] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [title, setTitle] = useState(todoTitle);
   const [isTodoTitleEmpty, setIsTodoTitleEmpty] = useState(false);
   const { mutate: addMemo } = useAddMemoMutation();
   const { mutate: updateMemo } = useUpdateMemoMutation();
 
   useEffect(() => {
-    setIsTodoTitleEmpty(!todoTitle.trim());
-  }, [todoTitle]);
+    setIsTodoTitleEmpty(!title.trim());
+  }, [title]);
 
   useEffect(() => {
-    if (isEdit && todoDetail) {
-      setMemoText(todoDetail.memoText || '');
+    if (!isEdit && memoDetail) {
+      setMemoText(memoDetail.memoText || '');
+      setTitle(memoDetail.title || '');
     }
-  }, [isEdit, todoDetail]);
+  }, [isEdit, memoDetail]);
 
   const handleMemoTextChange = (text: string) => {
     setMemoText(text);
@@ -121,48 +125,57 @@ const Container = ({
     }
   };
 
+  const isReadOnly = !isEdit && !!memoDetail;
+
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
       <div className="flex w-full items-stretch justify-center gap-[20px]">
         <div className="flex-1">
-          <MyEditor value={memoText} onChange={handleMemoTextChange} />
+          <MyEditor
+            value={memoText}
+            onChange={handleMemoTextChange}
+            readOnly={isReadOnly}
+          />
         </div>
         <div className="flex-1">
           <ImgUpload onImagesChange={handleImagesChange} />
-          {isEdit && todoDetail?.images && todoDetail.images.length > 0 && (
-            <div className="mt-4 rounded-lg bg-white p-3">
-              <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
-              <div className="flex flex-wrap gap-2">
-                {todoDetail.images.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative h-16 w-16 overflow-hidden rounded-md"
-                  >
-                    <img
-                      src={img.imageUrl}
-                      alt={`기존 이미지 ${index + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ))}
+          {isEdit &&
+            memoDetail &&
+            todoDetail?.images &&
+            todoDetail.images.length > 0 && (
+              <div className="mt-4 rounded-lg bg-white p-3">
+                <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
+                <div className="flex flex-wrap gap-2">
+                  {todoDetail.images.map((img, index) => (
+                    <div
+                      key={index}
+                      className="relative h-16 w-16 overflow-hidden rounded-md"
+                    >
+                      <img
+                        src={img.imageUrl}
+                        alt={`기존 이미지 ${index + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-gray-500">
+                  새 이미지를 업로드하면 기존 이미지는 대체됩니다.
+                </p>
               </div>
-              <p className="mt-2 text-xs text-gray-500">
-                새 이미지를 업로드하면 기존 이미지는 대체됩니다.
-              </p>
-            </div>
-          )}
+            )}
         </div>
       </div>
 
       <div className="flex w-full items-stretch justify-center gap-[20px]">
         <button
           className={`flex h-12 w-full items-center justify-center rounded-[16px] ${
-            isSubmitting || isTodoTitleEmpty
+            isSubmitting || isTodoTitleEmpty || isReadOnly
               ? 'bg-purple-300'
               : 'bg-purple-500 hover:bg-purple-600'
           } py-[14px] text-white font-T05-SB`}
           onClick={handleSaveMemo}
-          disabled={isSubmitting || isTodoTitleEmpty}
+          disabled={isSubmitting || isTodoTitleEmpty || isReadOnly}
         >
           {isSubmitting
             ? '저장 중...'

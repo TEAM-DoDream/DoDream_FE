@@ -20,7 +20,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
                 to="/mytodo/list"
                 className={`block w-full rounded-2xl px-4 py-3 text-left font-B01-B ${
                   pathname.includes('/mytodo/list') ||
-                  pathname.includes('/mytodo/add')
+                  pathname.includes('/mytodo/add') ||
+                  pathname.includes('/mytodo/memo')
                     ? 'bg-purple-100 text-purple-500'
                     : 'text-gray-400 hover:text-purple-500'
                 }`}

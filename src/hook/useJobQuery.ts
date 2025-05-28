@@ -9,6 +9,7 @@ export interface JobRequest {
   workTimeInfo: string;
   physicalInfo: string;
   imageUrl: string;
+  todoGroupNum: number;
 }
 
 export interface JobDetailRequest {
