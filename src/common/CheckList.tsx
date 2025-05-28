@@ -121,7 +121,7 @@ const CheckList = ({
         return (
           <div
             key={id ?? idx}
-            className="group flex w-full items-center justify-between gap-2 py-1 px-2 rounded-lg hover:bg-gray-50"
+            className="max-w-[940px]items-center group flex w-full justify-between gap-2 rounded-lg px-2 py-1 hover:bg-gray-50"
           >
             <div className="flex w-full items-center gap-2">
               <div
@@ -134,18 +134,18 @@ const CheckList = ({
               >
                 {done && <Check className="h-[19px] w-[19px]" />}
               </div>
-              <span
-                className={`truncate font-B02-M ${
+              <div
+                className={`w-[622px] truncate font-B02-M ${
                   done ? 'text-gray-500' : 'text-gray-800'
                 }`}
               >
                 {text}
-              </span>
+              </div>
             </div>
 
             <div className="ml-auto flex min-w-fit items-center gap-[5px]">
               {hasMemo && (
-                <button 
+                <button
                   className="flex items-center gap-[6px] rounded-[10px] bg-purple-100 px-3 py-2 text-purple-500 font-B03-SB"
                   onClick={() => handleViewMemo(idx)}
                 >
