@@ -105,3 +105,61 @@ export const districtMap: Record<string, string[]> = {
 };
 
 export const trainingOptions = ['이론 위주', '실습 위주'];
+
+import api from '@hook/api';
+
+export interface Region {
+  regionCode: string | null;
+  regionName: string;
+}
+
+export interface ParsedRegionData {
+  cityOptions: string[];
+  districtMap: Record<string, string[]>;
+  regionList: Region[];
+}
+
+export const fetchRegions = async (): Promise<ParsedRegionData> => {
+  try {
+    const response = await api.get<{ data: Region[] }>('/v1/region/all');
+    const regions = response.data.data;
+
+    const map: Record<string, string[]> = {};
+    const cities: string[] = [];
+
+    regions.forEach(({ regionName }) => {
+      const parsing = regionName.trim().split(/\s+/);
+
+      if (parsing.length < 2) return;
+
+      const city = parsing[0];
+      const district = parsing.slice(1).join(' ');
+
+      if (!cities.includes(city)) {
+        cities.push(city);
+      }
+
+      if (map[city]) {
+        if (!map[city].includes(district)) {
+          map[city].push(district);
+        }
+      } else {
+        map[city] = [district];
+      }
+    });
+
+    return {
+      cityOptions: cities,
+      districtMap: map,
+      regionList: regions,
+    };
+  } catch (error) {
+    console.error('지역 데이터를 가져오는 중 오류가 발생했습니다:', error);
+
+    return {
+      cityOptions,
+      districtMap,
+      regionList: [],
+    };
+  }
+};
