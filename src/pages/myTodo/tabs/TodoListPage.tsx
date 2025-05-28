@@ -8,6 +8,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery.ts';
 import { useMdTodoDetail } from '@hook/todo/useMdTodoDetail';
 import { useQuery } from '@tanstack/react-query';
+import { useMemoQuery } from '@hook/mydream/useGetMemo';
 
 const TodoListPage = () => {
   const navigate = useNavigate();
@@ -23,16 +24,17 @@ const TodoListPage = () => {
     : undefined;
 
   const { data: todoData } = useMdTodoQuery();
-
   const todoGroupId: number | undefined =
     urlTodoGroupIdNum ?? todoData?.todoGroupId ?? undefined;
 
   const mdTodoDetail = useMdTodoDetail();
+  const { mutate: togglePublicState } = useMdIsPublicMutation();
 
   const [isPublic, setIsPublic] = useState(false);
   const [todoTitle, setTodoTitle] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  const { mutate: togglePublicState } = useMdIsPublicMutation();
+
+  const isMemoView = location.pathname.includes('/memo');
 
   useEffect(() => {
     const pathParts = location.pathname.split('/');
@@ -47,12 +49,21 @@ const TodoListPage = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  const { data: getMemo } = useMemoQuery(todoIdNum as number, {
+    enabled: !!todoIdNum && isMemoView,
+  });
+
   useEffect(() => {
+    if (getMemo && !isEdit && isMemoView) {
+      setTodoTitle(getMemo.title || '');
+      setIsPublic(getMemo.isPublic || false);
+    }
+
     if (todoDetail && isEdit) {
       setTodoTitle(todoDetail.title || '');
       setIsPublic(todoDetail.isPublic || false);
     }
-  }, [todoDetail, isEdit]);
+  }, [todoDetail, getMemo, isEdit, isMemoView]);
 
   const handleToggle = (isPublic: boolean) => {
     setIsPublic(isPublic);
@@ -73,12 +84,14 @@ const TodoListPage = () => {
             className="w-[974px] rounded-[10px] border border-gray-200 bg-white px-[20px] py-[10px] text-gray-900 font-T05-SB"
             value={todoTitle}
             onChange={(e) => setTodoTitle(e.target.value)}
+            readOnly={isMemoView && !isEdit}
+            disabled={isMemoView && !isEdit}
           />
         </div>
 
         <div className="flex content-center items-center gap-1 self-end text-gray-500">
           <CautionIcon className="h-6 w-6" />
-          <span className={'text-gray-500 font-B02-M'}>공개</span>
+          <span className="text-gray-500 font-B02-M">공개</span>
           <ToggleButton
             initialState={isPublic}
             todoGroupId={todoGroupId}
@@ -87,7 +100,7 @@ const TodoListPage = () => {
         </div>
       </div>
 
-      {isEdit && isLoading ? (
+      {isEdit && getMemo && isLoading ? (
         <div className="flex h-[400px] w-full items-center justify-center">
           <p className="text-gray-500">로딩 중...</p>
         </div>
@@ -99,6 +112,7 @@ const TodoListPage = () => {
           todoId={todoIdNum}
           isEdit={isEdit}
           todoDetail={todoDetail}
+          memoDetail={getMemo}
         />
       )}
     </div>

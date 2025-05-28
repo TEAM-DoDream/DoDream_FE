@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import CheckIcon from '@assets/icons/check.svg?react';
 import MemoIcon from '@assets/icons/memo.svg?react';
 import ReWriteIcon from '@assets/icons/edit-write.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 interface TodoItem {
   todoId: number;
@@ -25,15 +25,7 @@ const TodoCard = ({
   showAddButton = false,
   disableHover = false,
 }: TodoCardProps) => {
-  const [todoList, setTodoList] = useState(todos);
-
-  const toggleCheck = (index: number) => {
-    setTodoList((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, completed: !item.completed } : item
-      )
-    );
-  };
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col justify-between rounded-[30px] border border-gray-300 bg-white p-[30px]">
@@ -42,7 +34,7 @@ const TodoCard = ({
       </div>
 
       <ul className="w-full flex-grow space-y-4">
-        {todoList.map((item, index) => (
+        {todos.map((item, index) => (
           <li
             key={index}
             className={`flex items-center px-2 py-1 ${
@@ -50,7 +42,6 @@ const TodoCard = ({
             }`}
           >
             <div
-              onClick={() => toggleCheck(index)}
               className={`flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[8px] border ${
                 item.completed
                   ? 'border-purple-300 bg-purple-150'
@@ -72,7 +63,10 @@ const TodoCard = ({
 
             <div className="flex min-w-fit items-center gap-2">
               {item.isMemoExist && (
-                <button className="flex items-center gap-1 rounded-xl bg-purple-100 px-4 py-2 text-purple-500 font-B03-SB">
+                <button
+                  className="flex items-center gap-1 rounded-xl bg-purple-100 px-4 py-2 text-purple-500 font-B03-SB"
+                  onClick={() => navigate(`/mytodo/memo/${item.todoId}`)}
+                >
                   <MemoIcon className="h-4 w-4 text-purple-500" />
                   메모
                 </button>
