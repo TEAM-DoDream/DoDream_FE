@@ -1,5 +1,5 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
-import HeartIcon from '@assets/icons/like.svg?react';
+import PurpleHeartIcon from '@assets/icons/fullheart.svg?react';
 import PurpleLike from '@assets/icons/purplelike.svg?react';
 import { useState, useEffect } from 'react';
 import { useAcademyFilterStore } from '@store/academyFilterStore';
@@ -125,11 +125,11 @@ const CardDetail = ({
             } ${isScrapLoading ? 'cursor-wait opacity-70' : ''}`}
           >
             {isScraped ? (
-              <PurpleLike
+              <PurpleHeartIcon
                 className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
               />
             ) : (
-              <HeartIcon
+              <PurpleLike
                 className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
               />
             )}

@@ -7,6 +7,15 @@ import { jobDataArraySchema } from '@validation/jobRecommend/jobDataSchema';
 import { useAddJobMutation } from '@hook/useAddJobMutation';
 import ToastModal from '@common/modal/ToastModal';
 import Check from '@assets/icons/check.svg?react';
+import { AxiosError } from 'axios';
+
+interface ErrorResponse {
+  success: boolean;
+  timestamp: string;
+  statusCode: number;
+  code: string;
+  message: string;
+}
 
 const JobRecommendPage = () => {
   const location = useLocation();
@@ -15,6 +24,8 @@ const JobRecommendPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('직업이 추가되었습니다');
+  const [isErrorToast, setIsErrorToast] = useState(false);
   const nickname = localStorage.getItem('nickname');
 
   const parseResult = jobDataArraySchema.safeParse(location.state);
@@ -51,14 +62,34 @@ const JobRecommendPage = () => {
   const handleAddJob = (jobId: number) => {
     addJob(jobId, {
       onSuccess: () => {
+        setIsErrorToast(false);
+        setToastMessage('직업이 추가되었습니다');
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
       },
-      onError: (error) => {
-        alert('직업 담기에 실패했습니다. 다시 시도해주세요.');
+      onError: (error: Error) => {
+        setIsErrorToast(true);
+        let errorMessage = '직업 담기에 실패했습니다. 다시 시도해주세요.';
+        
+        // AxiosError인지 확인
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response?.data) {
+          const { message } = axiosError.response.data;
+          if (message) {
+            errorMessage = message;
+          }
+        }
+        
+        setToastMessage(errorMessage);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
         console.error(error);
       },
     });
+  };
+
+  const handleDetailClick = (jobId: number) => {
+    navigate(`/job/${jobId}`);
   };
 
   return (
@@ -79,6 +110,7 @@ const JobRecommendPage = () => {
             onLeave={() => setHoveredIndex(null)}
             nickname={nickname}
             onClick={handleOpenModal}
+            onDetailClick={handleDetailClick}
           />
         ))}
       </div>
@@ -102,8 +134,9 @@ const JobRecommendPage = () => {
         <div className="fixed bottom-10 left-1/2 z-50 -translate-x-1/2">
           <ToastModal
             icon={<Check className="h-6 w-6 text-white" />}
-            text="직업이 추가되었습니다"
+            text={toastMessage}
             width="w-[300px]"
+            variant={isErrorToast ? "error" : "success"}
           />
         </div>
       )}

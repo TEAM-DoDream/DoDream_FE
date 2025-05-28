@@ -8,7 +8,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery.ts';
 import { useMdTodoDetail } from '@hook/todo/useMdTodoDetail';
 import { useQuery } from '@tanstack/react-query';
-import { useMemoQuery } from '@hook/mydream/useGetMemo';
+import { TodoDetailData } from '@validation/mydream/todoDetailSchema';
 
 const TodoListPage = () => {
   const navigate = useNavigate();
@@ -33,8 +33,21 @@ const TodoListPage = () => {
   const [isPublic, setIsPublic] = useState(false);
   const [todoTitle, setTodoTitle] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const [initialDataSet, setInitialDataSet] = useState(false);
 
   const isMemoView = location.pathname.includes('/memo');
+  const isReadOnly = isMemoView && !isEdit;
+
+  const currentTodoItem = todoData?.todos?.find(
+    (todo) => todo.todoId === todoIdNum
+  );
+
+  useEffect(() => {
+    if (todoIdNum && currentTodoItem && !initialDataSet) {
+      setTodoTitle(currentTodoItem.title || '');
+      setInitialDataSet(true);
+    }
+  }, [todoIdNum, currentTodoItem, initialDataSet]);
 
   useEffect(() => {
     const pathParts = location.pathname.split('/');
@@ -42,30 +55,66 @@ const TodoListPage = () => {
     setIsEdit(isEditMode);
   }, [location.pathname]);
 
-  const { data: todoDetail, isLoading } = useQuery({
-    queryKey: ['todoDetail', todoIdNum],
-    queryFn: () => (todoIdNum ? mdTodoDetail(todoIdNum) : null),
-    enabled: !!todoIdNum && isEdit,
+  const { data: todoDetail, isLoading: isEditLoading } = useQuery({
+    queryKey: ['todoDetail', todoIdNum, 'edit'],
+    queryFn: async () => {
+      try {
+        if (!todoIdNum) return null;
+        return await mdTodoDetail(todoIdNum);
+      } catch (error) {
+        console.error('Todo 상세 정보 조회 중 오류 발생:', error);
+
+        if (currentTodoItem) {
+          return {
+            todoId: todoIdNum,
+            title: currentTodoItem.title || '',
+            isPublic: false,
+            memoText: '',
+            images: [],
+          };
+        }
+
+        return null;
+      }
+    },
+    enabled: !!todoIdNum,
     staleTime: 1000 * 60 * 5,
+    retry: 1,
   });
 
-  const { data: getMemo } = useMemoQuery(todoIdNum as number, {
-    enabled: !!todoIdNum && isMemoView,
+  const { data: myMemoDetail, isLoading: isMyMemoLoading } = useQuery({
+    queryKey: ['myTodoDetail', todoIdNum, 'memo'],
+    queryFn: async () => {
+      try {
+        if (!todoIdNum) return null;
+        return await mdTodoDetail(todoIdNum);
+      } catch (error) {
+        console.error('내 메모 조회 중 오류 발생:', error);
+        alert('메모를 불러올 수 없습니다: ' + (error as Error).message);
+        navigate(-1);
+        return null;
+      }
+    },
+    enabled: !!todoIdNum && isMemoView && !isEdit,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
   });
 
   useEffect(() => {
-    if (getMemo && !isEdit && isMemoView) {
-      setTodoTitle(getMemo.title || '');
-      setIsPublic(getMemo.isPublic || false);
+    if (myMemoDetail && !isEdit && isMemoView) {
+      setTodoTitle(myMemoDetail.title || '');
+      setIsPublic(myMemoDetail.isPublic || false);
     }
 
     if (todoDetail && isEdit) {
       setTodoTitle(todoDetail.title || '');
       setIsPublic(todoDetail.isPublic || false);
     }
-  }, [todoDetail, getMemo, isEdit, isMemoView]);
+  }, [todoDetail, myMemoDetail, isEdit, isMemoView]);
 
   const handleToggle = (isPublic: boolean) => {
+    if (isReadOnly) return;
+
     setIsPublic(isPublic);
     if (todoGroupId) {
       togglePublicState({ todoGroupId, isPublic });
@@ -73,6 +122,20 @@ const TodoListPage = () => {
       console.error('todoGroupId가 없습니다.');
     }
   };
+
+  const isLoading = isEditLoading || isMyMemoLoading;
+
+  const customTodoDetail =
+    todoDetail ||
+    (todoIdNum && currentTodoItem
+      ? {
+          todoId: todoIdNum,
+          title: currentTodoItem.title || '',
+          isPublic: false,
+          memoText: '',
+          images: [],
+        }
+      : null);
 
   return (
     <div className="mx-[120px] mt-10 bg-gray-50 px-5 py-4">
@@ -84,8 +147,8 @@ const TodoListPage = () => {
             className="w-[974px] rounded-[10px] border border-gray-200 bg-white px-[20px] py-[10px] text-gray-900 font-T05-SB"
             value={todoTitle}
             onChange={(e) => setTodoTitle(e.target.value)}
-            readOnly={isMemoView && !isEdit}
-            disabled={isMemoView && !isEdit}
+            readOnly={isReadOnly}
+            disabled={isReadOnly}
           />
         </div>
 
@@ -96,11 +159,12 @@ const TodoListPage = () => {
             initialState={isPublic}
             todoGroupId={todoGroupId}
             onToggle={handleToggle}
+            disabled={isReadOnly}
           />
         </div>
       </div>
 
-      {isEdit && getMemo && isLoading ? (
+      {isLoading ? (
         <div className="flex h-[400px] w-full items-center justify-center">
           <p className="text-gray-500">로딩 중...</p>
         </div>
@@ -111,8 +175,9 @@ const TodoListPage = () => {
           todoGroupId={todoGroupId}
           todoId={todoIdNum}
           isEdit={isEdit}
-          todoDetail={todoDetail}
-          memoDetail={getMemo}
+          todoDetail={customTodoDetail as TodoDetailData | null}
+          memoDetail={myMemoDetail as TodoDetailData | null}
+          isMemoView={isMemoView}
         />
       )}
     </div>

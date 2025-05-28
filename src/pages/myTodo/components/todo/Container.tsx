@@ -10,6 +10,7 @@ interface TodoDetailType {
   title: string;
   isPublic: boolean;
   memoText: string;
+  link?: string;
   images: { imageUrl: string }[];
 }
 
@@ -21,6 +22,7 @@ interface ContainerProps {
   isEdit?: boolean;
   todoDetail?: TodoDetailType | null;
   memoDetail?: TodoDetailType | null;
+  isMemoView?: boolean;
 }
 
 const Container = ({
@@ -31,15 +33,19 @@ const Container = ({
   isEdit = false,
   todoDetail,
   memoDetail,
+  isMemoView = false,
 }: ContainerProps) => {
   const navigate = useNavigate();
   const [memoText, setMemoText] = useState('');
+  const [link, setLink] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [title, setTitle] = useState(todoTitle);
   const [isTodoTitleEmpty, setIsTodoTitleEmpty] = useState(false);
   const { mutate: addMemo } = useAddMemoMutation();
   const { mutate: updateMemo } = useUpdateMemoMutation();
+
+  const isReadOnly = isMemoView && !isEdit;
 
   useEffect(() => {
     setIsTodoTitleEmpty(!title.trim());
@@ -48,12 +54,25 @@ const Container = ({
   useEffect(() => {
     if (!isEdit && memoDetail) {
       setMemoText(memoDetail.memoText || '');
+      setLink(memoDetail.link || '');
       setTitle(memoDetail.title || '');
+    } else if (isEdit && todoDetail) {
+      setMemoText(todoDetail.memoText || '');
+      setLink(todoDetail.link || '');
+      setTitle(todoDetail.title || '');
     }
-  }, [isEdit, memoDetail]);
+  }, [isEdit, memoDetail, todoDetail]);
+
+  useEffect(() => {
+    setTitle(todoTitle);
+  }, [todoTitle]);
 
   const handleMemoTextChange = (text: string) => {
     setMemoText(text);
+  };
+
+  const handleLinkChange = (url: string) => {
+    setLink(url);
   };
 
   const handleImagesChange = (newImages: File[]) => {
@@ -75,6 +94,7 @@ const Container = ({
           todoTitle,
           isPublic,
           memoText: memoText || undefined,
+          link: link || undefined,
           images: images.length > 0 ? images : undefined,
         },
         {
@@ -105,6 +125,7 @@ const Container = ({
           todoTitle,
           isPublic,
           memoText: memoText || undefined,
+          link: link || undefined,
           images: images.length > 0 ? images : undefined,
         },
         {
@@ -125,8 +146,6 @@ const Container = ({
     }
   };
 
-  const isReadOnly = !isEdit && !!memoDetail;
-
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
       <div className="flex w-full items-stretch justify-center gap-[20px]">
@@ -135,35 +154,37 @@ const Container = ({
             value={memoText}
             onChange={handleMemoTextChange}
             readOnly={isReadOnly}
+            link={link}
+            onLinkChange={handleLinkChange}
           />
         </div>
         <div className="flex-1">
-          <ImgUpload onImagesChange={handleImagesChange} />
-          {isEdit &&
-            memoDetail &&
-            todoDetail?.images &&
-            todoDetail.images.length > 0 && (
-              <div className="mt-4 rounded-lg bg-white p-3">
-                <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
-                <div className="flex flex-wrap gap-2">
-                  {todoDetail.images.map((img, index) => (
-                    <div
-                      key={index}
-                      className="relative h-16 w-16 overflow-hidden rounded-md"
-                    >
-                      <img
-                        src={img.imageUrl}
-                        alt={`기존 이미지 ${index + 1}`}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-2 text-xs text-gray-500">
-                  새 이미지를 업로드하면 기존 이미지는 대체됩니다.
-                </p>
+          <ImgUpload
+            onImagesChange={handleImagesChange}
+            readOnly={isReadOnly}
+          />
+          {isEdit && todoDetail?.images && todoDetail.images.length > 0 && (
+            <div className="mt-4 rounded-lg bg-white p-3">
+              <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
+              <div className="flex flex-wrap gap-2">
+                {todoDetail.images.map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative h-16 w-16 overflow-hidden rounded-md"
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt={`기존 이미지 ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
-            )}
+              <p className="mt-2 text-xs text-gray-500">
+                새 이미지를 업로드하면 기존 이미지는 대체됩니다.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -181,7 +202,9 @@ const Container = ({
             ? '저장 중...'
             : isEdit
               ? '메모 수정하기'
-              : '메모 저장하기'}
+              : isReadOnly
+                ? '메모 보기'
+                : '메모 저장하기'}
         </button>
       </div>
     </div>

@@ -22,6 +22,15 @@ const AutoTextArea = ({
   const [videoId, setVideoId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!value) return;
+
+    const match = value.match(youtubeRegex);
+    if (match) {
+      setVideoId(match[1]);
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (editorRef.current && editorRef.current.innerText !== value) {
       editorRef.current.innerText = value;
     }
@@ -40,7 +49,7 @@ const AutoTextArea = ({
   };
 
   const removeVideo = () => {
-    if (!editorRef.current) return;
+    if (!editorRef.current || readOnly) return;
     setVideoId(null);
 
     editorRef.current
@@ -81,13 +90,17 @@ const AutoTextArea = ({
       window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
     overlay.appendChild(openBtn);
 
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.innerHTML = `${TrashIcon}<span class="ml-1">삭제</span>`;
-    delBtn.className =
-      'flex items-center gap-1 bg-white px-4 py-2 rounded-[10px] font-B03-SB text-gray-500 hover:bg-gray-200';
-    delBtn.onclick = removeVideo;
-    overlay.appendChild(delBtn);
+    if (!readOnly) {
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.innerHTML = `${TrashIcon}<span class="ml-1">삭제</span>`;
+      delBtn.className =
+        'flex items-center gap-1 bg-white px-4 py-2 rounded-[10px] font-B03-SB text-gray-500 hover:bg-gray-200';
+      delBtn.onclick = removeVideo;
+      delBtn.dataset.action = 'delete-video';
+      overlay.appendChild(delBtn);
+    }
+
     wrapper.appendChild(overlay);
 
     const spacer = document.createElement('div');
@@ -102,7 +115,32 @@ const AutoTextArea = ({
     range.collapse(false);
     selection?.removeAllRanges();
     selection?.addRange(range);
-  }, [videoId]);
+  }, [videoId, readOnly]);
+
+  useEffect(() => {
+    if (!editorRef.current) return;
+    
+    const wrappers = editorRef.current.querySelectorAll('div[data-youtube-wrapper]');
+    wrappers.forEach(wrapper => {
+      const delBtns = wrapper.querySelectorAll('button[data-action="delete-video"]');
+      
+      if (readOnly) {
+        delBtns.forEach(btn => btn.remove());
+      } else if (delBtns.length === 0) {
+        const overlay = wrapper.querySelector('div.absolute');
+        if (overlay) {
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.innerHTML = `${TrashIcon}<span class="ml-1">삭제</span>`;
+          delBtn.className =
+            'flex items-center gap-1 bg-white px-4 py-2 rounded-[10px] font-B03-SB text-gray-500 hover:bg-gray-200';
+          delBtn.onclick = removeVideo;
+          delBtn.dataset.action = 'delete-video';
+          overlay.appendChild(delBtn);
+        }
+      }
+    });
+  }, [readOnly]);
 
   return (
     <div className="w-full">

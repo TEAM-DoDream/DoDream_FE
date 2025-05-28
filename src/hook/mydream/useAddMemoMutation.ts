@@ -5,6 +5,7 @@ interface AddMemoRequest {
   todoTitle: string;
   isPublic: boolean;
   memoText?: string;
+  link?: string;
   images?: File[];
 }
 
@@ -15,30 +16,33 @@ interface AddMemoResponse {
 
 export const useAddMemoMutation = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ 
-      todoGroupId, 
-      todoTitle, 
-      isPublic, 
-      memoText, 
-      images 
+    mutationFn: async ({
+      todoGroupId,
+      todoTitle,
+      isPublic,
+      memoText,
+      link,
+      images,
     }: AddMemoRequest & { todoGroupId: number }) => {
-   
       const formData = new FormData();
       formData.append('todoTitle', todoTitle);
       formData.append('isPublic', String(isPublic));
-      
+
       if (memoText) {
         formData.append('memoText', memoText);
       }
-      
+      if (link) {
+        formData.append('link', link);
+      }
+
       if (images && images.length > 0) {
         images.forEach((image) => {
           formData.append('images', image);
         });
       }
-      
+
       const { data } = await api.post(
         `/v1/my-dream/todo-group/${todoGroupId}`,
         formData,

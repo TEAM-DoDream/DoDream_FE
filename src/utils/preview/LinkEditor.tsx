@@ -1,15 +1,24 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { LinkPreview } from './LinkPreview';
 
 const urlRegex = /(https?:\/\/[^\sㄱ-ㅎㅏ-ㅣ가-힣]+)/g;
 
 interface LinkEditorProps {
   readOnly?: boolean;
+  initialUrl?: string;
+  onUrlChange?: (url: string) => void;
 }
 
-export default function LinkEditor({ readOnly = false }: LinkEditorProps) {
+export default function LinkEditor({ readOnly = false, initialUrl = '', onUrlChange }: LinkEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl || null);
+
+  useEffect(() => {
+    if (initialUrl && editorRef.current) {
+      editorRef.current.innerText = initialUrl;
+      setPreviewUrl(initialUrl);
+    }
+  }, [initialUrl]);
 
   const handleInput = () => {
     if (readOnly) return;
@@ -17,6 +26,14 @@ export default function LinkEditor({ readOnly = false }: LinkEditorProps) {
     const match = content.match(urlRegex);
     if (match && match[0] !== previewUrl) {
       setPreviewUrl(match[0]);
+      if (onUrlChange) {
+        onUrlChange(match[0]);
+      }
+    } else if (!match && previewUrl) {
+      setPreviewUrl(null);
+      if (onUrlChange) {
+        onUrlChange('');
+      }
     }
   };
 
