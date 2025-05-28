@@ -70,8 +70,7 @@ const JobRecommendPage = () => {
       onError: (error: Error) => {
         setIsErrorToast(true);
         let errorMessage = '직업 담기에 실패했습니다. 다시 시도해주세요.';
-        
-        // AxiosError인지 확인
+
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response?.data) {
           const { message } = axiosError.response.data;
@@ -79,7 +78,7 @@ const JobRecommendPage = () => {
             errorMessage = message;
           }
         }
-        
+
         setToastMessage(errorMessage);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
@@ -89,7 +88,7 @@ const JobRecommendPage = () => {
   };
 
   const handleDetailClick = (jobId: number) => {
-    navigate(`/job/${jobId}`);
+    navigate(`/jobinfo/${jobId}`);
   };
 
   return (
@@ -136,7 +135,7 @@ const JobRecommendPage = () => {
             icon={<Check className="h-6 w-6 text-white" />}
             text={toastMessage}
             width="w-[300px]"
-            variant={isErrorToast ? "error" : "success"}
+            variant={isErrorToast ? 'error' : 'success'}
           />
         </div>
       )}
