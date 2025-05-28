@@ -1,4 +1,4 @@
-import OnboardCharacter from '@assets/images/onboarding.png';
+import OnboardCharacter from '@assets/images/onboarding.webp';
 import OptionSelector from '@pages/onboard/components/OptionSelector';
 
 interface QuestionsProps {
