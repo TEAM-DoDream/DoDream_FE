@@ -43,6 +43,11 @@ const Router = () => {
             element={<OtherTodoListPage />}
           />
           <Route
+            path="/othertodo/memo/:todoId"
+            element={<OtherTodoMemoPage />}
+          />
+
+          <Route
             path="/mytodo"
             element={
               <RequireLogin>
@@ -50,13 +55,16 @@ const Router = () => {
               </RequireLogin>
             }
           >
-          <Route path="/othertodo/memo/:todoId" element={<OtherTodoMemoPage />} />
             <Route index element={<Navigate to="/mytodo/list" replace />} />
             <Route path="list" element={<Todo />} />
             <Route path="add/:todoGroupId" element={<TodoListPage />} />
             <Route path="edit/:todoId" element={<TodoListPage />} />
+            <Route path="memo/:todoId" element={<TodoListPage />} />
             <Route path="scrap" element={<ScrapPage />}>
-              <Route index element={<Navigate to="/mytodo/scrap/job" replace />} />
+              <Route
+                index
+                element={<Navigate to="/mytodo/scrap/job" replace />}
+              />
               <Route path="job" element={<ScrapPage />} />
               <Route path="edu" element={<ScrapPage />} />
             </Route>
