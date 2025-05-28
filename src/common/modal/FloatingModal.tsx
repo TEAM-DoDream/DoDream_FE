@@ -4,6 +4,7 @@ import Number1 from '@assets/icons/number.svg?react';
 import Number2 from '@assets/icons/number2.svg?react';
 import { useFloatingAddJob } from '@hook/floating/FloatingAddJob';
 import { useFloatingSubmitMutation } from '@hook/floating/FloatingButtonMutation';
+import { useNavigate } from 'react-router-dom';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -13,6 +14,7 @@ interface FloatingModalProps {
 const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const [taskText, setTaskText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const { data: addjobs } = useFloatingAddJob();
   const { mutate } = useFloatingSubmitMutation();
@@ -46,7 +48,10 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
       <div className="flex flex-col">
         <div className="flex w-full flex-row justify-between">
           <div className="text-lg text-black font-T05-SB">나의 할 일</div>
-          <div className="flex h-[38px] flex-row items-center justify-center gap-[6px] rounded-lg border-[1.4px] border-purple-500 bg-white px-2 text-purple-500 font-B02-B">
+          <div
+            className="flex h-[38px] cursor-pointer flex-row items-center justify-center gap-[6px] rounded-lg border-[1.4px] border-purple-500 bg-white px-2 text-purple-500 font-B02-B"
+            onClick={() => navigate('/mytodo')}
+          >
             나의 할일 가기
             <GoIcon />
           </div>
