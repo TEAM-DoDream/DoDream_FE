@@ -1,5 +1,5 @@
 import CancelIcon from '@assets/icons/cross.svg?react';
-import HeartIcon from '@assets/icons/like.svg?react';
+import PurpleHeartIcon from '@assets/icons/fullheart.svg?react';
 import PurpleLike from '@assets/icons/purplelike.svg?react';
 import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
 import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMutation.ts';
@@ -103,11 +103,11 @@ const CardDetail = ({
           disabled={!isLoggedIn}
         >
           {isScrap ? (
-            <PurpleLike
+            <PurpleHeartIcon
               className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
             />
           ) : (
-            <HeartIcon
+            <PurpleLike
               className={`h-5 w-5 ${!isLoggedIn ? 'text-gray-400' : ''}`}
             />
           )}
