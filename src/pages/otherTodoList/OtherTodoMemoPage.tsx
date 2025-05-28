@@ -10,7 +10,6 @@ const OtherTodoMemoPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
-  // todoId가 있을 경우에만 쿼리 활성화
   const {
     data: memoData,
     isLoading: isMemoLoading,
@@ -20,7 +19,6 @@ const OtherTodoMemoPage = () => {
     retry: false,
   });
 
-  // 로딩 상태 및 에러 처리
   useEffect(() => {
     if (!isMemoLoading) {
       setIsLoading(false);
@@ -70,7 +68,6 @@ const OtherTodoMemoPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center px-4">
       <div className="w-full max-w-[1010px] pt-[40px]">
-
         <div className="mb-6 flex items-center justify-start gap-4">
           <div className="flex items-center">
             <button
@@ -95,7 +92,7 @@ const OtherTodoMemoPage = () => {
                 value={memoData.memoText}
                 onChange={() => {}}
                 readOnly={true}
-                link={memoData.link}
+                // link={memoData.link}
               />
             </div>
             <div className="flex-1">
@@ -104,7 +101,7 @@ const OtherTodoMemoPage = () => {
                   <h2 className="font-T05-SB">이미지</h2>
                 </div>
                 <div className="mt-4 flex flex-1 flex-col gap-3">
-                  {(!memoData.images || memoData.images.length === 0) ? (
+                  {!memoData.images || memoData.images.length === 0 ? (
                     <span className="text-gray-500 font-B02-M">
                       첨부된 이미지가 없어요
                     </span>
