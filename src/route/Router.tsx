@@ -12,6 +12,7 @@ import JobFound from '@pages/jobfound/JobFound';
 import JobInfo from '@pages/jobDetail/JobInfo';
 import OtherTodoPage from '@pages/otherTodo/OtherTodoPage';
 import OtherTodoListPage from '@pages/otherTodoList/OtherTodoListPage.tsx';
+import OtherTodoMemoPage from '@pages/otherTodoList/OtherTodoMemoPage.tsx';
 import MyTodoPage from '@pages/myTodo/MyTodoPage.tsx';
 import TodoListPage from '@pages/myTodo/tabs/TodoListPage.tsx';
 import ScrapPage from '@pages/myTodo/tabs/ScrapPage.tsx';
@@ -49,6 +50,7 @@ const Router = () => {
               </RequireLogin>
             }
           >
+          <Route path="/othertodo/memo/:todoId" element={<OtherTodoMemoPage />} />
             <Route index element={<Navigate to="/mytodo/list" replace />} />
             <Route path="list" element={<Todo />} />
             <Route path="add/:todoGroupId" element={<TodoListPage />} />
