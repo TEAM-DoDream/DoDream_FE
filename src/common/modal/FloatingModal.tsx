@@ -5,6 +5,7 @@ import Number2 from '@assets/icons/number2.svg?react';
 import { useFloatingAddJob } from '@hook/floating/FloatingAddJob';
 import { useFloatingSubmitMutation } from '@hook/floating/FloatingButtonMutation';
 import { useNavigate } from 'react-router-dom';
+import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -19,9 +20,24 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
 
   const { data: addjobs } = useFloatingAddJob();
   const { mutate } = useFloatingSubmitMutation();
+  const { data: hasJob, isLoading } = useMdTodoQuery();
+
+  const hasNoJob =
+    isLoggedIn &&
+    !isLoading &&
+    hasJob &&
+    Array.isArray(hasJob.todos) &&
+    hasJob.todos.length === 0 &&
+    !hasJob.todoGroupId;
 
   const handleSubmit = () => {
-    if (!isLoggedIn || !taskText.trim() || selectedCategory === null) return;
+    if (
+      !isLoggedIn ||
+      !taskText.trim() ||
+      selectedCategory === null ||
+      hasNoJob
+    )
+      return;
 
     mutate(
       {
@@ -43,6 +59,9 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
       }
     );
   };
+
+  const isButtonActive =
+    isLoggedIn && !hasNoJob && !!taskText.trim() && selectedCategory !== null;
 
   return (
     <div className="fixed bottom-[166px] right-[80px] z-50 w-full max-w-[476px] rounded-[30px] bg-white p-[26px] shadow-shadow4">
@@ -101,12 +120,12 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
 
         <button
           className={`mt-5 h-[60px] w-full rounded-2xl py-[11px] font-T05-SB ${
-            isLoggedIn
+            isButtonActive
               ? 'bg-purple-500 text-white hover:bg-purple-600'
               : 'cursor-not-allowed bg-purple-200 text-white'
           }`}
           onClick={handleSubmit}
-          disabled={!isLoggedIn}
+          disabled={!isButtonActive}
         >
           추가하기
         </button>
