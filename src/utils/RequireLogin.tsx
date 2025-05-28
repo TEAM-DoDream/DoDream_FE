@@ -14,8 +14,7 @@ const RequireLogin = ({ children }: RequireLoginProps) => {
     if (!token) {
       navigate('/', {
         state: {
-          toast:
-            '상단의 로그인 버튼을 통해 로그인 후 , 나의 할 일을 이용하실 수 있어요',
+          toast: '로그인 후 이용 가능한 기능입니다.',
         },
       });
     } else {

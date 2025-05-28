@@ -59,7 +59,7 @@ const OtherTodoPage = () => {
             <div
               key={dreamer.todoGroupId}
               className="cursor-pointer"
-              onClick={() => navigate(`/otherslist/${jobId}`)}
+              onClick={() => navigate(`/otherslist/${dreamer.todoGroupId}`)}
             >
               <ProfileCard
                 nickname={dreamer.memberNickname}
