@@ -30,6 +30,7 @@ const Signup2 = () => {
   const { loginId, password, gender } = useSignupStore();
   const { mutate } = useSignupMutation();
   const { mutate: checkNickname } = useDuplicateNicknameMutation();
+  const [displayBirthDate, setDisplayBirthDate] = useState('');
   const [duplicateMessage, setDuplicateMessage] = useState<string | null>(null);
   const [duplicateSuccess, setDuplicateSuccess] = useState<boolean | null>(
     null
@@ -87,6 +88,21 @@ const Signup2 = () => {
     });
   };
 
+  const formatBirthDate = (input: string) => {
+    const raw = input.replace(/\D/g, '').slice(0, 8);
+    if (raw.length < 4) return raw;
+    if (raw.length < 6) return `${raw.slice(0, 4)} / ${raw.slice(4)}`;
+    return `${raw.slice(0, 4)} / ${raw.slice(4, 6)} / ${raw.slice(6)}`;
+  };
+
+  const normalizeBirthDate = (formatted: string) => {
+    const raw = formatted.replace(/\D/g, '').slice(0, 8);
+    if (raw.length === 8) {
+      return `${raw.slice(0, 4)}/${raw.slice(4, 6)}/${raw.slice(6, 8)}`;
+    }
+    return '';
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -142,18 +158,33 @@ const Signup2 = () => {
         <Controller
           name="date"
           control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              inputtitle="생년월일"
-              placeholder="YYYY / MM / DD"
-              className={`h-[68px] w-full font-B02-M ${
-                errors.date ? 'border-warning' : ''
-              }`}
-              undertext={errors.date?.message}
-              undertextClassName={errors.date ? 'text-warning' : ''}
-            />
-          )}
+          render={({ field: { onChange, value, ...rest } }) => {
+            const handleInputChange = (
+              e: React.ChangeEvent<HTMLInputElement>
+            ) => {
+              const formatted = formatBirthDate(e.target.value);
+              const normalized = normalizeBirthDate(formatted);
+              setDisplayBirthDate(formatted);
+              onChange(normalized);
+            };
+
+            return (
+              <Input
+                {...rest}
+                value={displayBirthDate}
+                onChange={handleInputChange}
+                inputtitle="생년월일"
+                placeholder="YYYY / MM / DD"
+                inputMode="numeric"
+                maxLength={14}
+                className={`h-[68px] w-full font-B02-M ${
+                  errors.date ? 'border-warning' : ''
+                }`}
+                undertext={errors.date?.message}
+                undertextClassName={errors.date ? 'text-warning' : ''}
+              />
+            );
+          }}
         />
 
         <div className="flex w-full flex-col gap-2">
@@ -199,6 +230,7 @@ const Signup2 = () => {
             if (selectedAddress && selectedRegionCode) {
               setAddress(selectedAddress);
               setRegionCode(selectedRegionCode);
+              setIsModal(false);
             }
             setIsModal(false);
           }}
