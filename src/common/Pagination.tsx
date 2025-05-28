@@ -19,65 +19,75 @@ const Pagination = ({
     }
   };
 
-  const getPages = (): (number | '...')[] => {
-    const pages: (number | '...')[] = [];
+  const getPageGroup = () => {
+    return Math.ceil(currentPage / 10);
+  };
 
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      const left = 2;
-
-      pages.push(1);
-
-      if (currentPage > left + 1) pages.push('...');
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (currentPage < totalPages - left) pages.push('...');
-      pages.push(totalPages);
+  const getPages = (): number[] => {
+    const pages: number[] = [];
+    const currentGroup = getPageGroup();
+    
+    const startPage = (currentGroup - 1) * 10 + 1;
+    const endPage = Math.min(startPage + 9, totalPages);
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
     }
-
+    
     return pages;
   };
+  
+  const goToPrevGroup = () => {
+    const prevGroupLastPage = (getPageGroup() - 1) * 10;
+    if (prevGroupLastPage > 0) {
+      handleClick(prevGroupLastPage);
+    }
+  };
+  
+  const goToNextGroup = () => {
+    const nextGroupFirstPage = getPageGroup() * 10 + 1;
+    if (nextGroupFirstPage <= totalPages) {
+      handleClick(nextGroupFirstPage);
+    }
+  };
+
+  const hasNextGroup = getPageGroup() * 10 < totalPages;
+  const hasPrevGroup = getPageGroup() > 1;
 
   return (
     <div className="flex items-center justify-center space-x-2">
-      {getPages().map((p, i) => {
-        const key = typeof p === 'number' ? `page-${p}` : `dots-${i}`;
-        return p === '...' ? (
-          <span
-            key={key}
-            className="flex h-9 w-9 items-center justify-center text-gray-300 font-B02-SB"
-          >
-            …
-          </span>
-        ) : (
-          <button
-            key={key}
-            onClick={() => handleClick(p as number)}
-            className={clsx(
-              'flex h-9 w-9 cursor-pointer flex-row items-center justify-center transition font-B02-SB',
-              p === currentPage
-                ? 'text-purple-500'
-                : 'text-gray-500 hover:text-gray-700'
-            )}
-          >
-            {p}
-          </button>
-        );
-      })}
+      {hasPrevGroup && (
+        <button
+          onClick={goToPrevGroup}
+          className="h-9 w-9 cursor-pointer"
+        >
+          <Arrow className="h-9 w-9 rotate-180 rounded-[10px] border border-gray-300" />
+        </button>
+      )}
+      
+      {getPages().map((p) => (
+        <button
+          key={`page-${p}`}
+          onClick={() => handleClick(p)}
+          className={clsx(
+            'flex h-9 w-9 cursor-pointer flex-row items-center justify-center transition font-B02-SB',
+            p === currentPage
+              ? 'text-purple-500'
+              : 'text-gray-500 hover:text-gray-700'
+          )}
+        >
+          {p}
+        </button>
+      ))}
 
-      <button
-        onClick={() => handleClick(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="h-9 w-9 cursor-pointer disabled:opacity-50"
-      >
-        <Arrow className="h-9 w-9 rounded-[10px] border border-gray-300" />
-      </button>
+      {hasNextGroup && (
+        <button
+          onClick={goToNextGroup}
+          className="h-9 w-9 cursor-pointer"
+        >
+          <Arrow className="h-9 w-9 rounded-[10px] border border-gray-300" />
+        </button>
+      )}
     </div>
   );
 };
