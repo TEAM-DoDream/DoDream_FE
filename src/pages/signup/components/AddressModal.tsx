@@ -68,6 +68,15 @@ const AddressModal = ({ onClose }: ModalProps) => {
           districts.map((district) => ({ city, district }))
         );
 
+  useEffect(() => {
+    if (selectedCity && selectedDistrict) {
+      const fullName = `${selectedCity} ${selectedDistrict}`;
+      const match = regionList.find((r) => r.regionName === fullName);
+      const regionCode = match?.regionCode ?? null;
+      onClose(fullName, regionCode ?? undefined);
+    }
+  }, [selectedCity, selectedDistrict]);
+
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50">
       <div className="flex h-[700px] w-[600px] flex-col items-center overflow-hidden rounded-3xl bg-white">
