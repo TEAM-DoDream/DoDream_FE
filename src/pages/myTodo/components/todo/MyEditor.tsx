@@ -8,9 +8,10 @@ const MAX_LENGTH = 5000;
 interface MyEditorProps {
   value: string;
   onChange: (text: string) => void;
+  readOnly?: boolean;
 }
 
-const MyEditor = ({ value, onChange }: MyEditorProps) => {
+const MyEditor = ({ value, onChange, readOnly = false }: MyEditorProps) => {
   const [localValue, setLocalValue] = useState(value);
 
   useEffect(() => {
@@ -40,10 +41,11 @@ const MyEditor = ({ value, onChange }: MyEditorProps) => {
         value={localValue}
         onChange={handleChange}
         maxLength={MAX_LENGTH}
+        readOnly={readOnly}
       />
       <div className="mt-4">
         <h2 className="text-lg font-bold text-gray-900">링크 미리보기</h2>
-        <LinkEditor />
+        <LinkEditor readOnly={readOnly} />
       </div>
     </div>
   );
