@@ -6,12 +6,18 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   maxLength?: number;
+  readOnly?: boolean;
 }
 
 const youtubeRegex =
   /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
 
-const AutoTextArea = ({ value, onChange, maxLength = 5000 }: Props) => {
+const AutoTextArea = ({
+  value,
+  onChange,
+  maxLength = 5000,
+  readOnly = false,
+}: Props) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
 
@@ -102,11 +108,11 @@ const AutoTextArea = ({ value, onChange, maxLength = 5000 }: Props) => {
     <div className="w-full">
       <div
         ref={editorRef}
-        contentEditable
+        contentEditable={!readOnly}
         onInput={handleInput}
         suppressContentEditableWarning
         data-placeholder="자유롭게 메모를 입력하세요"
-        className={`max-h-[520px] min-h-[48px] w-full overflow-y-auto whitespace-pre-wrap rounded-lg border border-gray-300 p-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400`}
+        className={`max-h-[520px] min-h-[48px] w-full overflow-y-auto whitespace-pre-wrap rounded-lg border border-gray-300 p-3 text-sm text-gray-800 focus:outline-none ${readOnly ? '' : 'focus:ring-2 focus:ring-blue-400'}`}
       />
     </div>
   );
