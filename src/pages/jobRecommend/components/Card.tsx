@@ -12,6 +12,7 @@ interface CardProps {
   onHover?: () => void;
   onLeave?: () => void;
   nickname?: string | null;
+  onDetailClick?: (jobId: number) => void;
 }
 
 const Card = ({
@@ -25,6 +26,7 @@ const Card = ({
   onClick,
   onLeave,
   strong,
+  onDetailClick,
 }: CardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -123,6 +125,7 @@ const Card = ({
           <button
             data-testid="card-detail-button"
             className="rounded-[12px] bg-purple-500 px-14 py-4 text-white font-B03-SB"
+            onClick={() => onDetailClick && onDetailClick(jobId)}
           >
             상세정보 보기
           </button>
