@@ -25,6 +25,8 @@ const JobInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const addJobMutation = useAddJobMutation();
 
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+
   const handleAddJob = () => {
     if (!jobId) return;
     addJobMutation.mutate(Number(jobId), {
@@ -118,11 +120,16 @@ const JobInfo = () => {
 
           <div className="mt-[30px]">
             <Button
-              text={`${jobDetail?.jobName} 담기`}
+              text={
+                isLoggedIn
+                  ? `${jobDetail?.jobName} 담기`
+                  : '로그인 후 이용 가능한 기능이에요'
+              }
               color="primary"
               type="button"
               className="flex h-[60px] w-[712px] items-center justify-center rounded-2xl px-[60px] py-3 font-T05-SB"
               onClick={handleAddJob}
+              disabled={!isLoggedIn}
             />
           </div>
         </div>
@@ -131,7 +138,9 @@ const JobInfo = () => {
       </div>
 
       <JobView jobName={jobDetail?.jobName || ''} />
-      {isModalOpen && <AddJobModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && isLoggedIn && (
+        <AddJobModal onClose={() => setIsModalOpen(false)} />
+      )}
     </div>
   );
 };
