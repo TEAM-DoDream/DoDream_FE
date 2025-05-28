@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Cancel from '@assets/icons/bigcancel.svg?react';
 import Divider from '@common/Divider';
 import Warning from '@assets/icons/warning.svg?react';
@@ -10,16 +11,56 @@ interface LikeJobModalProps {
   onClose: () => void;
 }
 
+interface JobItem {
+  jobId: number;
+  jobName: string;
+}
+
 const LikeJobModal = ({ onClose }: LikeJobModalProps) => {
   const { data: InfoData, refetch } = useGetInfo();
-  const deletejob = useDeleteJob();
+  const deleteJob = useDeleteJob();
+
+  const [originalJobs, setOriginalJobs] = useState<JobItem[]>([]);
+  const [localJobs, setLocalJobs] = useState<JobItem[]>([]);
+
+  useEffect(() => {
+    if (InfoData?.jobs) {
+      setOriginalJobs(InfoData.jobs);
+      setLocalJobs(InfoData.jobs);
+    }
+  }, [InfoData]);
+
+  const handleCancel = () => {
+    setLocalJobs(originalJobs);
+    onClose();
+  };
+
+  const handleSave = () => {
+    const removedJobs = originalJobs.filter(
+      (job) => !localJobs.some((j) => j.jobId === job.jobId)
+    );
+    if (removedJobs.length > 0) {
+      const ids = removedJobs.map((j) => j.jobId);
+      deleteJob.mutate(ids, {
+        onSuccess: () => {
+          refetch();
+          onClose();
+        },
+      });
+    } else {
+      onClose();
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
       <div className="flex w-[420px] flex-col items-start rounded-[30px] bg-white px-[30px] py-10">
         <div className="flex w-full justify-between">
           <div className="text-black font-T03-B">관심직업</div>
-          <Cancel className="cursor-pointer text-gray-500" onClick={onClose} />
+          <Cancel
+            className="cursor-pointer text-gray-500"
+            onClick={handleCancel}
+          />
         </div>
 
         <Divider className="mt-[30px]" />
@@ -34,19 +75,18 @@ const LikeJobModal = ({ onClose }: LikeJobModalProps) => {
 
         <div className="flex w-full flex-col items-end gap-10">
           <div className="mt-6 grid w-full grid-cols-3 gap-x-4 gap-y-4">
-            {InfoData?.jobs.map((tag) => (
+            {localJobs.map((tag) => (
               <div
                 key={tag.jobId}
-                className="flex w-full cursor-pointer items-center justify-between truncate rounded-full border border-purple-500 bg-purple-100 px-3 py-2 text-purple-500 font-B03-M hover:bg-purple-150"
+                className="flex w-full cursor-pointer items-center justify-between whitespace-nowrap rounded-full border border-purple-500 bg-purple-100 px-3 py-2 text-purple-500 font-B03-M hover:bg-purple-150"
               >
                 <span>{tag.jobName}</span>
                 <button
+                  type="button"
                   onClick={() => {
-                    deletejob.mutate([tag.jobId], {
-                      onSuccess: () => {
-                        refetch();
-                      },
-                    });
+                    setLocalJobs((prev: JobItem[]) =>
+                      prev.filter((j) => j.jobId !== tag.jobId)
+                    );
                   }}
                 >
                   <SmallCancel />
@@ -58,7 +98,7 @@ const LikeJobModal = ({ onClose }: LikeJobModalProps) => {
           <Button
             text="저장"
             color="primary"
-            onClick={onClose}
+            onClick={handleSave}
             className="flex items-center justify-end rounded-[14px] px-[30px] py-3"
           />
         </div>
