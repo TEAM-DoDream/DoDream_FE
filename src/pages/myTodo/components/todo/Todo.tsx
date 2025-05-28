@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import BackIcon from '@assets/icons/back.svg?react';
 import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
@@ -16,34 +16,31 @@ const Todo = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const alertShown = useRef(false);
-  
+
   const [refreshCounter, setRefreshCounter] = useState(0);
 
   const { data: todoData, isLoading: isTodoLoading } = useMdTodoQuery();
   const { data: jobsData, isLoading: isJobsLoading } = useMdJobsQuery();
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
-  
+
   const {
     data: selectedTodoGroup,
     isLoading: isGroupLoading,
     refetch: refetchTodoGroup,
   } = useTodoGroupQuery(selectedJobId || undefined);
-  
+
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
-  
+
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token && !alertShown.current) {
-      alertShown.current = true;
-      alert('로그인 후 이용해주세요');
-      navigate('/');
-    }
-    
     if (todoData?.todoGroupId && selectedJobId === null) {
       setSelectedJobId(todoData.todoGroupId);
-    } else if (jobsData && Array.isArray(jobsData) && jobsData.length > 0 && selectedJobId === null) {
+    } else if (
+      jobsData &&
+      Array.isArray(jobsData) &&
+      jobsData.length > 0 &&
+      selectedJobId === null
+    ) {
       setSelectedJobId(jobsData[0].todoGroupId);
     }
   }, [todoData, jobsData, selectedJobId, navigate]);
@@ -65,7 +62,7 @@ const Todo = () => {
       queryClient.invalidateQueries({ queryKey: ['todoGroup', selectedJobId] });
       refetchTodoGroup();
     }
-    
+
     if (location.pathname === '/mytodo/list') {
       if (selectedJobId) {
         queryClient.refetchQueries({
@@ -76,11 +73,17 @@ const Todo = () => {
         queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
       }
     }
-  }, [selectedJobId, queryClient, refetchTodoGroup, refreshCounter, location.pathname]);
+  }, [
+    selectedJobId,
+    queryClient,
+    refetchTodoGroup,
+    refreshCounter,
+    location.pathname,
+  ]);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdown = () => setIsDropdownOpen((o) => !o);
-  
+
   const handleSelect = (jobId: number) => {
     if (jobId === selectedJobId) {
       setRefreshCounter((prev) => prev + 1);
@@ -188,7 +191,7 @@ const Todo = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={handleRefresh}
             className="mr-2 text-gray-500 font-B03-M hover:text-purple-500"
           >

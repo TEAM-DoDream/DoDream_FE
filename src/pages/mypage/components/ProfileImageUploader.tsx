@@ -4,6 +4,7 @@ import Camera from '@assets/icons/camera.svg?react';
 import Trash from '@assets/icons/profile_delete.svg?react';
 import { useUploadImageMutation } from '@hook/mypage/useUploadImage';
 import { useUserStore } from '@store/useUserStore';
+import { useDeleteProfile } from '@hook/mypage/useDeleteProfile';
 
 interface ProfileImageUploaderProps {
   imageUrl?: string;
@@ -16,6 +17,7 @@ const ProfileImageUploader = ({ imageUrl }: ProfileImageUploaderProps) => {
 
   const [imageSrc, setImageSrc] = useState(imageUrl || BaseImage);
   const [isDefaultImage, setIsDefaultImage] = useState(!imageUrl);
+  const deleteMutation = useDeleteProfile();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,7 +30,6 @@ const ProfileImageUploader = ({ imageUrl }: ProfileImageUploaderProps) => {
       onSuccess: (response) => {
         const uploadedUrl = response.data?.data;
         if (uploadedUrl) {
-          console.log(uploadedUrl);
           setImageSrc(uploadedUrl);
           setUserImage(uploadedUrl);
         } else {
@@ -51,7 +52,17 @@ const ProfileImageUploader = ({ imageUrl }: ProfileImageUploaderProps) => {
   }, [imageUrl]);
 
   const handleResetImage = () => {
-    setImageSrc(BaseImage);
+    deleteMutation.mutate(undefined, {
+      onSuccess: () => {
+        setImageSrc(BaseImage);
+        setIsDefaultImage(true);
+        setUserImage('');
+      },
+      onError: (error) => {
+        alert('이미지 삭제에 실패했습니다.');
+        console.error(error);
+      },
+    });
   };
 
   return (
