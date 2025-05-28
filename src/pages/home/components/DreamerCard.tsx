@@ -1,8 +1,10 @@
 import Divider from '@common/Divider';
 import CheckList from '@common/CheckList';
 import BaseImage from '@assets/images/profile.png';
+import { useNavigate } from 'react-router-dom';
 
 interface DreamerCardProps {
+  todogroupId: number;
   memberNickname: string;
   profileImage: string;
   regionName: string;
@@ -24,9 +26,14 @@ const DreamerCard = ({
   todoCount,
   profileImage,
   todos,
+  todogroupId,
 }: DreamerCardProps) => {
+  const navigate = useNavigate();
   return (
-    <div className="flex h-auto w-[384px] flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 bg-white p-[30px] transition-shadow hover:shadow-shadow2">
+    <div
+      className="flex h-auto w-[384px] flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 bg-white p-[30px] transition-shadow hover:shadow-shadow2"
+      onClick={() => navigate(`/otherslist/${todogroupId}`)}
+    >
       <div className="flex flex-row gap-5">
         <img
           src={profileImage || BaseImage}

@@ -7,12 +7,23 @@ import HomeDreamer from './components/HomeDreamer';
 import LoginBanner from './components/LoginBanner';
 import ToastModal from '@common/modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
+import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 
 const Home = () => {
   const isLoggedIn = !!localStorage.getItem('accessToken');
   const location = useLocation();
   const navigate = useNavigate();
   const [toast, setToast] = useState<string | null>(null);
+
+  const { data, isLoading } = useMdTodoQuery();
+
+  const hasNoJob =
+    isLoggedIn &&
+    !isLoading &&
+    data &&
+    Array.isArray(data.todos) &&
+    data.todos.length === 0 &&
+    !data.todoGroupId;
 
   useEffect(() => {
     if (location.state?.toast) {
@@ -33,7 +44,13 @@ const Home = () => {
         </div>
       )}
 
-      {isLoggedIn ? <LoginBanner /> : <Banner />}
+      {!isLoggedIn ? (
+        <Banner />
+      ) : hasNoJob ? (
+        <Banner goToOnboard />
+      ) : (
+        <LoginBanner />
+      )}
 
       <div className="px-[120px] py-20">
         <HomeDreamer />
