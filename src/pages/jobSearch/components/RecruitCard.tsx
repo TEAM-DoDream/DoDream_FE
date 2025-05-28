@@ -1,7 +1,24 @@
 import Like from '@assets/icons/like.svg?react';
+import PurpleLike from '@assets/icons/purplelike.svg?react';
 import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
 
-const RecruitCard = ({ item }: { item: RecruitItem }) => {
+interface RecruitCardProps {
+  item: RecruitItem;
+  isScrap?: boolean;
+  onScrapClick?: (id: string, isScrap: boolean) => void;
+}
+
+const RecruitCard = ({ item, isScrap = false, onScrapClick }: RecruitCardProps) => {
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+  
+  const handleScrapClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (onScrapClick) {
+      onScrapClick(item.id, isScrap);
+    }
+  };
+
   return (
     <div className="flex h-[330px] w-[388px] cursor-pointer flex-col justify-between rounded-[30px] border border-gray-200 bg-white p-[24px] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
       <div className="flex items-start justify-between">
@@ -10,14 +27,15 @@ const RecruitCard = ({ item }: { item: RecruitItem }) => {
         </span>
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          aria-label="관심 채용 공고 담기"
-          className="ml-auto"
+          onClick={handleScrapClick}
+          aria-label={isLoggedIn ? "관심 채용 공고 담기" : "로그인 필요"}
+          className={`ml-auto ${!isLoggedIn ? 'cursor-not-allowed opacity-50' : ''}`}
         >
-          <Like className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+          {isScrap ? (
+            <PurpleLike className="h-6 w-6" />
+          ) : (
+            <Like className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+          )}
         </button>
       </div>
 
