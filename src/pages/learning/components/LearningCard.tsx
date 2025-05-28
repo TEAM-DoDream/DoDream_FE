@@ -1,5 +1,5 @@
 import Like from '@assets/icons/like.svg?react';
-import PurpleLike from '@assets/icons/purplelike.svg?react';
+import PurpleHeartIcon from '@assets/icons/fullheart.svg?react';
 import { AcademyItem } from '@validation/academy/academySchema.ts';
 
 interface LearningCardProps {
@@ -8,9 +8,13 @@ interface LearningCardProps {
   onScrapClick?: (e: React.MouseEvent) => void;
 }
 
-const LearningCard = ({ item, isScrap = false, onScrapClick }: LearningCardProps) => {
+const LearningCard = ({
+  item,
+  isScrap = false,
+  onScrapClick,
+}: LearningCardProps) => {
   const isLoggedIn = !!localStorage.getItem('accessToken');
-  
+
   const handleScrapClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -26,11 +30,11 @@ const LearningCard = ({ item, isScrap = false, onScrapClick }: LearningCardProps
           <button
             type="button"
             onClick={handleScrapClick}
-            aria-label={isLoggedIn ? "관심 교육 과정 담기" : "로그인 필요"}
+            aria-label={isLoggedIn ? '관심 교육 과정 담기' : '로그인 필요'}
             className={`ml-auto ${!isLoggedIn ? 'cursor-not-allowed opacity-50' : ''}`}
           >
             {isScrap ? (
-              <PurpleLike className="h-6 w-6" />
+              <PurpleHeartIcon className="h-6 w-6" />
             ) : (
               <Like className="h-6 w-6 text-gray-400 hover:text-gray-600" />
             )}

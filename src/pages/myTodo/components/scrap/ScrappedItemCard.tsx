@@ -1,4 +1,4 @@
-import Like from '@assets/icons/like.svg?react';
+import PurpleHeartIcon from '@assets/icons/fullheart.svg?react';
 import { ScrapTrainingItem } from '@validation/scrap/scrapSchema';
 import { ScrapRecruitItem } from '@validation/scrap/scrapRecruitSchema';
 
@@ -85,9 +85,11 @@ const ScrappedItemCard = ({
           disabled={isDeleting}
           className={isDeleting ? 'cursor-not-allowed opacity-50' : 'ml-auto'}
         >
-          <Like
+          <PurpleHeartIcon
             className={`h-6 w-6 ${
-              isDeleting ? 'text-gray-400' : 'text-purple-500 hover:text-purple-700'
+              isDeleting
+                ? 'text-gray-400'
+                : 'text-purple-500 hover:text-purple-700'
             }`}
           />
         </button>
@@ -117,7 +119,7 @@ const ScrappedItemCard = ({
         </div>
       </div>
 
-      <div className="mt-auto flex justify-between items-center">
+      <div className="mt-auto flex items-center justify-between">
         {displayCost && type === 'edu' && 'realMan' in item && (
           <div className="rounded-[10px] bg-purple-50 px-4 py-2">
             <span className="text-purple-500 font-B01-B">{item.realMan}</span>
@@ -125,8 +127,8 @@ const ScrappedItemCard = ({
         )}
 
         {type === 'job' && 'expiration-date' in item && (
-          <div className="text-sm text-gray-500 font-B03-M ml-auto">
-            마감일 <span className="text-gray-300 mx-1">|</span>{' '}
+          <div className="ml-auto text-sm text-gray-500 font-B03-M">
+            마감일 <span className="mx-1 text-gray-300">|</span>{' '}
             <span className="text-purple-500">{item['expiration-date']}</span>
           </div>
         )}
