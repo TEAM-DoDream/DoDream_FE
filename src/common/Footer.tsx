@@ -14,7 +14,7 @@ const Footer = () => {
         인생의 제 2막을 향한, 두드림
       </div>
       <div className="mt-1 text-center text-gray-400 font-B01-M">
-        두둠칫팀 JuhyunPark4650@gmail.com
+        두둠칫팀 teamdodream.dev@gmail.com
       </div>
     </div>
   );
