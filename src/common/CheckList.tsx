@@ -121,7 +121,7 @@ const CheckList = ({
         return (
           <div
             key={id ?? idx}
-            className="max-w-[940px]items-center group flex w-full justify-between gap-2 rounded-lg px-2 py-1 hover:bg-gray-50"
+            className="group flex w-full max-w-[940px] items-center justify-between gap-2 rounded-lg px-2 py-1 hover:bg-gray-50"
           >
             <div className="flex w-full items-center gap-2">
               <div
