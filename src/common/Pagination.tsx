@@ -12,15 +12,17 @@ const Pagination = ({
   currentPage,
   setCurrentPage,
 }: PaginationProps) => {
+  const displayPage = currentPage + 1;
+  
   const handleClick = (page: number) => {
-    if (page >= 1 && page <= totalPages && page !== currentPage) {
-      setCurrentPage(page);
+    if (page >= 1 && page <= totalPages && page !== displayPage) {
+      setCurrentPage(page - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const getPageGroup = () => {
-    return Math.ceil(currentPage / 10);
+    return Math.ceil(displayPage / 10);
   };
 
   const getPages = (): number[] => {
@@ -71,7 +73,7 @@ const Pagination = ({
           onClick={() => handleClick(p)}
           className={clsx(
             'flex h-9 w-9 cursor-pointer flex-row items-center justify-center transition font-B02-SB',
-            p === currentPage
+            p === displayPage
               ? 'text-purple-500'
               : 'text-gray-500 hover:text-gray-700'
           )}
