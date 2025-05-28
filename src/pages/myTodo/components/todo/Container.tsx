@@ -10,6 +10,7 @@ interface TodoDetailType {
   title: string;
   isPublic: boolean;
   memoText: string;
+  link?: string;
   images: { imageUrl: string }[];
 }
 
@@ -36,6 +37,7 @@ const Container = ({
 }: ContainerProps) => {
   const navigate = useNavigate();
   const [memoText, setMemoText] = useState('');
+  const [link, setLink] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [title, setTitle] = useState(todoTitle);
@@ -52,9 +54,11 @@ const Container = ({
   useEffect(() => {
     if (!isEdit && memoDetail) {
       setMemoText(memoDetail.memoText || '');
+      setLink(memoDetail.link || '');
       setTitle(memoDetail.title || '');
     } else if (isEdit && todoDetail) {
       setMemoText(todoDetail.memoText || '');
+      setLink(todoDetail.link || '');
       setTitle(todoDetail.title || '');
     }
   }, [isEdit, memoDetail, todoDetail]);
@@ -65,6 +69,10 @@ const Container = ({
 
   const handleMemoTextChange = (text: string) => {
     setMemoText(text);
+  };
+
+  const handleLinkChange = (url: string) => {
+    setLink(url);
   };
 
   const handleImagesChange = (newImages: File[]) => {
@@ -86,6 +94,7 @@ const Container = ({
           todoTitle,
           isPublic,
           memoText: memoText || undefined,
+          link: link || undefined,
           images: images.length > 0 ? images : undefined,
         },
         {
@@ -116,6 +125,7 @@ const Container = ({
           todoTitle,
           isPublic,
           memoText: memoText || undefined,
+          link: link || undefined,
           images: images.length > 0 ? images : undefined,
         },
         {
@@ -144,6 +154,8 @@ const Container = ({
             value={memoText}
             onChange={handleMemoTextChange}
             readOnly={isReadOnly}
+            link={link}
+            onLinkChange={handleLinkChange}
           />
         </div>
         <div className="flex-1">
