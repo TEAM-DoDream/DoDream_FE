@@ -1,4 +1,4 @@
-import { useDropdown } from '@hook/useDropdown.ts';
+import { useDropdown } from '@hook/useDropdown';
 import BackIcon from '@assets/icons/back.svg?react';
 import DropDownIcon from '@assets/icons/drop_down.svg?react';
 import clsx from 'clsx';

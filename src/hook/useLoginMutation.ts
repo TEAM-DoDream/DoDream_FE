@@ -24,8 +24,9 @@ export const useLoginMutation = () => {
         setUser({
           nickname: res.data?.nickname || '',
           regionName: res.data?.regionName || '',
+          userImage: '',
         });
-        navigate('/');
+        navigate('/');  
       } else {
         alert('로그인에 실패했습니다. 다시 시도해주세요.');
       }
