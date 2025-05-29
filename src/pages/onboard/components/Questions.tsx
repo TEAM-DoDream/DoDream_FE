@@ -14,7 +14,7 @@ const Questions = ({ question, options, value, onChange }: QuestionsProps) => {
       <img
         src={OnboardCharacter}
         alt="캐릭터"
-        className="hidden h-[100px] w-[100px] shrink-0 md:block"
+        className="hidden h-[105px] w-[138px] shrink-0 md:block"
       />
 
       <div className="flex flex-1 flex-col space-y-8">
