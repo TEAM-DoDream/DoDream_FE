@@ -280,4 +280,4 @@ Pull Request Naming Rule: `[<Prefix>](#<Issue_Number>) <Description>` 의 양식
 
 <br>
 
-![두드림_비전](https://github.com/user-attachments/assets/31fc69f4-ecc0-4475-b6d5-6d8aab05aac0)
+![두드림_비전](https://github.com/user-attachments/assets/eb3a0e05-0180-4632-ac7c-0d52cb89e6d1)
