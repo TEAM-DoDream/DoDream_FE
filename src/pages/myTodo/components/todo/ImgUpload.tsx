@@ -11,12 +11,14 @@ interface ImgUploadProps {
   onImagesChange: (images: File[]) => void;
   readOnly?: boolean;
   existingImages?: ImageType[];
+  onDeleteExistingImage?: (imageId: number) => void;
 }
 
 const ImgUpload = ({
   onImagesChange,
   readOnly = false,
   existingImages = [],
+  onDeleteExistingImage,
 }: ImgUploadProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -52,6 +54,11 @@ const ImgUpload = ({
     if (readOnly) return;
     setPreviewImages((prev) => prev.filter((_, i) => i !== index));
     setFileImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteExisting = (imageId: number) => {
+    if (readOnly || !onDeleteExistingImage) return;
+    onDeleteExistingImage(imageId);
   };
 
   const hasImages = previewImages.length > 0 || existingImages.length > 0;
@@ -93,6 +100,15 @@ const ImgUpload = ({
                   alt={`이미지 ${idx + 1}`}
                   className="w-full rounded-lg border border-gray-200"
                 />
+                {!readOnly && onDeleteExistingImage && (
+                  <button
+                    onClick={() => handleDeleteExisting(img.imageId)}
+                    className="absolute right-2 top-2 flex items-center gap-1 rounded-[10px] bg-white px-3 py-1 text-gray-500 shadow font-B03-SB hover:bg-gray-200"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                    삭제
+                  </button>
+                )}
               </div>
             ))}
 

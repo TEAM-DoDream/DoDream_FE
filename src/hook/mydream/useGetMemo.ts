@@ -23,7 +23,7 @@ const GetMemo = async (todoId: number): Promise<GetMemoProps> => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log('memo', response.data);
+
   return response.data.data;
 };
 
