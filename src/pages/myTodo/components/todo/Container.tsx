@@ -44,6 +44,10 @@ const Container = ({
   const [isTodoTitleEmpty, setIsTodoTitleEmpty] = useState(false);
   const { mutate: addMemo } = useAddMemoMutation();
   const { mutate: updateMemo } = useUpdateMemoMutation();
+  const [existingImages, setExistingImages] = useState<
+    { imageId: number; imageUrl: string }[]
+  >([]);
+  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
 
   const isReadOnly = isMemoView && !isEdit;
 
@@ -52,14 +56,22 @@ const Container = ({
   }, [title]);
 
   useEffect(() => {
+    setDeletedImageIds([]);
+
     if (!isEdit && memoDetail) {
       setMemoText(memoDetail.memoText || '');
       setLink(memoDetail.link || '');
       setTitle(memoDetail.title || '');
+      if (memoDetail.images) {
+        setExistingImages(memoDetail.images);
+      }
     } else if (isEdit && todoDetail) {
       setMemoText(todoDetail.memoText || '');
       setLink(todoDetail.link || '');
       setTitle(todoDetail.title || '');
+      if (todoDetail.images) {
+        setExistingImages(todoDetail.images);
+      }
     }
   }, [isEdit, memoDetail, todoDetail]);
 
@@ -80,6 +92,14 @@ const Container = ({
     setImages(newImages);
   };
 
+  const handleDeleteExistingImage = (imageId: number) => {
+    // 화면에서 이미지 제거
+    setExistingImages((prev) => prev.filter((img) => img.imageId !== imageId));
+
+    // 삭제할 이미지 ID 추적
+    setDeletedImageIds((prev) => [...prev, imageId]);
+  };
+
   const handleSaveMemo = () => {
     if (!todoTitle.trim()) {
       alert('할일 제목을 입력해주세요.');
@@ -97,6 +117,8 @@ const Container = ({
           memoText: memoText || undefined,
           link: link || undefined,
           images: images.length > 0 ? images : undefined,
+          deleteImageIds:
+            deletedImageIds.length > 0 ? deletedImageIds : undefined,
         },
         {
           onSuccess: () => {
@@ -147,9 +169,6 @@ const Container = ({
     }
   };
 
-  // 현재 보여줄 이미지들 결정
-  const displayImages = isEdit ? todoDetail?.images : memoDetail?.images;
-
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
       <div className="flex w-full items-stretch justify-center gap-[20px]">
@@ -164,7 +183,10 @@ const Container = ({
           <ImgUpload
             onImagesChange={handleImagesChange}
             readOnly={isReadOnly}
-            existingImages={displayImages}
+            existingImages={existingImages}
+            onDeleteExistingImage={
+              !isReadOnly ? handleDeleteExistingImage : undefined
+            }
           />
         </div>
       </div>
