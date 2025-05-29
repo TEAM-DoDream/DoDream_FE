@@ -11,7 +11,7 @@ interface TodoDetailType {
   isPublic: boolean;
   memoText: string;
   link?: string;
-  images: { imageUrl: string }[];
+  images: { imageId: number; imageUrl: string }[];
 }
 
 interface ContainerProps {
@@ -71,9 +71,10 @@ const Container = ({
     setMemoText(text);
   };
 
-  const handleLinkChange = (url: string) => {
-    setLink(url);
-  };
+  // const handleLinkChange = (url: string) => {
+  //   console.log('링크 변경:', url);
+  //   setLink(url);
+  // };
 
   const handleImagesChange = (newImages: File[]) => {
     setImages(newImages);
@@ -146,6 +147,9 @@ const Container = ({
     }
   };
 
+  // 현재 보여줄 이미지들 결정
+  const displayImages = isEdit ? todoDetail?.images : memoDetail?.images;
+
   return (
     <div className="container flex w-[1010px] flex-col items-center gap-5 rounded-[30px] bg-gray-100 p-[20px]">
       <div className="flex w-full items-stretch justify-center gap-[20px]">
@@ -154,37 +158,14 @@ const Container = ({
             value={memoText}
             onChange={handleMemoTextChange}
             readOnly={isReadOnly}
-            link={link}
-            onLinkChange={handleLinkChange}
           />
         </div>
         <div className="flex-1">
           <ImgUpload
             onImagesChange={handleImagesChange}
             readOnly={isReadOnly}
+            existingImages={displayImages}
           />
-          {isEdit && todoDetail?.images && todoDetail.images.length > 0 && (
-            <div className="mt-4 rounded-lg bg-white p-3">
-              <h3 className="mb-2 text-gray-900 font-B01-SB">기존 이미지</h3>
-              <div className="flex flex-wrap gap-2">
-                {todoDetail.images.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative h-16 w-16 overflow-hidden rounded-md"
-                  >
-                    <img
-                      src={img.imageUrl}
-                      alt={`기존 이미지 ${index + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-              <p className="mt-2 text-xs text-gray-500">
-                새 이미지를 업로드하면 기존 이미지는 대체됩니다.
-              </p>
-            </div>
-          )}
         </div>
       </div>
 
