@@ -10,7 +10,6 @@ export const useMdTodoDetail = () => {
   return async (todoId: number): Promise<TodoDetailData> => {
     try {
       const { data } = await api.get(`/v1/my-dream/todo/${todoId}`);
-      console.log('API raw response:', data);
 
       return TodoDetailSchema.parse(data.data);
     } catch (error: unknown) {

@@ -28,7 +28,7 @@ const Mypage = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response.data);
+
     return response.data.data;
   } catch (error) {
     console.error('내 계정 정보를 불러오는 것에 실패했습니다.', error);
