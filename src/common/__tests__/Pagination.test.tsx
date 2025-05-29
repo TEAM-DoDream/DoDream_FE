@@ -22,7 +22,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={20}
-        currentPage={3}
+        currentPage={2}
         setCurrentPage={() => {}}
       />
     );
@@ -41,7 +41,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={20}
-        currentPage={1}
+        currentPage={0}
         setCurrentPage={setCurrentPageMock}
       />
     );
@@ -49,8 +49,8 @@ describe('Pagination 컴포넌트', () => {
     // 5번 페이지 버튼 클릭
     fireEvent.click(screen.getByText('5'));
     
-    // setCurrentPage가 5로 호출되었는지 확인
-    expect(setCurrentPageMock).toHaveBeenCalledWith(5);
+    // setCurrentPage가 4로 호출되었는지 확인
+    expect(setCurrentPageMock).toHaveBeenCalledWith(4);
     
     // window.scrollTo가 호출되었는지 확인
     expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
@@ -61,7 +61,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={20}
-        currentPage={3}
+        currentPage={2}
         setCurrentPage={setCurrentPageMock}
       />
     );
@@ -77,7 +77,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={20}
-        currentPage={5}
+        currentPage={4}
         setCurrentPage={() => {}}
       />
     );
@@ -91,7 +91,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={30}
-        currentPage={11}
+        currentPage={10}
         setCurrentPage={() => {}}
       />
     );
@@ -105,7 +105,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={20}
-        currentPage={20}
+        currentPage={19}
         setCurrentPage={() => {}}
       />
     );
@@ -120,7 +120,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={30}
-        currentPage={5}
+        currentPage={4}
         setCurrentPage={setCurrentPageMock}
       />
     );
@@ -129,8 +129,8 @@ describe('Pagination 컴포넌트', () => {
     const nextGroupButton = screen.getByTestId('arrow-icon');
     fireEvent.click(nextGroupButton.parentElement as HTMLElement);
     
-    // 다음 그룹의 첫 페이지(11)로 이동해야 함
-    expect(setCurrentPageMock).toHaveBeenCalledWith(11);
+    // 다음 그룹의 첫 페이지로 이동해야 함
+    expect(setCurrentPageMock).toHaveBeenCalledWith(10);
   });
 
   it('이전 그룹 버튼을 클릭하면 이전 그룹의 마지막 페이지로 이동해야 한다', () => {
@@ -138,7 +138,7 @@ describe('Pagination 컴포넌트', () => {
     render(
       <Pagination
         totalPages={30}
-        currentPage={15}
+        currentPage={14}
         setCurrentPage={setCurrentPageMock}
       />
     );
@@ -147,15 +147,15 @@ describe('Pagination 컴포넌트', () => {
     const arrowIcons = screen.getAllByTestId('arrow-icon');
     fireEvent.click(arrowIcons[0].parentElement as HTMLElement);
     
-    // 이전 그룹의 마지막 페이지(10)로 이동해야 함
-    expect(setCurrentPageMock).toHaveBeenCalledWith(10);
+    // 이전 그룹의 마지막 페이지로 이동해야 함
+    expect(setCurrentPageMock).toHaveBeenCalledWith(9);
   });
 
   it('페이지 수가 10개 이하일 때 모든 페이지 버튼이 표시되어야 한다', () => {
     render(
       <Pagination
         totalPages={7}
-        currentPage={3}
+        currentPage={2}
         setCurrentPage={() => {}}
       />
     );
@@ -170,7 +170,7 @@ describe('Pagination 컴포넌트', () => {
     const { rerender } = render(
       <Pagination
         totalPages={30}
-        currentPage={5}
+        currentPage={4}
         setCurrentPage={() => {}}
       />
     );
@@ -183,7 +183,7 @@ describe('Pagination 컴포넌트', () => {
     rerender(
       <Pagination
         totalPages={30}
-        currentPage={15}
+        currentPage={14}
         setCurrentPage={() => {}}
       />
     );
