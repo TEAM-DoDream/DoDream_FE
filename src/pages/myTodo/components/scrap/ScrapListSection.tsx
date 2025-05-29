@@ -65,9 +65,7 @@ const ScrapListSection = ({
             id: (item as ScrapRecruitItem).id,
           },
           {
-            onSuccess: () => {
-              console.log('채용 스크랩이 성공적으로 삭제되었습니다.');
-            },
+            onSuccess: () => {},
             onError: (error) => {
               console.error('채용 스크랩 삭제 실패:', error);
               alert('스크랩 삭제에 실패했습니다. 다시 시도해주세요.');
