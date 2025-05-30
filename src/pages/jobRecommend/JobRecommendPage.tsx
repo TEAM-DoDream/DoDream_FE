@@ -115,7 +115,7 @@ const JobRecommendPage = () => {
       </div>
 
       {isModalOpen && selectedJobId !== null && (
-        <AddJobModal jobId={selectedJobId} onClose={handleCloseModal} />
+        <AddJobModal onClose={handleCloseModal} />
       )}
 
       <div className="mt-8 flex gap-2">

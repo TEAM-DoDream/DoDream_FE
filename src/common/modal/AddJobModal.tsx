@@ -8,12 +8,12 @@ interface AddJobModalProps {
   onClose: () => void;
 }
 
-const AddJobModal = ({ jobId, onClose }: AddJobModalProps) => {
+const AddJobModal = ({ onClose }: AddJobModalProps) => {
   const navigate = useNavigate();
 
   const goToJobInfo = () => {
     onClose();
-    navigate(`/jobinfo/${jobId}`);
+    navigate('/jobfound');
   };
 
   return (
