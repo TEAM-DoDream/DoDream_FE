@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
 import CheckList from '@common/CheckList';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
 
 const LoginBanner = () => {
@@ -30,11 +30,18 @@ const LoginBanner = () => {
     );
   }, [todoData]);
 
-  useEffect(() => {}, [todoItems.length]);
-
   const handleCheckChange = (newIds: number[]) => {
     const added = newIds.filter((id) => !checkedIds.includes(id));
-    added.forEach((todoId) => completeTodo({ todoId, completed: true }));
+    const removed = checkedIds.filter((id) => !newIds.includes(id));
+    
+    added.forEach((todoId) => 
+      completeTodo({ todoId, completed: true })
+    );
+    
+    removed.forEach((todoId) => 
+      completeTodo({ todoId, completed: false })
+    );
+    
     setCheckedIds(newIds);
   };
 
