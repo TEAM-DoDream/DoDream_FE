@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
 import CheckList from '@common/CheckList';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
-import { useEffect, useState, useRef } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
 
 const LoginBanner = () => {
@@ -20,67 +20,25 @@ const LoginBanner = () => {
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
 
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
-  const [localTodoItems, setLocalTodoItems] = useState<
-    { id: number; text: string }[]
-  >([]);
-  const initialLoadDone = useRef(false);
 
-  useEffect(() => {
-    if (todoData?.todos && !initialLoadDone.current) {
-      const items = todoData.todos
+  const todoItems = useMemo(() => {
+    return (
+      todoData?.todos
         .filter((t) => !t.completed)
         .slice(0, 4)
-        .map((t) => ({ id: t.todoId, text: t.title }));
-
-      if (items.length > 0) {
-        setLocalTodoItems(items);
-        initialLoadDone.current = true;
-      }
-    }
+        .map((t) => ({ id: t.todoId, text: t.title })) ?? []
+    );
   }, [todoData]);
+
+  useEffect(() => {}, [todoItems.length]);
 
   const handleCheckChange = (newIds: number[]) => {
     const added = newIds.filter((id) => !checkedIds.includes(id));
-    const removed = checkedIds.filter((id) => !newIds.includes(id));
-
+    added.forEach((todoId) => completeTodo({ todoId, completed: true }));
     setCheckedIds(newIds);
-
-    added.forEach((todoId) => {
-      completeTodo(
-        { todoId, completed: true },
-        {
-          onSuccess: () => {},
-          onError: () => {
-            setCheckedIds((prev) => prev.filter((id) => id !== todoId));
-          },
-        }
-      );
-    });
-
-    removed.forEach((todoId) => {
-      completeTodo(
-        { todoId, completed: false },
-        {
-          onSuccess: () => {},
-          onError: () => {
-            setCheckedIds((prev) => [...prev, todoId]);
-          },
-        }
-      );
-    });
   };
 
-  const displayedItems =
-    localTodoItems.length > 0
-      ? localTodoItems
-      : todoData?.todos
-          ?.filter((t) => !t.completed)
-          .slice(0, 4)
-          .map((t) => ({ id: t.todoId, text: t.title })) || [];
-
-  const preventAutoRefresh = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+  const displayedItems = todoItems.filter((i) => !checkedIds.includes(i.id!));
 
   return (
     <div className="flex h-[489px] w-full items-center justify-center gap-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
@@ -105,16 +63,13 @@ const LoginBanner = () => {
           </div>
         </div>
 
-        <div
-          className="absolute bottom-0 left-[30px] top-[135px] flex items-center justify-center"
-          onClick={preventAutoRefresh}
-        >
-          {isLoading && localTodoItems.length === 0 ? (
+        <div className="absolute bottom-0 left-[30px] top-[135px] flex items-center justify-center">
+          {isLoading ? (
             <div className="text-white">로딩중...</div>
           ) : (
             <CheckList
               lists={
-                displayedItems.length > 0
+                displayedItems.length
                   ? displayedItems
                   : [{ text: '할일을 추가해주세요' }]
               }
