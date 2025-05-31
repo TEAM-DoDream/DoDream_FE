@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import BackIcon from '@assets/icons/back.svg?react';
 import TodoCard from '@pages/otherTodoList/components/TodoCard.tsx';
-import Footer from '@common/Footer.tsx';
 import { useEachTodosQuery } from '@hook/useJobQuery.ts';
 import BaseImg from '@assets/images/profile.png';
 import LoadingSpinner from '@common/LoadingSpinner';
@@ -54,7 +53,7 @@ const OtherTodoListPage = () => {
               </div>
             </div>
 
-            <div className="mt-[50px] flex flex-col gap-6">
+            <div className="mt-[50px] flex w-[1000px] flex-col gap-6">
               {Array.isArray(eachTodos?.todos) && (
                 <TodoCard
                   title="할 일 목록"
@@ -73,7 +72,6 @@ const OtherTodoListPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
