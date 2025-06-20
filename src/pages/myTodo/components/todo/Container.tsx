@@ -6,12 +6,12 @@ import MyEditor from './MyEditor';
 import ImgUpload from './ImgUpload';
 
 interface TodoDetailType {
-  todoId: number;
+  todoId?: number;
   title: string;
   isPublic: boolean;
-  memoText: string;
-  link?: string;
-  images: { imageId: number; imageUrl: string }[];
+  memoText?: string | null;
+  link?: string | null;
+  images?: { imageId: number; imageUrl: string }[] | null;
 }
 
 interface ContainerProps {
