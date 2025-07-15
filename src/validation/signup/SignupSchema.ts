@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const EmailOnlySchema = z.object({
+  email: z.string().trim().email('올바른 이메일 형식을 입력해주세요'),
+});
+
+export type EmailOnlyFormValues = z.infer<typeof EmailOnlySchema>;
+
 export const SignupSchema = z
   .object({
     loginId: z
