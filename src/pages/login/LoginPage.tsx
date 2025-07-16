@@ -29,6 +29,17 @@ const LoginPage = () => {
                 회원가입
               </a>
             </div>
+            <div className="mt-4 flex w-full items-center justify-center text-center">
+              <div className="flex w-full items-center justify-center gap-6 px-4">
+                <a href="/findpwd" className="text-gray-400 font-B02-SB">
+                  비밀번호 찾기
+                </a>
+                <div className="text-gray-200 font-B02-SB">|</div>
+                <a href="/findid" className="text-gray-400 font-B02-SB">
+                  아이디 찾기
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
