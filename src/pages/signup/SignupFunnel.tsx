@@ -2,6 +2,7 @@ import { useFunnel, Step } from '@hook/useFunnel';
 import Signup from './components/Signup';
 import Signup2 from './components/Signup2';
 import SingupAgree from './components/SingupAgree';
+import SignupEmailVerify from './components/SignupEmailVerify';
 
 const SignupFunnel = () => {
   const { Funnel, setStep } = useFunnel('singupAgree');
@@ -9,7 +10,11 @@ const SignupFunnel = () => {
   return (
     <Funnel>
       <Step name="singupAgree">
-        <SingupAgree onNext={() => setStep('signup')} />
+        <SingupAgree onNext={() => setStep('signupEmailVerify')} />
+      </Step>
+
+      <Step name="signupEmailVerify">
+        <SignupEmailVerify onNext={() => setStep('signup')} />
       </Step>
 
       <Step name="signup">
