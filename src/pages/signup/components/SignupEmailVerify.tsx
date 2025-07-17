@@ -1,6 +1,6 @@
 import Button from '@common/Button';
 import { Input } from '@common/Input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface SignupProps {
   onNext: () => void;
@@ -8,9 +8,29 @@ interface SignupProps {
 
 const SignupEmailVerify = ({ onNext }: SignupProps) => {
   const [verifyNum, setVerifyNum] = useState('');
-  const handleSubmit = () => {
+  const [timeLeft, setTimeLeft] = useState(180);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     onNext();
   };
+
   return (
     <form
       className="flex w-full flex-col items-center justify-center"
@@ -30,7 +50,9 @@ const SignupEmailVerify = ({ onNext }: SignupProps) => {
 
           <div className="flex flex-row gap-[30px]">
             <div className="text-gray-500 font-B02-M">인증까지 남은 시간</div>
-            <div className="text-success font-B02-B">02:59</div>
+            <div className="text-success font-B02-B">
+              {formatTime(timeLeft)}
+            </div>
           </div>
         </div>
 
