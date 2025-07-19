@@ -8,7 +8,6 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery.ts';
 import { useMdTodoDetail } from '@hook/todo/useMdTodoDetail';
 import { useQuery } from '@tanstack/react-query';
-import { TodoDetailData } from '@validation/mydream/todoDetailSchema';
 
 const TodoListPage = () => {
   const navigate = useNavigate();
@@ -133,7 +132,7 @@ const TodoListPage = () => {
           title: currentTodoItem.title || '',
           isPublic: false,
           memoText: '',
-          images: [],
+          images: []
         }
       : null);
 
@@ -175,8 +174,8 @@ const TodoListPage = () => {
           todoGroupId={todoGroupId}
           todoId={todoIdNum}
           isEdit={isEdit}
-          todoDetail={customTodoDetail as TodoDetailData | null}
-          memoDetail={myMemoDetail as TodoDetailData | null}
+          todoDetail={customTodoDetail}
+          memoDetail={myMemoDetail}
           isMemoView={isMemoView}
         />
       )}
