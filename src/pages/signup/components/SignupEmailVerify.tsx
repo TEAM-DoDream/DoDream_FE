@@ -2,11 +2,12 @@ import Button from '@common/Button';
 import { Input } from '@common/Input';
 import { useEffect, useState } from 'react';
 
-interface SignupProps {
+interface SignupEmailVerifyProps {
   onNext: () => void;
+  email: string;
 }
 
-const SignupEmailVerify = ({ onNext }: SignupProps) => {
+const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
   const [verifyNum, setVerifyNum] = useState('');
   const [timeLeft, setTimeLeft] = useState(180);
 
@@ -45,7 +46,7 @@ const SignupEmailVerify = ({ onNext }: SignupProps) => {
         <div className="mt-5 flex w-full flex-col items-start justify-center gap-[10px] rounded-2xl bg-gray-50 p-5">
           <div className="flex flex-row gap-[60px]">
             <div className="text-gray-500 font-B02-M">발송된 이메일</div>
-            <div className="text-gray-900 font-B02-M">123Dodream@naver.com</div>
+            <div className="text-gray-900 font-B02-M">{email}</div>
           </div>
 
           <div className="flex flex-row gap-[30px]">
