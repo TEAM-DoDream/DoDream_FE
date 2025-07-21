@@ -22,6 +22,7 @@ import RequireLogin from '@utils/RequireLogin';
 import IdFindPage from '@pages/idFind/IdFindPage.tsx';
 import PwdFindPage from '@pages/pwdFind/PwdFindPage.tsx';
 import InputVerification from '@pages/inputVerification/InputVerificationPage.tsx';
+import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
 
 const Router = () => {
   return (
@@ -44,6 +45,7 @@ const Router = () => {
           <Route path="/findid" element={<IdFindPage />} />
           <Route path="/findpwd" element={<PwdFindPage />} />
           <Route path="/verifcation" element={<InputVerification />} />
+          <Route path="/resultId" element={<FindIdDisplayPage />} />
           <Route
             path="/otherslist/:todoGroupId"
             element={<OtherTodoListPage />}
