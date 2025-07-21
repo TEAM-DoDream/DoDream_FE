@@ -23,6 +23,7 @@ import IdFindPage from '@pages/idFind/IdFindPage.tsx';
 import PwdFindPage from '@pages/pwdFind/PwdFindPage.tsx';
 import InputVerification from '@pages/inputVerification/InputVerificationPage.tsx';
 import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
+import ChangePwdPage from '@pages/pwdFind/ChangePwdPage.tsx';
 
 const Router = () => {
   return (
@@ -46,6 +47,7 @@ const Router = () => {
           <Route path="/findpwd" element={<PwdFindPage />} />
           <Route path="/verifcation" element={<InputVerification />} />
           <Route path="/resultId" element={<FindIdDisplayPage />} />
+          <Route path="/changepwd" element={<ChangePwdPage />} />
           <Route
             path="/otherslist/:todoGroupId"
             element={<OtherTodoListPage />}
