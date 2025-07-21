@@ -6,7 +6,7 @@ export const RecruitItemSchema = z.object({
   title: z.string(),
   jobName: z.string(),
   companyName: z.string(),
-  locationName: z.string(),
+  locationName: z.string().nullable(),
   jobTypeName: z.string(),
   experienceLevel: z.string(),
   requiredEducationLevel: z.string(),
