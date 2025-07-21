@@ -19,6 +19,11 @@ import ScrapPage from '@pages/myTodo/tabs/ScrapPage.tsx';
 import Todo from '@pages/myTodo/components/todo/Todo';
 import Mypage from '@pages/mypage/Mypage';
 import RequireLogin from '@utils/RequireLogin';
+import IdFindPage from '@pages/idFind/IdFindPage.tsx';
+import PwdFindPage from '@pages/pwdFind/PwdFindPage.tsx';
+import InputVerification from '@pages/inputVerification/InputVerificationPage.tsx';
+import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
+import ChangePwdPage from '@pages/pwdFind/ChangePwdPage.tsx';
 
 const Router = () => {
   return (
@@ -38,6 +43,11 @@ const Router = () => {
           <Route path="/jobfound" element={<JobFound />} />
           <Route path="/jobinfo/:jobId" element={<JobInfo />} />
           <Route path="/others/:jobId" element={<OtherTodoPage />} />
+          <Route path="/findid" element={<IdFindPage />} />
+          <Route path="/findpwd" element={<PwdFindPage />} />
+          <Route path="/verification" element={<InputVerification />} />
+          <Route path="/resultId" element={<FindIdDisplayPage />} />
+          <Route path="/changepwd" element={<ChangePwdPage />} />
           <Route
             path="/otherslist/:todoGroupId"
             element={<OtherTodoListPage />}
