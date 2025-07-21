@@ -19,7 +19,7 @@ const IdFindPage = () => {
           onChange={handleEmail}
           className={'mb-6 h-14 w-full font-B02-M'}
         />
-        <div className="mt-8 h-[3.25rem] w-full font-T05-SB">
+        <div className="mt-8 h-[60px] w-full font-T05-SB">
           <Button text={'인증번호 전송하기'} className="h-full w-full" />
         </div>
       </div>

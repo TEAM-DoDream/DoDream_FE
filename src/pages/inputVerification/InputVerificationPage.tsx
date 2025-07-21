@@ -16,7 +16,7 @@ const InputVerification = () => {
         <div className={'mt-[10px] text-gray-500 font-B03-M'}>
           인증번호가 안 왔다면 이메일을 확인하거나 [다시 받기]를 눌러주세요
         </div>
-        <div className="mt-8 h-[3.25rem] w-full font-T05-SB">
+        <div className="mt-8 h-[60px] w-full font-T05-SB">
           <Button text={'입력 완료하기'} className="h-[60px] w-full" />
         </div>
         {/* 인증 번호 로직을 생각하였을 때, 입력 완료하기(인증하기) 이후, api 통신 해서 올바르면 다음버튼이 생기고,
