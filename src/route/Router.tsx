@@ -45,7 +45,7 @@ const Router = () => {
           <Route path="/others/:jobId" element={<OtherTodoPage />} />
           <Route path="/findid" element={<IdFindPage />} />
           <Route path="/findpwd" element={<PwdFindPage />} />
-          <Route path="/verifcation" element={<InputVerification />} />
+          <Route path="/verification" element={<InputVerification />} />
           <Route path="/resultId" element={<FindIdDisplayPage />} />
           <Route path="/changepwd" element={<ChangePwdPage />} />
           <Route
