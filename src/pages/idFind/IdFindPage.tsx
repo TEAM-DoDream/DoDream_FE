@@ -3,13 +3,14 @@ import Button from '@common/Button.tsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IdFindFormData, idFindSchema } from '@validation/idFind/idFindSchema';
-import { useState } from 'react';
+
 
 const IdFindPage = () => {
-  const [email, setEmail] = useState('');
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid }
   } = useForm<IdFindFormData>({
     resolver: zodResolver(idFindSchema),
@@ -21,9 +22,7 @@ const IdFindPage = () => {
     // 여기에 인증번호 전송 API 호출 로직 추가
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
+
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
@@ -40,8 +39,8 @@ const IdFindPage = () => {
             title={'이메일'}
             placeholder={'이메일을 입력하세요'}
             className={'mb-1 h-14 w-full font-B02-M'}
-            value={email}
-            onChange={handleEmailChange}
+            value={watch('email')}
+      
           />
           {errors.email && (
             <p className="mb-4 text-red-500 text-sm">{errors.email.message}</p>
