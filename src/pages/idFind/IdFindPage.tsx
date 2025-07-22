@@ -38,7 +38,7 @@ const IdFindPage = () => {
             {...register('email')}
             title={'이메일'}
             placeholder={'이메일을 입력하세요'}
-            className={'mb-1 h-14 w-full font-B02-M'}
+            className={'mb-1 h-[68px] w-full font-B02-M'}
             value={watch('email')}
       
           />

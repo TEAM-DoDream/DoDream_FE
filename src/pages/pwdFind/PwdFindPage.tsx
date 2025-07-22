@@ -26,7 +26,7 @@ const PwdFindPage = () => {
           title={'이메일'}
           placeholder={'이메일을 입력하세요'}
           onChange={e => setValue('email', e.target.value, { shouldValidate: true })}
-          className={`h-14 w-full font-B02-M ${errors.email ? 'border-red-500' : ''}`}
+          className={`h-[68px] w-full font-B02-M ${errors.email ? 'border-red-500' : ''}`}
         />
         {errors.email && (
           <p className="mb-4 text-red-500 text-sm">{errors.email.message}</p>
@@ -37,7 +37,7 @@ const PwdFindPage = () => {
           title={'아이디'}
           placeholder={'아이디를 입력하세요'}
           onChange={e => setValue('loginId', e.target.value, { shouldValidate: true })}
-          className={`h-14 w-full font-B02-M ${errors.loginId ? 'border-red-500' : ''}`}
+          className={`h-[68px] w-full font-B02-M ${errors.loginId ? 'border-red-500' : ''}`}
         />
         {errors.loginId && (
           <p className="mb-4 text-red-500 text-sm">{errors.loginId.message}</p>
