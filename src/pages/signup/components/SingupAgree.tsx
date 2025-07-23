@@ -1,6 +1,7 @@
 import Button from '@common/Button';
 import CheckBox from '@common/CheckBox';
 import { Input } from '@common/Input';
+import { useVerifyMutation } from '@hook/signup/useVerifyMutation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   EmailOnlyFormValues,
@@ -21,6 +22,8 @@ const SingupAgree = ({ onNext, setEmail }: SignupProps) => {
     mode: 'onChange',
   });
 
+  const verifyMutation = useVerifyMutation();
+
   const allChecked = checkedList.every(Boolean);
   const handleAllToggle = () => {
     const newValue = !allChecked;
@@ -33,12 +36,21 @@ const SingupAgree = ({ onNext, setEmail }: SignupProps) => {
     setCheckedList(newList);
   };
 
-  const onSubmit = (data: EmailOnlyFormValues) => {
-    if (checkedList.every(Boolean)) {
+  const onSubmit = async (data: EmailOnlyFormValues) => {
+    if (!checkedList.every(Boolean)) {
+      alert('모든 필수 항목에 동의해야 합니다.');
+      return;
+    }
+
+    try {
+      await verifyMutation.mutateAsync({
+        email: data.email,
+        type: 'SIGN_UP',
+      });
       setEmail(data.email);
       onNext();
-    } else {
-      alert('모든 필수 항목에 동의해야 합니다.');
+    } catch (err) {
+      alert('이메일 인증 요청에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
