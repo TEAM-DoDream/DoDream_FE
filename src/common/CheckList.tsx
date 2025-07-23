@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Check from '@assets/icons/check.svg?react';
-import MemoIcon from '@assets/icons/memo.svg?react';
+import SaveIcon from '@assets/icons/save.svg?react';
 import ReWriteIcon from '@assets/icons/edit-write.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
+import { useUpdateMemoMutation } from '@hook/mydream/useUpdateMemoMutation.ts';
 
 type ChecklistItem =
   | string
@@ -29,10 +30,9 @@ const CheckList = ({
   className = '',
   onChange,
 }: CheckListProps) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const isMyToPage = location.pathname.startsWith('/mytodo/list');
-
+  const { mutate: updateTodo } = useUpdateMemoMutation();
   const normalized = lists.map((item) =>
     typeof item === 'string' ? { text: item } : item
   );
@@ -45,6 +45,9 @@ const CheckList = ({
     checked: boolean;
   } | null>(null);
 
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editText, setEditText] = useState<string>('');
+
   const deleteTodoMutation = useDeleteTodoMutation();
 
   const toggleCheck = (id?: number) => {
@@ -56,6 +59,27 @@ const CheckList = ({
       next = [...checkedIds, id];
     }
     onChange?.(next);
+  };
+
+  const handleSaveEdit = () => {
+    if (editIndex === null) return;
+    const item = listItems[editIndex];
+    if (!item.id) return;
+
+    updateTodo({
+      todoId: item.id,
+      todoTitle: editText,
+      isPublic: true,
+    });
+
+    const newItems = [...listItems];
+    newItems[editIndex] = {
+      ...item,
+      text: editText,
+    };
+    setListItems(newItems);
+    setEditIndex(null);
+    setEditText('');
   };
 
   const handleDelete = (index: number) => {
@@ -104,22 +128,20 @@ const CheckList = ({
 
   const handleEdit = (index: number) => {
     const item = listItems[index];
-    if (item.id) {
-      navigate(`/mytodo/edit/${item.id}`);
-    }
+    setEditIndex(index);
+    setEditText(item.text);
   };
 
-  const handleViewMemo = (index: number) => {
-    const item = listItems[index];
-    if (item.id) {
-      navigate(`/mytodo/memo/${item.id}`);
-    }
+  const handleCancelEdit = () => {
+    setEditIndex(null);
+    setEditText('');
   };
 
   return (
     <div className={className}>
-      {listItems.map(({ text, hasMemo, id }, idx) => {
+      {listItems.map(({ text, id }, idx) => {
         const done = id !== undefined && checkedIds.includes(id);
+        const isEditing = editIndex === idx;
 
         return (
           <div
@@ -137,42 +159,62 @@ const CheckList = ({
               >
                 {done && <Check className="h-[19px] w-[19px]" />}
               </div>
-              <div
-                className={`w-[622px] truncate font-B02-M ${
-                  done ? 'text-gray-500' : 'text-gray-800'
-                }`}
-              >
-                {text}
-              </div>
+              {isEditing ? (
+                <input
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  className="w-[622px] rounded-md border border-gray-300 px-3 py-2 text-gray-800 font-B02-M"
+                  autoFocus
+                />
+              ) : (
+                <div
+                  className={`w-[622px] truncate font-B02-M ${
+                    done ? 'text-gray-500' : 'text-gray-800'
+                  }`}
+                >
+                  {text}
+                </div>
+              )}
             </div>
 
             <div className="ml-auto flex min-w-fit items-center gap-[5px]">
-              {hasMemo && (
-                <button
-                  className="flex items-center gap-[6px] rounded-[10px] bg-purple-100 px-3 py-2 text-purple-500 font-B03-SB"
-                  onClick={() => handleViewMemo(idx)}
-                >
-                  <MemoIcon className="h-[18px] w-[18px] text-purple-500" />
-                  메모
-                </button>
-              )}
-
               {isMyToPage && (
                 <div className="flex flex-row gap-[5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                  <button
-                    onClick={() => handleEdit(idx)}
-                    className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
-                  >
-                    <ReWriteIcon className="h-[18px] w-[18px]" />
-                    편집
-                  </button>
-                  <button
-                    onClick={() => handleDelete(idx)}
-                    className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
-                  >
-                    <TrashIcon className="h-[18px] w-[18px]" />
-                    삭제
-                  </button>
+                  {isEditing ? (
+                    <>
+                      <button
+                        onClick={handleSaveEdit}
+                        className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
+                      >
+                        <SaveIcon className="h-[18px] w-[18px] text-purple-500" />
+                        저장
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
+                      >
+                        <TrashIcon className="h-[18px] w-[18px]" />
+                        취소
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleEdit(idx)}
+                        className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
+                      >
+                        <ReWriteIcon className="h-[18px] w-[18px]" />
+                        편집
+                      </button>
+                      <button
+                        onClick={() => handleDelete(idx)}
+                        className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
+                      >
+                        <TrashIcon className="h-[18px] w-[18px]" />
+                        삭제
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
