@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Check from '@assets/icons/check.svg?react';
 import SaveIcon from '@assets/icons/save.svg?react';
-import MemoIcon from '@assets/icons/memo.svg?react';
 import ReWriteIcon from '@assets/icons/edit-write.svg?react';
 import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
@@ -31,7 +30,6 @@ const CheckList = ({
   className = '',
   onChange,
 }: CheckListProps) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const isMyToPage = location.pathname.startsWith('/mytodo/list');
   const { mutate: updateTodo } = useUpdateMemoMutation();
@@ -139,16 +137,9 @@ const CheckList = ({
     setEditText('');
   };
 
-  const handleViewMemo = (index: number) => {
-    const item = listItems[index];
-    if (item.id) {
-      navigate(`/mytodo/memo/${item.id}`);
-    }
-  };
-
   return (
     <div className={className}>
-      {listItems.map(({ text, hasMemo, id }, idx) => {
+      {listItems.map(({ text, id }, idx) => {
         const done = id !== undefined && checkedIds.includes(id);
         const isEditing = editIndex === idx;
 
@@ -187,16 +178,6 @@ const CheckList = ({
             </div>
 
             <div className="ml-auto flex min-w-fit items-center gap-[5px]">
-              {hasMemo && (
-                <button
-                  className="flex items-center gap-[6px] rounded-[10px] bg-purple-100 px-3 py-2 text-purple-500 font-B03-SB"
-                  onClick={() => handleViewMemo(idx)}
-                >
-                  <MemoIcon className="h-[18px] w-[18px] text-purple-500" />
-                  메모
-                </button>
-              )}
-
               {isMyToPage && (
                 <div className="flex flex-row gap-[5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   {isEditing ? (
