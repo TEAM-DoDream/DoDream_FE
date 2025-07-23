@@ -1,5 +1,7 @@
 import Button from '@common/Button';
 import { Input } from '@common/Input';
+import { useVerifyCodeCheckMutation } from '@hook/signup/useVerifyCodeCheckMutation';
+import { useVerifyMutation } from '@hook/signup/useVerifyMutation';
 import { useEffect, useState } from 'react';
 
 interface SignupEmailVerifyProps {
@@ -10,9 +12,18 @@ interface SignupEmailVerifyProps {
 const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
   const [verifyNum, setVerifyNum] = useState('');
   const [timeLeft, setTimeLeft] = useState(180);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isResendEnabled, setIsResendEnabled] = useState(false);
+
+  const codeCheckMutation = useVerifyCodeCheckMutation();
+  const verifyMutation = useVerifyMutation();
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
+    if (timeLeft <= 0) {
+      setIsResendEnabled(true);
+      return;
+    }
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
@@ -27,9 +38,51 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
     return `${min}:${sec}`;
   };
 
+  useEffect(() => {
+    if (verifyNum.trim().length === 6) {
+      codeCheckMutation
+        .mutateAsync({
+          email,
+          code: verifyNum.trim(),
+          type: 'SIGN_UP',
+        })
+        .then(() => {
+          setErrorMessage('');
+          setSuccessMessage('올바른 인증번호입니다.');
+        })
+        .catch(() => {
+          setSuccessMessage('');
+          setErrorMessage('존재하지 않는 인증번호입니다.');
+        });
+    } else {
+      setErrorMessage('');
+      setSuccessMessage('');
+    }
+  }, [verifyNum, email]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onNext();
+    if (successMessage === '올바른 인증번호입니다.') {
+      onNext();
+    }
+  };
+
+  const handleResend = async () => {
+    if (!isResendEnabled) return;
+
+    try {
+      await verifyMutation.mutateAsync({
+        email,
+        type: 'SIGN_UP',
+      });
+      setTimeLeft(180);
+      setIsResendEnabled(false);
+      setVerifyNum('');
+      setErrorMessage('');
+      setSuccessMessage('');
+    } catch (error) {
+      setErrorMessage('인증번호 재전송에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
@@ -65,12 +118,28 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
             onChange={(e) => setVerifyNum(e.target.value)}
             className="h-[68px] w-full pr-[84px] font-B02-M"
           />
+
           <button
             type="button"
-            className="absolute right-3 top-16 h-[38px] -translate-y-1/2 items-center justify-center rounded-[10px] bg-gray-400 px-[10px] py-2 text-white font-B03-M"
+            disabled={!isResendEnabled}
+            onClick={handleResend}
+            className={`absolute right-3 top-16 h-[38px] -translate-y-1/2 items-center justify-center rounded-[10px] px-[10px] py-2 text-white font-B03-M ${
+              isResendEnabled ? 'bg-purple-500' : 'bg-gray-400'
+            }`}
           >
             다시 받기
           </button>
+
+          {successMessage && (
+            <div className="mt-[10px] text-success font-B03-M">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="mt-[10px] text-warning font-B03-M">
+              {errorMessage}
+            </div>
+          )}
         </div>
 
         <Button
