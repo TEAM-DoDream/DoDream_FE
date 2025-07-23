@@ -148,7 +148,11 @@ const Todo = () => {
   }
 
   if (!jobsData || !Array.isArray(jobsData) || jobsData.length === 0) {
-    return <EmptyTodo onNavigate={() => navigate('/jobsearch')} />;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <EmptyTodo onNavigate={() => navigate('/jobsearch')} />
+      </div>
+    );
   }
 
   const selectedJobName = Array.isArray(jobsData)
