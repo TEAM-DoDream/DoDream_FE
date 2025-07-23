@@ -12,7 +12,6 @@ const EmailVerify = async (payload: VerifyProps) => {
       `/v1/member/auth/email/verifications`,
       payload
     );
-    console.log(response.data);
     return response.data.data;
   } catch (error) {
     console.error('이메일 전송 문자를 보내는데 실패했습니다.:', error);
