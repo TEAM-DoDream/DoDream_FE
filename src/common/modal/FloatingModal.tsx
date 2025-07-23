@@ -5,6 +5,7 @@ import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import TwoArrow from '@assets/icons/stick_arrow.svg?react';
 import CalendarIcon from '@assets/icons/floating_calendar.svg?react';
 import Cursor from '@assets/icons/cursor.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -15,6 +16,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const [taskText, setTaskText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const isLoggedIn = !!localStorage.getItem('accessToken');
+  const navigate = useNavigate();
 
   // const { data: addjobs } = useFloatingAddJob();
   const { mutate } = useFloatingSubmitMutation();
@@ -58,7 +60,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
     );
   };
 
-  const isButtonActive = isLoggedIn && !!taskText.trim() !== null;
+  const isButtonActive = isLoggedIn && !!taskText.trim();
 
   return (
     <div className="fixed bottom-[166px] right-[80px] z-50 w-full max-w-[476px] rounded-[30px] bg-white p-[26px] shadow-shadow4">
@@ -72,7 +74,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
             <div className="flex w-full flex-col items-center justify-center">
               <div className="flex flex-row items-center gap-[31px] px-10 py-[7px]">
                 <div className="relative inline-block">
-                  <div className="flex h-[43px] items-center rounded-[12px] bg-purple-150 px-[18px] py-[8.68px] text-[16px] font-medium leading-[20px] text-purple-500">
+                  <div className="flex h-[43px] items-center rounded-[12px] bg-purple-150 px-[18px] py-[8.68px] text-[16px] font-medium leading-[20px] text-purple-500 font-B03-M">
                     직업 담으러 가기
                   </div>
                   <div className="absolute -right-[10px] bottom-[-30px]">
@@ -88,7 +90,10 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
                 하단의 버튼을 통해 먼저 직업을 담아주세요
               </div>
 
-              <button className="mt-[52px] flex h-[60px] w-full items-center justify-center rounded-2xl bg-purple-150 py-[11px] text-purple-500 font-T05-SB">
+              <button
+                className="mt-[52px] flex h-[60px] w-full items-center justify-center rounded-2xl bg-purple-150 py-[11px] text-purple-500 font-T05-SB"
+                onClick={() => navigate('/jobfound')}
+              >
                 {' '}
                 직업 담으러 가기
               </button>
