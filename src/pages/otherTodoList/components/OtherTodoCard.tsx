@@ -17,7 +17,7 @@ interface TodoCardProps {
   todos: TodoItem[];
 }
 
-const OtherTodoCard = ({ title, todos }: TodoCardProps) => {
+const OtherTodoCard = ({ todos }: TodoCardProps) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null);
@@ -52,10 +52,6 @@ const OtherTodoCard = ({ title, todos }: TodoCardProps) => {
           <LoadingSpinner />
         </div>
       )}
-
-      <div className="mb-4 border-b border-gray-300 pb-4 text-black font-T05-SB">
-        {title}
-      </div>
 
       <ul className="w-full flex-grow space-y-4">
         {todos.map((item, index) => (
