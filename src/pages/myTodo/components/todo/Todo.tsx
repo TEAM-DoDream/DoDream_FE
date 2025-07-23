@@ -128,17 +128,6 @@ const Todo = () => {
     }
   };
 
-  const handleRefresh = () => {
-    setRefreshCounter((prev) => prev + 1);
-
-    if (selectedJobId) {
-      queryClient.invalidateQueries({ queryKey: ['todoGroup', selectedJobId] });
-      refetchTodoGroup();
-    } else {
-      queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
-    }
-  };
-
   if (isJobsLoading || (isTodoLoading && !todoData)) {
     return (
       <div className="py-4 text-gray-500 font-B01-M">
@@ -195,12 +184,6 @@ const Todo = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefresh}
-            className="mr-2 text-gray-500 font-B03-M hover:text-purple-500"
-          >
-            새로고침
-          </button>
           <div className="flex items-center gap-2 text-gray-500 font-B03-M">
             <Eye />
             조회수 {totalView}
