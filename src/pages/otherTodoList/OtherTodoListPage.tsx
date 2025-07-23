@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import BackIcon from '@assets/icons/back.svg?react';
-import TodoCard from '@pages/otherTodoList/components/TodoCard.tsx';
 import { useEachTodosQuery } from '@hook/useJobQuery.ts';
 import BaseImg from '@assets/images/profile.png';
 import LoadingSpinner from '@common/LoadingSpinner';
+import OtherTodoCard from '@pages/otherTodoList/components/OtherTodoCard.tsx';
 
 const OtherTodoListPage = () => {
   const navigate = useNavigate();
@@ -55,17 +55,14 @@ const OtherTodoListPage = () => {
 
             <div className="mt-[50px] flex w-[1000px] flex-col gap-6">
               {Array.isArray(eachTodos?.todos) && (
-                <TodoCard
+                <OtherTodoCard
                   title="할 일 목록"
                   todos={eachTodos.todos.map((todo) => ({
                     todoId: todo.todoId,
                     title: todo.title,
                     completed: todo.completed,
-                    isMemoExist: todo.isMemoExist,
                     isPublic: todo.isPublic,
                   }))}
-                  showAddButton={false}
-                  disableHover={true}
                 />
               )}
             </div>
