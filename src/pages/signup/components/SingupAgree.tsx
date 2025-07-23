@@ -1,6 +1,7 @@
 import Button from '@common/Button';
 import CheckBox from '@common/CheckBox';
 import { Input } from '@common/Input';
+import { useVerifyMutation } from '@hook/signup/useVerifyMutation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   EmailOnlyFormValues,
@@ -11,17 +12,19 @@ import { Controller, useForm } from 'react-hook-form';
 
 interface SignupProps {
   onNext: () => void;
+  setEmail: (email: string) => void;
 }
 
-const SingupAgree = ({ onNext }: SignupProps) => {
+const SingupAgree = ({ onNext, setEmail }: SignupProps) => {
   const [checkedList, setCheckedList] = useState([false, false, false]);
   const { control, handleSubmit } = useForm<EmailOnlyFormValues>({
     resolver: zodResolver(EmailOnlySchema),
     mode: 'onChange',
   });
 
-  const allChecked = checkedList.every(Boolean);
+  const verifyMutation = useVerifyMutation();
 
+  const allChecked = checkedList.every(Boolean);
   const handleAllToggle = () => {
     const newValue = !allChecked;
     setCheckedList([newValue, newValue, newValue]);
@@ -33,11 +36,21 @@ const SingupAgree = ({ onNext }: SignupProps) => {
     setCheckedList(newList);
   };
 
-  const onSubmit = () => {
-    if (checkedList.every(Boolean)) {
-      onNext();
-    } else {
+  const onSubmit = async (data: EmailOnlyFormValues) => {
+    if (!checkedList.every(Boolean)) {
       alert('모든 필수 항목에 동의해야 합니다.');
+      return;
+    }
+
+    try {
+      await verifyMutation.mutateAsync({
+        email: data.email,
+        type: 'SIGN_UP',
+      });
+      setEmail(data.email);
+      onNext();
+    } catch (err) {
+      alert('이메일 인증 요청에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
