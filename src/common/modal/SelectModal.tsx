@@ -105,8 +105,8 @@ const SelectModal = <
             <ToastModal
               text={
                 <>
-                  내 스크랩에 담기에 성공했어요!{' '}
-                  <span className="text-gray-300">[마이드림&gt;스크랩]</span>
+                  채용 정보 담기에 성공했어요!{' '}
+                  <span className="text-gray-300">[나의 할일&gt;스크랩]</span>
                   에서 확인할 수 있어요
                 </>
               }
