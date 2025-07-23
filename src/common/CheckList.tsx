@@ -8,6 +8,7 @@ import TrashIcon from '@assets/icons/delete-trash.svg?react';
 import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
+import { useUpdateMemoMutation } from '@hook/mydream/useUpdateMemoMutation.ts';
 
 type ChecklistItem =
   | string
@@ -33,7 +34,7 @@ const CheckList = ({
   const navigate = useNavigate();
   const location = useLocation();
   const isMyToPage = location.pathname.startsWith('/mytodo/list');
-
+  const { mutate: updateTodo } = useUpdateMemoMutation();
   const normalized = lists.map((item) =>
     typeof item === 'string' ? { text: item } : item
   );
@@ -60,6 +61,27 @@ const CheckList = ({
       next = [...checkedIds, id];
     }
     onChange?.(next);
+  };
+
+  const handleSaveEdit = () => {
+    if (editIndex === null) return;
+    const item = listItems[editIndex];
+    if (!item.id) return;
+
+    updateTodo({
+      todoId: item.id,
+      todoTitle: editText,
+      isPublic: true,
+    });
+
+    const newItems = [...listItems];
+    newItems[editIndex] = {
+      ...item,
+      text: editText,
+    };
+    setListItems(newItems);
+    setEditIndex(null);
+    setEditText('');
   };
 
   const handleDelete = (index: number) => {
@@ -110,18 +132,6 @@ const CheckList = ({
     const item = listItems[index];
     setEditIndex(index);
     setEditText(item.text);
-  };
-
-  const handleSaveEdit = () => {
-    if (editIndex === null) return;
-    const newItems = [...listItems];
-    newItems[editIndex] = {
-      ...newItems[editIndex],
-      text: editText,
-    };
-    setListItems(newItems);
-    setEditIndex(null);
-    setEditText('');
   };
 
   const handleCancelEdit = () => {
