@@ -1,7 +1,13 @@
 import { useVerifyMutation } from "@hook/signup/useVerifyMutation";
 import { useNavigate } from "react-router-dom";
 
-const InputCode = ({ value, onChange, email }: { value: string, onChange: (value: string) => void, email: string }) => {
+interface InputCodeProps {
+  value: string;
+  onChange: (value: string) => void;
+  email: string;
+}
+
+const InputCode = ({ value, onChange, email }: InputCodeProps) => {
   const navigate = useNavigate();
   const { mutate: verify } = useVerifyMutation();
   const handleResend = () => {
