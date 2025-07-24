@@ -60,28 +60,34 @@ const Header = ({ type }: ShowProps) => {
         })}
       </div>
 
-      {type === 'show' && !isLoggedIn && (
-        <Button
-          text="로그인"
-          color="primary"
-          className="flex h-[38px] items-center justify-center rounded-[10px] px-6 py-[10px]"
-          onClick={() => navigate('/login')}
-        />
-      )}
-
-      {type === 'show' && isLoggedIn && (
-        <div
-          className="flex cursor-pointer items-center gap-2"
-          onClick={() => navigate('/mypage')}
-        >
-          <img
-            src={profileImage || BaseImage}
-            alt="프로필이미지"
-            className="h-10 w-10 rounded-full"
-          />
-          <span className="text-gray-900 font-B03-M">{nickname}님</span>
+      <div className="flex flex-row items-center justify-center gap-[10px]">
+        <div className="cursor-pointer px-[15px] py-[10px] text-gray-500 underline font-B03-M">
+          {' '}
+          두드림 사용설명서
         </div>
-      )}
+        {type === 'show' && !isLoggedIn && (
+          <Button
+            text="로그인"
+            color="primary"
+            className="flex h-[38px] items-center justify-center rounded-[10px] px-6 py-[10px]"
+            onClick={() => navigate('/login')}
+          />
+        )}
+
+        {type === 'show' && isLoggedIn && (
+          <div
+            className="flex cursor-pointer items-center gap-2"
+            onClick={() => navigate('/mypage')}
+          >
+            <img
+              src={profileImage || BaseImage}
+              alt="프로필이미지"
+              className="h-10 w-10 rounded-full"
+            />
+            <span className="text-gray-900 font-B03-M">{nickname}님</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

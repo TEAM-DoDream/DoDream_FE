@@ -8,7 +8,6 @@ import Cancel from '@assets/icons/whiteCancel.svg?react';
 const FloatingButton = () => {
   const [isModal, setIsModal] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleAddTask = () => {
     setIsModal(false);
@@ -24,18 +23,12 @@ const FloatingButton = () => {
       <button
         className="fixed bottom-[50px] right-[80px] flex h-[102px] items-center gap-[10px] rounded-[28px] bg-purple-500 px-[30px] shadow-shadow4 transition-colors hover:bg-purple-600"
         onClick={() => setIsModal(true)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <div
           className="cursor-pointer text-white font-T02-B"
           onClick={() => setIsModal(false)}
         >
-          {isModal
-            ? '할일 추가 닫기'
-            : isHovered
-              ? '바로 할 일 추가'
-              : '할 일 추가하기'}
+          {isModal ? '할일 추가 닫기' : '바로 할일 추가'}
         </div>
         {isModal ? <Cancel /> : <Pencil />}
       </button>
