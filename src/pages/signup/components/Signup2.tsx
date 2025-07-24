@@ -27,7 +27,7 @@ const Signup2 = () => {
   ];
   const [regionCode, setRegionCode] = useState<string | null>(null);
 
-  const { loginId, password, gender } = useSignupStore();
+  const { loginId, password, gender, email } = useSignupStore();
   const { mutate } = useSignupMutation();
   const { mutate: checkNickname } = useDuplicateNicknameMutation();
   const [displayBirthDate, setDisplayBirthDate] = useState('');
@@ -58,6 +58,7 @@ const Signup2 = () => {
     const requestData = {
       loginId,
       password,
+      email,
       nickName: data.nickname,
       birthDate: data.date,
       gender: selectedGender ?? gender,

@@ -9,6 +9,7 @@ export interface SignupRequest {
   birthDate: string;
   gender: string | null;
   regionCode?: string | null;
+  email: string;
 }
 
 const signupUser = async (data: SignupRequest) => {
