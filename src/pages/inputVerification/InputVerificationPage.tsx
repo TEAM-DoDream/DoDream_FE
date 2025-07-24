@@ -5,6 +5,9 @@ import InputCode from '@pages/inputVerification/components/InputCode.tsx';
 import { VerificationFormData, verificationSchema } from '@validation/idFind/verificationSchema';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useVerifyCodeCheckMutation } from '@hook/signup/useVerifyCodeCheckMutation';
+import { useState } from 'react';
 
 const InputVerification = () => {
   const{handleSubmit, formState: { errors },setValue } = useForm<VerificationFormData>({
@@ -17,6 +20,25 @@ const InputVerification = () => {
   };
   const location = useLocation();
   const email = location.state?.email;
+
+  const { mutate: verifyCodeCheck } = useVerifyCodeCheckMutation();
+  const [code, setCode] = useState('');
+  const navigate = useNavigate();
+  const handleVerifyCodeCheck = () => {
+    verifyCodeCheck({
+      email: email,
+      type: 'FIND_ID',
+      code: code,
+    }, {
+      onSuccess: (response) => {
+        console.log(response);
+        navigate('/resultId');
+      },
+      onError: (error) => {
+        alert(error);
+      },
+    });
+  };
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
@@ -33,14 +55,15 @@ const InputVerification = () => {
         {errors.verificationCode && (
           <p className="mb-4 text-red-500 text-sm">{errors.verificationCode.message}</p>
         )}
+        <InputCode value={code} onChange={setCode} email={email} />
         <div className={'mt-[10px] text-gray-500 font-B03-M'}>
           인증번호가 안 왔다면 이메일을 확인하거나 [다시 받기]를 눌러주세요
         </div>
         <div className="mt-8 h-[60px] w-full font-T05-SB">
           <Button text={'입력 완료하기'} className="h-[60px] w-full" onClick={handleSubmit(onSubmit)}/>
+          <Button text={'입력 완료하기'} className="h-[60px] w-full" onClick={handleVerifyCodeCheck} />
         </div>
-        {/* 인증 번호 로직을 생각하였을 때, 입력 완료하기(인증하기) 이후, api 통신 해서 올바르면 다음버튼이 생기고,
-        다음 버튼을 누르면 아이디 찾기 쪽으로 이동해서 보여줄 것 같은데, 현재는 바디로 조정하는 듯 */}
+
       </div>
     </div>
   );
