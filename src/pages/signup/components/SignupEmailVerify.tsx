@@ -2,6 +2,7 @@ import Button from '@common/Button';
 import { Input } from '@common/Input';
 import { useVerifyCodeCheckMutation } from '@hook/signup/useVerifyCodeCheckMutation';
 import { useVerifyMutation } from '@hook/signup/useVerifyMutation';
+import { useSignupStore } from '@store/useSignupStore';
 import { useEffect, useState } from 'react';
 
 interface SignupEmailVerifyProps {
@@ -15,6 +16,7 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isResendEnabled, setIsResendEnabled] = useState(false);
+  const setField = useSignupStore((state) => state.setField);
 
   const codeCheckMutation = useVerifyCodeCheckMutation();
   const verifyMutation = useVerifyMutation();
@@ -65,6 +67,7 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
     if (successMessage === '올바른 인증번호입니다.') {
       onNext();
     }
+    setField('email', email);
   };
 
   const handleResend = async () => {

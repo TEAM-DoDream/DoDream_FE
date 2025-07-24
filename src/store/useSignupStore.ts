@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 interface SignupState {
   loginId: string;
+  email: string;
   password: string;
   nickName: string;
   birthDate: string;
@@ -17,6 +18,7 @@ interface SignupState {
 export const useSignupStore = create<SignupState>((set) => ({
   loginId: '',
   password: '',
+  email: '',
   nickName: '',
   birthDate: '',
   gender: '',
@@ -29,6 +31,7 @@ export const useSignupStore = create<SignupState>((set) => ({
       nickName: '',
       birthDate: '',
       gender: '',
+      email: '',
       regionCode: null,
     }),
 }));
