@@ -4,6 +4,7 @@ import Display from '@pages/inputVerification/components/Display.tsx';
 import InputCode from '@pages/inputVerification/components/InputCode.tsx';
 import { VerificationFormData, verificationSchema } from '@validation/idFind/verificationSchema';
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 
 const InputVerification = () => {
   const{handleSubmit, formState: { errors },setValue } = useForm<VerificationFormData>({
@@ -14,6 +15,9 @@ const InputVerification = () => {
   const onSubmit = (data: VerificationFormData) => {
     console.log(data);
   };
+  const location = useLocation();
+  const email = location.state?.email;
+
   return (
     <div className="flex w-full flex-col items-center justify-center">
       <div className="flex w-[428px] flex-col items-start justify-center md:mt-16 lg:mt-24">
@@ -21,7 +25,7 @@ const InputVerification = () => {
         <div className="mb-6 text-gray-800 font-B02-M">
           이메일로 전송된 인증번호를 입력해주세요.
         </div>
-        <Display />
+        <Display email={email} />
         <div className={'mb-2 text-gray-600 font-B01-M'}>인증번호 입력</div>
         <InputCode onChange={(value) => {
           setValue('verificationCode', value);
