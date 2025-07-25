@@ -1,4 +1,22 @@
+import { useEffect, useState } from 'react';
+
 const Display = () => {
+
+  const [remainTime, setRemainTime] = useState(180);
+  const formatTime = (seconds:number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainTime(prev => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+ 
+
   return (
     <div className="flex min-h-[52px] w-[424px] flex-col justify-center rounded-2xl bg-gray-50 p-5">
       <div className="grid grid-cols-2 text-sm text-gray-500">
@@ -7,7 +25,7 @@ const Display = () => {
       </div>
       <div className="mt-1 grid grid-cols-2 text-sm text-gray-500">
         <span>인증까지 남은 시간</span>
-        <span className="text-left font-semibold text-blue-500">02:59</span>
+        <span className="text-left font-semibold text-blue-500">{formatTime(remainTime)}</span>
       </div>
     </div>
   );
