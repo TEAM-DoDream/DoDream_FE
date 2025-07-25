@@ -65,8 +65,8 @@ const InputVerification = () => {
       },
       {
         onSuccess: (data) => {
+          alert('인증번호가 일치합니다.');
           if (type === 'FIND_ID') {
-            alert('인증번호가 일치합니다.');
             navigate('/resultId', { state: { email, loginId: data.loginId } });
           } else if (type === 'FIND_PASSWORD') {
             navigate('/changepwd', { state: { email, loginId } });
