@@ -16,10 +16,12 @@ const PwdFindPage = () => {
   const onSubmit = () => {
     verify({
       email: watch('email'),
+      loginId: watch('loginId'),
       type: 'FIND_PASSWORD',
     }, {
       onSuccess: () => {
-        navigate('/verification', { state: { email: watch('email'), type: 'FIND_PASSWORD' } });
+        alert(watch('loginId'));
+        navigate('/verification', { state: { email: watch('email'), loginId: watch('loginId'), type: 'FIND_PASSWORD' } });
       },
       onError: (error) => {
         alert(error);

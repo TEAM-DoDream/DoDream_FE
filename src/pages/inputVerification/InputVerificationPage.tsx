@@ -15,7 +15,9 @@ const InputVerification = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email;
+  const loginId = location.state?.loginId;
   const type = location.state?.type;
+
   const {
     handleSubmit,
     formState: { errors },
@@ -42,12 +44,13 @@ const InputVerification = () => {
         code,
       },
       {
-        onSuccess: (response) => {
+        onSuccess: () => {
+        
           if (type === 'FIND_ID') {
-            const loginId = response.loginId; 
+          
             navigate('/resultId', { state: { email, loginId } });
           } else if (type === 'FIND_PASSWORD') {
-            navigate('/resultPwd', { state: { email, loginId: response.loginId } });
+            navigate('/changepwd', { state: { email, loginId} });
           }
         },
         onError: (error) => {

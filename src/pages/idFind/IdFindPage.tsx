@@ -24,11 +24,11 @@ const IdFindPage = () => {
 
   const handleEmail = () => {
     verify({
-      email: watch('email'), // watch로 현재 입력값 사용
+      email: watch('email'), 
       type: 'FIND_ID',
     }, {
       onSuccess: () => {
-        navigate('/verification', { state: { email: watch('email') } });
+        navigate('/verification', { state: { email: watch('email'), type: 'FIND_ID' } });
       },
       onError: (error) => {
         alert(error);
