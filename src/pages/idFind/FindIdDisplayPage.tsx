@@ -6,7 +6,7 @@ const FindIdDisplayPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { email, loginId } = location.state || {};
-
+  console.log(email, loginId);
   const handleFindPwdClick = () => {
     navigate('/findpwd');
   };

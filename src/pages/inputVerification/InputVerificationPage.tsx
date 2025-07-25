@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,7 +11,6 @@ import {
   verificationSchema,
 } from '@validation/idFind/verificationSchema';
 import { useVerifyCodeCheckMutation } from '@hook/signup/useVerifyCodeCheckMutation';
-import { useState } from 'react';
 
 const InputVerification = () => {
   const location = useLocation();
@@ -20,6 +20,23 @@ const InputVerification = () => {
   const type = location.state?.type;
 
   const [remainTime, setRemainTime] = useState(180);
+
+
+  useEffect(() => {
+    if (remainTime === 0) return;
+
+    const timer = setInterval(() => {
+      setRemainTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [remainTime]);
 
   const {
     handleSubmit,
@@ -47,12 +64,12 @@ const InputVerification = () => {
         code,
       },
       {
-        onSuccess: () => {
-          alert('인증번호가 일치합니다.');
+        onSuccess: (data) => {
           if (type === 'FIND_ID') {
-            navigate('/resultId', { state: { email, loginId } });
+            alert('인증번호가 일치합니다.');
+            navigate('/resultId', { state: { email, loginId: data.loginId } });
           } else if (type === 'FIND_PASSWORD') {
-            navigate('/changepwd', { state: { email, loginId} });
+            navigate('/changepwd', { state: { email, loginId } });
           }
         },
         onError: (error) => {
@@ -72,15 +89,13 @@ const InputVerification = () => {
 
         {email && <Display email={email} remainTime={remainTime} />}
         <label className="mb-2 text-gray-600 font-B01-M">인증번호 입력</label>
-        <InputCode 
-          value={watch('verificationCode') || ''} 
+        <InputCode
+          value={code || ''}
           email={email || ''}
           loginId={loginId}
           type={type}
-          onChange={(value) => setValue('verificationCode', value)} 
-          onResend={() => {
-            setRemainTime(180);
-          }}
+          onChange={(value) => setValue('verificationCode', value)}
+          onResend={() => setRemainTime(180)}
         />
 
         {errors.verificationCode && (
