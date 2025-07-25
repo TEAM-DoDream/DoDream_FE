@@ -10,6 +10,7 @@ import {
   verificationSchema,
 } from '@validation/idFind/verificationSchema';
 import { useVerifyCodeCheckMutation } from '@hook/signup/useVerifyCodeCheckMutation';
+import { useState } from 'react';
 
 const InputVerification = () => {
   const location = useLocation();
@@ -17,6 +18,8 @@ const InputVerification = () => {
   const email = location.state?.email;
   const loginId = location.state?.loginId;
   const type = location.state?.type;
+
+  const [remainTime, setRemainTime] = useState(180);
 
   const {
     handleSubmit,
@@ -45,9 +48,8 @@ const InputVerification = () => {
       },
       {
         onSuccess: () => {
-        
+          alert('인증번호가 일치합니다.');
           if (type === 'FIND_ID') {
-          
             navigate('/resultId', { state: { email, loginId } });
           } else if (type === 'FIND_PASSWORD') {
             navigate('/changepwd', { state: { email, loginId} });
@@ -68,12 +70,17 @@ const InputVerification = () => {
           이메일로 전송된 인증번호를 입력해주세요.
         </p>
 
-        {email && <Display email={email} />}
+        {email && <Display email={email} remainTime={remainTime} />}
         <label className="mb-2 text-gray-600 font-B01-M">인증번호 입력</label>
         <InputCode 
           value={watch('verificationCode') || ''} 
           email={email || ''}
+          loginId={loginId}
+          type={type}
           onChange={(value) => setValue('verificationCode', value)} 
+          onResend={() => {
+            setRemainTime(180);
+          }}
         />
 
         {errors.verificationCode && (

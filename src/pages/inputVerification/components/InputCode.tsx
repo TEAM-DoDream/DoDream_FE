@@ -1,23 +1,25 @@
 import { useVerifyMutation } from "@hook/signup/useVerifyMutation";
-import { useNavigate } from "react-router-dom";
 
 interface InputCodeProps {
   value: string;
   onChange: (value: string) => void;
   email: string;
+  loginId?: string;
+  type: 'SIGN_UP' | 'FIND_ID' | 'FIND_PASSWORD';
+  onResend: () => void;
 }
 
-const InputCode = ({ value, onChange, email }: InputCodeProps) => {
-  const navigate = useNavigate();
+const InputCode = ({ value, onChange, email, loginId, type, onResend }: InputCodeProps) => {
   const { mutate: verify } = useVerifyMutation();
   const handleResend = () => {
     verify({
       email: email,
-      type: 'FIND_ID',
+      type: type,
+      loginId: loginId,
     }, {
       onSuccess: () => {
+        onResend();
         alert('인증번호가 다시 발송되었습니다.');
-        navigate('/verification', { state: { email: email } });
       },
       onError: (error) => {
         alert(error);

@@ -1,25 +1,16 @@
-import { useEffect, useState } from 'react';
+
 
 interface DisplayProps {
   email: string;
+  remainTime: number;
 }
 
-const Display = ({ email }: DisplayProps) => {
-  const [remainTime, setRemainTime] = useState<number>(180);
-
+const Display = ({ email, remainTime }: DisplayProps) => {
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRemainTime((prev) => Math.max(0, prev - 1));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <div className="flex min-h-[52px] w-[424px] flex-col justify-center rounded-2xl bg-gray-50 p-5">
