@@ -20,7 +20,6 @@ const PwdFindPage = () => {
       type: 'FIND_PASSWORD',
     }, {
       onSuccess: () => {
-        alert(watch('loginId'));
         navigate('/verification', { state: { email: watch('email'), loginId: watch('loginId'), type: 'FIND_PASSWORD' } });
       },
       onError: (error) => {
