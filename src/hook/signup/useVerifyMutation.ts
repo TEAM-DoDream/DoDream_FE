@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 interface VerifyProps {
   email: string;
+  loginId?: string;
   type: 'SIGN_UP' | 'FIND_ID' | 'FIND_PASSWORD';
 }
 

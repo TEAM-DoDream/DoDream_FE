@@ -4,6 +4,8 @@ import { Input } from '@common/Input.tsx';
 import Button from '@common/Button.tsx';
 import { z } from 'zod';
 import { pwdSchema } from '@validation/pwdFind/pwdSchema';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useChangePwdMutation from '@hook/changepwd/useChangePwdMutation';
 
 const changePwdSchema = z
   .object({
@@ -18,6 +20,11 @@ const changePwdSchema = z
 type ChangePwdFormData = z.infer<typeof changePwdSchema>;
 
 const ChangePwdPage = () => {
+  const location = useLocation();
+  const { email, loginId } = location.state || {};
+  const navigate = useNavigate();
+  const { mutate: changePwd } = useChangePwdMutation();
+
   const {
     register,
     handleSubmit,
@@ -29,9 +36,20 @@ const ChangePwdPage = () => {
     mode: 'onChange'
   });
 
-  const onSubmit = (data: ChangePwdFormData) => {
-    console.log('비밀번호 변경 데이터:', data);
-    // 비밀번호 변경 API 호출 로직 추가
+  const onSubmit = () => {
+    changePwd({
+      email: email,
+      loginId: loginId,
+      newPassword: watch('password'),
+    }, {
+      onSuccess: () => {
+        alert('비밀번호가 변경되었습니다.');
+        navigate('/login');
+      },
+      onError: (error) => {
+        alert(error);
+      },
+    });
   };
 
   return (
