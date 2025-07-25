@@ -1,42 +1,120 @@
-import Button from '@common/Button.tsx';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import Button from '@common/Button.tsx';
 import Display from '@pages/inputVerification/components/Display.tsx';
 import InputCode from '@pages/inputVerification/components/InputCode.tsx';
-import { VerificationFormData, verificationSchema } from '@validation/idFind/verificationSchema';
-import { useForm } from 'react-hook-form';
+import {
+  VerificationFormData,
+  verificationSchema,
+} from '@validation/idFind/verificationSchema';
+import { useVerifyCodeCheckMutation } from '@hook/signup/useVerifyCodeCheckMutation';
 
 const InputVerification = () => {
-  const{handleSubmit, formState: { errors },setValue } = useForm<VerificationFormData>({
+  const location = useLocation();
+  const navigate = useNavigate();
+  const email = location.state?.email;
+  const loginId = location.state?.loginId;
+  const type = location.state?.type;
+
+  const [remainTime, setRemainTime] = useState(180);
+
+
+  useEffect(() => {
+    if (remainTime === 0) return;
+
+    const timer = setInterval(() => {
+      setRemainTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [remainTime]);
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<VerificationFormData>({
     resolver: zodResolver(verificationSchema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
-  const onSubmit = (data: VerificationFormData) => {
-    console.log(data);
+  const code = watch('verificationCode');
+  const { mutate: verifyCodeCheck } = useVerifyCodeCheckMutation();
+
+  const onSubmit = () => {
+    if (!email) {
+      alert('이메일 정보가 없습니다.');
+      return;
+    }
+
+    verifyCodeCheck(
+      {
+        email,
+        type,
+        code,
+      },
+      {
+        onSuccess: (data) => {
+          alert('인증번호가 일치합니다.');
+          if (type === 'FIND_ID') {
+            navigate('/resultId', { state: { email, loginId: data.loginId } });
+          } else if (type === 'FIND_PASSWORD') {
+            navigate('/changepwd', { state: { email, loginId } });
+          }
+        },
+        onError: (error) => {
+          alert(error.message);
+        },
+      }
+    );
   };
+
   return (
     <div className="flex w-full flex-col items-center justify-center">
       <div className="flex w-[428px] flex-col items-start justify-center md:mt-16 lg:mt-24">
-        <div className="mb-4 text-gray-700 font-T01-B">인증번호 입력하기</div>
-        <div className="mb-6 text-gray-800 font-B02-M">
+        <h2 className="mb-4 text-gray-700 font-T01-B">인증번호 입력하기</h2>
+        <p className="mb-6 text-gray-800 font-B02-M">
           이메일로 전송된 인증번호를 입력해주세요.
-        </div>
-        <Display />
-        <div className={'mb-2 text-gray-600 font-B01-M'}>인증번호 입력</div>
-        <InputCode onChange={(value) => {
-          setValue('verificationCode', value);
-        }} />
+        </p>
+
+        {email && <Display email={email} remainTime={remainTime} />}
+        <label className="mb-2 text-gray-600 font-B01-M">인증번호 입력</label>
+        <InputCode
+          value={code || ''}
+          email={email || ''}
+          loginId={loginId}
+          type={type}
+          onChange={(value) => setValue('verificationCode', value)}
+          onResend={() => setRemainTime(180)}
+        />
+
         {errors.verificationCode && (
-          <p className="mb-4 text-red-500 text-sm">{errors.verificationCode.message}</p>
+          <p className="mb-4 text-sm text-red-500">
+            {errors.verificationCode.message}
+          </p>
         )}
-        <div className={'mt-[10px] text-gray-500 font-B03-M'}>
+
+        <p className="mt-[10px] text-gray-500 font-B03-M">
           인증번호가 안 왔다면 이메일을 확인하거나 [다시 받기]를 눌러주세요
-        </div>
+        </p>
+
         <div className="mt-8 h-[60px] w-full font-T05-SB">
-          <Button text={'입력 완료하기'} className="h-[60px] w-full" onClick={handleSubmit(onSubmit)}/>
+          <Button
+            text="입력 완료하기"
+            className="h-[60px] w-full"
+            onClick={handleSubmit(onSubmit)}
+          />
         </div>
-        {/* 인증 번호 로직을 생각하였을 때, 입력 완료하기(인증하기) 이후, api 통신 해서 올바르면 다음버튼이 생기고,
-        다음 버튼을 누르면 아이디 찾기 쪽으로 이동해서 보여줄 것 같은데, 현재는 바디로 조정하는 듯 */}
       </div>
     </div>
   );
