@@ -4,27 +4,13 @@ import Button from '@common/Button.tsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IdFindFormData, idFindSchema } from '@validation/idFind/idFindSchema';
-
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const IdFindPage = () => {
   const navigate = useNavigate();
   const { mutate: verify } = useVerifyMutation();
-  const [email, setEmail] = useState('');
-  const handleEmail = () => {
-    verify({
-      email: email,
-      type: 'FIND_ID',
-    }, {
-      onSuccess: () => {
-        navigate('/verification', { state: { email: email } });
-      },
-      onError: (error) => {
-        alert(error);
-      },
-    });
-  };
+
+  // useState email, setEmail 삭제
 
   const {
     register,
@@ -36,12 +22,23 @@ const IdFindPage = () => {
     mode: 'onChange'
   });
 
-  const onSubmit = (data: IdFindFormData) => {
-    console.log('이메일 제출:', data);
-    // 여기에 인증번호 전송 API 호출 로직 추가
+  const handleEmail = () => {
+    verify({
+      email: watch('email'), // watch로 현재 입력값 사용
+      type: 'FIND_ID',
+    }, {
+      onSuccess: () => {
+        navigate('/verification', { state: { email: watch('email') } });
+      },
+      onError: (error) => {
+        alert(error);
+      },
+    });
   };
 
-
+  const onSubmit = () => {
+    handleEmail();
+  };
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
@@ -59,7 +56,6 @@ const IdFindPage = () => {
             placeholder={'이메일을 입력하세요'}
             className={'mb-1 h-[68px] w-full font-B02-M'}
             value={watch('email')}
-
           />
           {errors.email && (
             <p className="mb-4 text-red-500 text-sm">{errors.email.message}</p>
@@ -73,21 +69,6 @@ const IdFindPage = () => {
             />
           </div>
         </form>
-        <div className={'mb-1 text-gray-600 font-B01-M'}>이메일</div>
-        <Input
-          value={email}
-          title={'이메일'}
-          placeholder={'이메일을 입력하세요'}
-          onChange={(e) => setEmail(e.target.value)}
-          className={' h-14 w-full font-B02-M'}
-        />
-        <div className="mt-8 h-[60px] w-full font-T05-SB">
-          <Button
-            text={'인증번호 전송하기'}
-            className="h-full w-full"
-            onClick={handleEmail}
-          />
-        </div>
       </div>
     </div>
   );
