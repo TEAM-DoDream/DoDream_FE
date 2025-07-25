@@ -3,14 +3,28 @@ import Button from '@common/Button.tsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PwdFindFormData, pwdFindSchema } from '@validation/pwdFind/pwdFindSchema';
+import { useVerifyMutation } from '@hook/signup/useVerifyMutation';
+import { useNavigate } from 'react-router-dom';
 
 const PwdFindPage = () => {
   const { handleSubmit, watch, setValue, formState: { errors, isValid } } = useForm<PwdFindFormData>({
     resolver: zodResolver(pwdFindSchema),
     mode: 'onChange'
   });
-  const onSubmit = (data: PwdFindFormData) => {
-    console.log(data);
+  const { mutate: verify } = useVerifyMutation();
+  const navigate = useNavigate();
+  const onSubmit = () => {
+    verify({
+      email: watch('email'),
+      type: 'FIND_PASSWORD',
+    }, {
+      onSuccess: () => {
+        navigate('/verification', { state: { email: watch('email'), type: 'FIND_PASSWORD' } });
+      },
+      onError: (error) => {
+        alert(error);
+      },
+    });
   };
   return (
     <div className="flex w-full flex-col items-center justify-center">

@@ -15,7 +15,7 @@ const InputVerification = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email;
-
+  const type = location.state?.type;
   const {
     handleSubmit,
     formState: { errors },
@@ -38,14 +38,17 @@ const InputVerification = () => {
     verifyCodeCheck(
       {
         email,
-        type: 'FIND_ID',
+        type,
         code,
       },
       {
         onSuccess: (response) => {
-          // 예시: response.loginId 또는 response.data.loginId 등 실제 응답 구조에 맞게
-          const loginId = response.loginId; // 또는 response.data.loginId
-          navigate('/resultId', { state: { email, loginId } });
+          if (type === 'FIND_ID') {
+            const loginId = response.loginId; 
+            navigate('/resultId', { state: { email, loginId } });
+          } else if (type === 'FIND_PASSWORD') {
+            navigate('/resultPwd', { state: { email, loginId: response.loginId } });
+          }
         },
         onError: (error) => {
           alert(error.message);
