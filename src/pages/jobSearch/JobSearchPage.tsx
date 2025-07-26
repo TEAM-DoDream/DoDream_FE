@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Filter from '@pages/jobSearch/components/Filter';
 import RecruitCard from '@pages/jobSearch/components/RecruitCard';
 import CardDetail from '@pages/jobSearch/components/CardDetail';
@@ -13,10 +13,34 @@ import { useShallow } from 'zustand/react/shallow';
 import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
 import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMutation';
 import { useQueryClient } from '@tanstack/react-query';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const sortOptions = ['마감 임박순', '마감 여유순'];
 
 const JobSearchPage = () => {
+  useEffect(() => {
+    const handleReturn = () => {
+      const ts = localStorage.getItem('external_link_open_ts');
+      if (!ts) return;
+      const elapsedSec = Math.round((Date.now() - Number(ts)) / 1000);
+  
+
+      ReactTagManager.action({
+        event: 'back_to_web_time',
+        category: '채용상세',
+        elapsed_time: elapsedSec,
+      });
+  
+      localStorage.removeItem('external_link_open_ts');
+    };
+  
+    window.addEventListener('focus', handleReturn);
+   
+  
+    return () => {
+      window.removeEventListener('focus', handleReturn);
+    };
+  }, []);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
