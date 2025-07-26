@@ -11,6 +11,7 @@ import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation
 import { useQueryClient } from '@tanstack/react-query';
 import { useMdJobsQuery } from '@hook/todo/useTdJobsQuery';
 import { useTodoGroupQuery } from '@hook/todo/useTodoGroupQuery';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const Todo = () => {
   const navigate = useNavigate();
@@ -80,6 +81,14 @@ const Todo = () => {
     refreshCounter,
     location.pathname,
   ]);
+
+  useEffect(() => {
+    ReactTagManager.action({
+      event: 'my_todo_page',
+      category: '할 일 목록',
+      clickText: '[나의 할일] 페이지 클릭 시 (진입)',
+    });
+  }, []);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdown = () => setIsDropdownOpen((o) => !o);
@@ -212,7 +221,14 @@ const Todo = () => {
 
         <button
           className="mt-[16px] flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
-          onClick={handleAddTodo}
+          onClick={() => {
+            handleAddTodo();
+            ReactTagManager.action({
+              event: 'my_todo_add',
+              category: '할 일 목록',
+              clickText: '[나의 할일] 페이지> 할 일 작성 [추가하기] 버튼 클릭 시 ',
+            }); 
+          }}
         >
           <Plus className="h-6 w-6" />
           추가하기
