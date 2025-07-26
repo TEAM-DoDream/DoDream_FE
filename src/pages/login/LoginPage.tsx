@@ -2,18 +2,21 @@ import Divider from '@common/Divider.tsx';
 import LoginImageComponent from '@pages/login/components/LoginImage.tsx';
 import LoginForm from '@pages/login/components/LoginForm.tsx';
 import { useNavigate } from 'react-router-dom';
-import { useAnalytics } from '@hook/tagging/GaTag.ts';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { trackEvent } = useAnalytics();
-  const handleSignupClick = () => {
-    trackEvent({
+  
+  const handleSignupClick = (e: React.MouseEvent) => {
+    e.preventDefault();  
+    ReactTagManager.action({
+      event: 'signup_start',
       category: 'Signup',
-      action: 'signup_start',
-      label: '로그인 → 회원가입 이동',
+      clickText: '회원가입',
     });
-    navigate('/signup'); // 라우터 네비게이트
+    setTimeout(() => {
+      navigate('/signup');
+    }, 200);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import api from './api';
 import { useNavigate } from 'react-router-dom';
-import ReactGA from 'react-ga4';
+import { ReactTagManager } from 'react-gtm-ts';
 
 export interface SignupRequest {
   loginId: string;
@@ -38,12 +38,13 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: signupUser,
     onSuccess: () => {
-      ReactGA.event({
-        category: 'Signup',
-        action: 'signup_complete',
-        label: '두드림 시작하기 클릭 → 회원가입 완료',
-        value: 1,
+  
+      ReactTagManager.action({
+          event: 'signup_complete',
+          category: 'Signup',
+          clickText: '회원가입 완료',
       });
+    
 
       navigate('/login');
     },
