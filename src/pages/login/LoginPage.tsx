@@ -1,8 +1,23 @@
 import Divider from '@common/Divider.tsx';
 import LoginImageComponent from '@pages/login/components/LoginImage.tsx';
 import LoginForm from '@pages/login/components/LoginForm.tsx';
+import ReactGA from 'react-ga4';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const eventPayload = {
+    category: 'Signup',
+    action: 'signup_start',
+    label: '회원가입 시작 버튼 클릭 → 회원가입 페이지 진입',
+    value: 1,
+  };
+
+  const handleSignupClick = () => {
+    ReactGA.event(eventPayload); // GA 이벤트 전송
+    navigate('/signup'); // 라우터 네비게이트
+  };
+
   return (
     <div className="flex items-center justify-center bg-white px-4">
       <div className="flex w-full max-w-[1200px]">
@@ -25,10 +40,15 @@ const LoginPage = () => {
 
             <div className="mt-4 w-full text-center text-gray-500 font-B03-M">
               두드림이 처음이신가요?{'  '}
-              <a href="/signup" className="text-purple-500 font-B03-M">
+              <a
+                href="/signup"
+                className="text-purple-500 font-B03-M"
+                onClick={handleSignupClick}
+              >
                 회원가입
               </a>
             </div>
+
             <div className="mt-4 flex w-full items-center justify-center text-center">
               <div className="flex w-full items-center justify-center gap-6 px-4">
                 <a href="/findpwd" className="text-gray-400 font-B02-SB">
