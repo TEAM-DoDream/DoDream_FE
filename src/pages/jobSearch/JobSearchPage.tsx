@@ -41,6 +41,8 @@ const JobSearchPage = () => {
       window.removeEventListener('focus', handleReturn);
     };
   }, []);
+
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
