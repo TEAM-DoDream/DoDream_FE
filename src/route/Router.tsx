@@ -1,4 +1,12 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
+import ReactGA from 'react-ga4';
+import { useEffect } from 'react';
 import LoginPage from '@pages/login/LoginPage';
 import SignupFunnel from '@pages/signup/SignupFunnel';
 import HideLayout from '@outlet/HideLayout';
@@ -25,9 +33,19 @@ import InputVerification from '@pages/inputVerification/InputVerificationPage.ts
 import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
 import ChangePwdPage from '@pages/pwdFind/ChangePwdPage.tsx';
 
+function PageViewTracker() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: pathname + search });
+    console.log(pathname + search);
+  }, [pathname, search]);
+  return null;
+}
+
 const Router = () => {
   return (
     <BrowserRouter>
+      <PageViewTracker />
       <Routes>
         <Route element={<HideLayout />}>
           <Route path="/login" element={<LoginPage />} />
