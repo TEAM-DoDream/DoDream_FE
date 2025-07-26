@@ -1,20 +1,18 @@
 import Divider from '@common/Divider.tsx';
 import LoginImageComponent from '@pages/login/components/LoginImage.tsx';
 import LoginForm from '@pages/login/components/LoginForm.tsx';
-import ReactGA from 'react-ga4';
 import { useNavigate } from 'react-router-dom';
+import { useAnalytics } from '@hook/tagging/GaTag.ts';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const eventPayload = {
-    category: 'Signup',
-    action: 'signup_start',
-    label: '회원가입 시작 버튼 클릭 → 회원가입 페이지 진입',
-    value: 1,
-  };
-
+  const { trackEvent } = useAnalytics();
   const handleSignupClick = () => {
-    ReactGA.event(eventPayload); // GA 이벤트 전송
+    trackEvent({
+      category: 'Signup',
+      action: 'signup_start',
+      label: '로그인 → 회원가입 이동',
+    });
     navigate('/signup'); // 라우터 네비게이트
   };
 
