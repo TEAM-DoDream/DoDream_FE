@@ -164,7 +164,15 @@ const LearningPage = () => {
             {jobs.map((item, index) => (
               <div
                 key={index}
-                onClick={() => setSelectedCardId(index)}
+                onClick={() => {
+                  setSelectedCardId(index);
+          
+                  ReactTagManager.action({
+                    event: 'academy_click',
+                    category: '학원정보',
+                    clickText: '학원 정보 카드 클릭',
+                  });
+                }}
                 className="cursor-pointer"
               >
                 <LearningCard
@@ -215,6 +223,7 @@ const LearningPage = () => {
                 selectedCard,
                 scrapStatusMap[selectedCard.trprId] || false
               )
+             
             }
           />
         </div>

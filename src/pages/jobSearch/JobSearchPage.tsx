@@ -152,7 +152,14 @@ const JobSearchPage = () => {
             {jobs.map((item, index) => (
               <div
                 key={item.id}
-                onClick={() => setSelectedCardId(index)}
+                onClick={() => {
+                  setSelectedCardId(index);
+                  ReactTagManager.action({
+                    event: 'job_post_click',
+                    category: '채용정보',
+                    clickText: '채용 정보 카드 클릭',
+                  });
+                }}
                 className="cursor-pointer"
               >
                 <RecruitCard
