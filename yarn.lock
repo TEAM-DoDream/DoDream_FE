@@ -3925,6 +3925,16 @@ react-ga4@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-ga4/-/react-ga4-2.1.0.tgz#56601f59d95c08466ebd6edfbf8dede55c4678f9"
   integrity sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==
 
+react-gtm-module@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.11.tgz#14484dac8257acd93614e347c32da9c5ac524206"
+  integrity sha512-8gyj4TTxeP7eEyc2QKawEuQoAZdjKvMY4pgWfycGmqGByhs17fR+zEBs0JUDq4US/l+vbTl+6zvUIx27iDo/Vw==
+
+react-gtm-ts@^1.0.45:
+  version "1.0.45"
+  resolved "https://registry.yarnpkg.com/react-gtm-ts/-/react-gtm-ts-1.0.45.tgz#1097c0ff3a190ef8934a4a6307e662e0a2fdcb46"
+  integrity sha512-GzF7coUe0DiYqS0pIooEDXmauTOeWd9U+LeqjYui4WW1KYjUNf8q70veEeJWYGyEeHT9b0sPUaX0WECSOrJuHw==
+
 react-hook-form@^7.56.1:
   version "7.56.1"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.56.1.tgz#45b2040fef997b873d656959d2e7f864f35bf95d"
