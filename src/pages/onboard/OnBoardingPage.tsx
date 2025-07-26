@@ -6,7 +6,7 @@ import Navigation from '@pages/onboard/components/Navigation';
 import Questions from '@pages/onboard/components/Questions';
 import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation.ts';
 import LoadingSpinner from '@common/LoadingSpinner';
-import { useAnalytics } from '@hook/tagging/GaTag';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const OnBoardingPage = () => {
   const {
@@ -23,25 +23,16 @@ const OnBoardingPage = () => {
   } = useOnboarding(stepQuestions);
 
   const { mutate, isPending } = useSubmitOnboardAnswers();
-  const { trackEvent } = useAnalytics();
-  
   
   useEffect(() => {
     const handleBeforeUnload = () => {
- 
       const currentPageId = `${curStep + 1}.${curQuestionIndex + 1}`;
       
-    
-      try {
-        trackEvent({
-          action: 'onboarding_exit',
-          category: '온보딩',
-          label: `이탈 위치: ${currentPageId}`,
-          value: 3,
-        });
-      } catch (error) {
-        console.error('GA 이벤트 전송 실패:', error);
-      }
+      ReactTagManager.action({
+        event: 'onboarding_exit',
+        category: '온보딩',
+        clickText: `이탈 위치: ${currentPageId}`,
+      });
     };
 
 
@@ -50,24 +41,22 @@ const OnBoardingPage = () => {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [curStep, curQuestionIndex, trackEvent]);
+  }, [curStep, curQuestionIndex]);
   
   const handleSubmit = () => {
-    trackEvent({
-      action: 'onboarding_complete',
+    ReactTagManager.action({
+      event: 'onboarding_complete',
       category: '온보딩',
-      label: '온보딩 질문 완료',
-      value: 3,
+      clickText: '온보딩 질문 완료',
     });
     
     mutate(buildPayload());
   };
 
-  // 자격증 관련 질문인지 확인
+
   const isLastLicenseQuestion = 
     currentQuestionData?.question === '자격증이 필요한 일도 괜찮으신가요?';
   
-  // 스텝퍼 표시를 위한 값 계산
   const displayStep = isLastLicenseQuestion ? stepQuestions.length - 1 : curStep;
   const displayQuestionIndex = isLastLicenseQuestion 
     ? (stepQuestions[stepQuestions.length - 1].questions?.length || 1) - 1 
