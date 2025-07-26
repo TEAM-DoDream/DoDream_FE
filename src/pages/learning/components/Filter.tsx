@@ -11,6 +11,7 @@ import {
 } from '@utils/data/job/filterOptions.ts';
 
 import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
+import { ReactTagManager } from 'react-gtm-ts';
 
 type Tag = {
   label: string;
@@ -51,6 +52,16 @@ const Filter = () => {
     return t;
   }, [job, location, trainingCourse]);
 
+  const handleFilterEvent = (filterType: 'job_id' | 'region' | 'training_course', value: string) => {
+    ReactTagManager.action({
+      event: 'filter_used_academy',
+      category: '학원정보',
+      filter_type: filterType,
+      filter_value: value,
+      clickText: '필터 선택',
+    });
+  };
+
   const handleCitySelect = (city: string) => {
     setTempCity(city);
     if (city === selectedCity) {
@@ -62,8 +73,11 @@ const Filter = () => {
   };
 
   const handleDistrictSelect = (dist: string) => {
-    setSelection('location', `${tempCity} ${dist}`);
+    const fullLocation = `${tempCity} ${dist}`;
+    setSelection('location', fullLocation);
     setLocStep('city');
+   
+    handleFilterEvent('region', fullLocation);
   };
 
   const handleResetAll = () => {
@@ -81,7 +95,11 @@ const Filter = () => {
             placeholder="직업종류 선택"
             options={jobOptions}
             value={job}
-            onSelect={(v) => setSelection('job', v)}
+            onSelect={(v) => {
+              setSelection('job', v);
+             
+              handleFilterEvent('job_id', v);
+            }}
           />
         </div>
 
@@ -115,7 +133,11 @@ const Filter = () => {
             placeholder="과정 선택"
             options={trainingOptions}
             value={trainingCourse}
-            onSelect={(v) => setSelection('trainingCourse', v)}
+            onSelect={(v) => {
+              setSelection('trainingCourse', v);
+             
+              handleFilterEvent('training_course', v);
+            }}
           />
         </div>
       </div>
