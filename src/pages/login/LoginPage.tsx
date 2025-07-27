@@ -1,8 +1,24 @@
 import Divider from '@common/Divider.tsx';
 import LoginImageComponent from '@pages/login/components/LoginImage.tsx';
 import LoginForm from '@pages/login/components/LoginForm.tsx';
+import { useNavigate } from 'react-router-dom';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  
+  const handleSignupClick = (e: React.MouseEvent) => {
+    e.preventDefault();  
+    ReactTagManager.action({
+      event: 'signup_start',
+      category: 'Signup',
+      clickText: '회원가입',
+    });
+    setTimeout(() => {
+      navigate('/signup');
+    }, 200);
+  };
+
   return (
     <div className="flex items-center justify-center bg-white px-4">
       <div className="flex w-full max-w-[1200px]">
@@ -25,10 +41,15 @@ const LoginPage = () => {
 
             <div className="mt-4 w-full text-center text-gray-500 font-B03-M">
               두드림이 처음이신가요?{'  '}
-              <a href="/signup" className="text-purple-500 font-B03-M">
+              <a
+                href="/signup"
+                className="text-purple-500 font-B03-M"
+                onClick={handleSignupClick}
+              >
                 회원가입
               </a>
             </div>
+
             <div className="mt-4 flex w-full items-center justify-center text-center">
               <div className="flex w-full items-center justify-center gap-6 px-4">
                 <a href="/findpwd" className="text-gray-400 font-B02-SB">
