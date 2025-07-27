@@ -1,13 +1,9 @@
 import Button from '@common/Button';
-
-const dummyJobs = Array(12).fill({
-  title: '요양보호사',
-  description:
-    '구직자에게 맞는 일자리를 찾도록 돕고 이력서·면접 준비도 도와주는 역할을 해요.',
-  imageUrl: 'example.jpg',
-});
+import { useJobSelect } from '@hook/jobselect/useJobSelect';
 
 const JobSelect = () => {
+  const { data } = useJobSelect();
+
   return (
     <div className="flex flex-col items-start justify-center px-[120px] pb-[92px] pt-[90px]">
       <div className="text-center text-gray-900 font-T01-B">
@@ -33,20 +29,22 @@ const JobSelect = () => {
       </div>
 
       <div className="mt-11 grid w-full grid-cols-5 gap-x-5 gap-y-5">
-        {dummyJobs.map((job, index) => (
+        {data?.map((job, index) => (
           <div
             key={index}
             className="flex w-full cursor-pointer flex-col items-start rounded-[18px] border border-gray-200 pb-5 hover:shadow-shadow2"
           >
             <img
               src={job.imageUrl}
-              alt={job.title}
-              className="h-[180px] w-full object-cover"
+              alt={`${job.jobId}`}
+              className="h-[180px] w-full rounded-t-[18px] object-cover"
             />
             <div className="flex flex-col px-4">
-              <div className="mt-3 text-gray-900 font-T05-SB">{job.title}</div>
+              <div className="mt-3 text-gray-900 font-T05-SB">
+                {job.jobName}
+              </div>
               <div className="mt-[10px] text-gray-500 font-C01-R">
-                {job.description}
+                {job.jobDescription}
               </div>
 
               <button className="font-B03-R mt-5 flex w-[49px] self-end text-nowrap rounded-[6px] border border-purple-500 bg-white px-3 py-[6px] text-purple-500 hover:bg-purple-50">
