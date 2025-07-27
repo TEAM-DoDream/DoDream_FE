@@ -61,10 +61,14 @@ const Header = ({ type }: ShowProps) => {
       </div>
 
       <div className="flex flex-row items-center justify-center gap-[10px]">
-        <div className="cursor-pointer px-[15px] py-[10px] text-gray-500 underline font-B03-M">
-          {' '}
+        <a
+          href="https://substantial-scabiosa-c3a.notion.site/23bf45a40bd8802e9858edc8d7746a92"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cursor-pointer px-[15px] py-[10px] text-gray-500 underline font-B03-M"
+        >
           두드림 사용설명서
-        </div>
+        </a>
         {type === 'show' && !isLoggedIn && (
           <Button
             text="로그인"
