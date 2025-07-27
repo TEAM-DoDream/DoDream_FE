@@ -92,7 +92,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
 
               <button
                 className="mt-[52px] flex h-[60px] w-full items-center justify-center rounded-2xl bg-purple-150 py-[11px] text-purple-500 font-T05-SB"
-                onClick={() => navigate('/jobfound')}
+                onClick={() => navigate('/jobselect')}
               >
                 {' '}
                 직업 담으러 가기

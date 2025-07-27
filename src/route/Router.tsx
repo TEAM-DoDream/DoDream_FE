@@ -24,6 +24,7 @@ import PwdFindPage from '@pages/pwdFind/PwdFindPage.tsx';
 import InputVerification from '@pages/inputVerification/InputVerificationPage.tsx';
 import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
 import ChangePwdPage from '@pages/pwdFind/ChangePwdPage.tsx';
+import JobSelect from '@pages/jobSelect/JobSelect';
 
 const Router = () => {
   return (
@@ -48,6 +49,7 @@ const Router = () => {
           <Route path="/verification" element={<InputVerification />} />
           <Route path="/resultId" element={<FindIdDisplayPage />} />
           <Route path="/changepwd" element={<ChangePwdPage />} />
+          <Route path="/jobselect" element={<JobSelect />} />
           <Route
             path="/otherslist/:todoGroupId"
             element={<OtherTodoListPage />}
