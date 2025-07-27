@@ -4,8 +4,17 @@ import { useEachTodosQuery } from '@hook/useJobQuery.ts';
 import BaseImg from '@assets/images/profile.png';
 import LoadingSpinner from '@common/LoadingSpinner';
 import OtherTodoCard from '@pages/otherTodoList/components/OtherTodoCard.tsx';
+import { ReactTagManager } from 'react-gtm-ts';
+import { useEffect } from 'react';
 
 const OtherTodoListPage = () => {
+  useEffect(() => {
+    ReactTagManager.action({
+      event: 'others_todo_view',
+      category: '할 일 목록',
+      clickText: '타인의 할 일 페이지 진입 시',
+    });
+  }, []);
   const navigate = useNavigate();
   const { todoGroupId } = useParams<{ todoGroupId: string }>();
   const {
@@ -23,6 +32,7 @@ const OtherTodoListPage = () => {
   }
 
   if (!eachTodos) return <div>데이터가 없습니다.</div>;
+
 
   return (
     <>

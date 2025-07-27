@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import Button from '@common/Button';
 import CheckBox from '@common/CheckBox';
 import { Input } from '@common/Input';
@@ -7,7 +9,6 @@ import {
   EmailOnlyFormValues,
   EmailOnlySchema,
 } from '@validation/signup/SignupSchema';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 interface SignupProps {
@@ -53,7 +54,6 @@ const SingupAgree = ({ onNext, setEmail }: SignupProps) => {
       alert('이메일 인증 요청에 실패했습니다. 다시 시도해주세요.');
     }
   };
-
   return (
     <form
       className="flex w-full flex-col items-center justify-center"

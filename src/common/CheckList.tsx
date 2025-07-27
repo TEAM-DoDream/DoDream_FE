@@ -8,6 +8,7 @@ import ToastModal from './modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
 import { useUpdateMemoMutation } from '@hook/mydream/useUpdateMemoMutation.ts';
+import { ReactTagManager } from 'react-gtm-ts';
 
 type ChecklistItem =
   | string
@@ -59,6 +60,11 @@ const CheckList = ({
       next = [...checkedIds, id];
     }
     onChange?.(next);
+
+    ReactTagManager.action({
+      event: 'my_todo_check',
+      clickText: '할 일 체크 시',
+    });
   };
 
   const handleSaveEdit = () => {
@@ -183,7 +189,15 @@ const CheckList = ({
                   {isEditing ? (
                     <>
                       <button
-                        onClick={handleSaveEdit}
+                        onClick={() => {
+                          handleSaveEdit();
+                          ReactTagManager.action({
+                            event: 'edit_todo_click',
+                            source_page: '7.1.3',
+                            trigger_method: 'inline',
+                            click_text: '저장',
+                          });
+                        }}
                         className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"
                       >
                         <SaveIcon className="h-[18px] w-[18px] text-purple-500" />

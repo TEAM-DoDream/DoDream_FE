@@ -5,6 +5,7 @@ import { RecruitItem } from '@validation/recruit/recruitSchema.ts';
 import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMutation.ts';
 import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
 import { useState, useEffect } from 'react';
+import { ReactTagManager } from 'react-gtm-ts';
 
 interface CardDetailProps {
   item: RecruitItem;
@@ -118,6 +119,19 @@ const CardDetail = ({
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center rounded-xl bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600"
+          onClick={() => {
+            localStorage.setItem('external_link_open_ts', String(Date.now()));
+            
+            ReactTagManager.action({
+              event: 'external_link_open',
+              category: '채용상세',
+              link_url: item.url,
+              clickText: '사람인에서 자세히 보기',
+              job_id: item.id,
+              company: item.companyName,
+              title: item.title,
+            });
+          }}
         >
           사람인에서 자세히 보기
         </a>

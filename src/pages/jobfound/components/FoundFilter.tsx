@@ -3,6 +3,7 @@ import DropDown from '@common/DropDown';
 import ResetButton from '@common/ResetButton';
 import { useFilterStore } from '@store/filterStore';
 import Cancel from '@assets/icons/purplecancel.svg?react';
+import { ReactTagManager } from 'react-gtm-ts';
 
 type Tag = { label: string; type: 'require' | 'workTime' | 'bodyActivity' };
 
@@ -29,6 +30,16 @@ const FoundFilter = () => {
     return t;
   }, [require, workTime, bodyActivity]);
 
+  const handleFilterEvent = (filterType: 'cert' | 'work_time' | 'activity_level', value: string) => {
+    ReactTagManager.action({
+      event: 'filter_used_recruit',
+      category: '직업정보',
+      filter_type: filterType,
+      filter_value: value,
+      clickText: '필터 선택',
+    });
+  };
+
   const handleResetAll = () => {
     reset();
   };
@@ -42,7 +53,10 @@ const FoundFilter = () => {
             placeholder="자격증 필요여부를 선택"
             options={needOptions}
             value={require}
-            onSelect={(v) => setSelection('require', v)}
+            onSelect={(v) => {
+              setSelection('require', v);
+              handleFilterEvent('cert', v);
+            }}
           />
 
           <DropDown
@@ -50,7 +64,10 @@ const FoundFilter = () => {
             placeholder="근무 시간대를 선택"
             options={workTimeOptions}
             value={workTime}
-            onSelect={(v) => setSelection('workTime', v)}
+            onSelect={(v) => {
+              setSelection('workTime', v);
+              handleFilterEvent('work_time', v);
+            }}
           />
 
           <DropDown
@@ -58,7 +75,10 @@ const FoundFilter = () => {
             placeholder="직무 활동량 정도 선택"
             options={bodyActivityOptions}
             value={bodyActivity}
-            onSelect={(v) => setSelection('bodyActivity', v)}
+            onSelect={(v) => {
+              setSelection('bodyActivity', v);
+              handleFilterEvent('activity_level', v);
+            }}
           />
         </div>
 

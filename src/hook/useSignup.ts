@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import api from './api';
 import { useNavigate } from 'react-router-dom';
+import { ReactTagManager } from 'react-gtm-ts';
 
 export interface SignupRequest {
   loginId: string;
@@ -37,6 +38,14 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: signupUser,
     onSuccess: () => {
+  
+      ReactTagManager.action({
+          event: 'signup_complete',
+          category: 'Signup',
+          clickText: '회원가입 완료',
+      });
+    
+
       navigate('/login');
     },
   });

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Filter from '@pages/learning/components/Filter.tsx';
 import { useAcademyInfoQuery } from '@hook/useAcademyInfoQuery.ts';
 import { AcademyItem } from '@validation/academy/academySchema.ts';
@@ -14,8 +14,34 @@ import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
 import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
 import { useScrapTrainingMutation } from '@hook/scrap/training/useScrapTrainingMutation';
 import { useQueryClient } from '@tanstack/react-query';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const LearningPage = () => {
+
+  useEffect(() => {
+    const handleReturn = () => {
+      const ts = localStorage.getItem('external_link_open_ts');
+      if (!ts) return;
+      const elapsedSec = Math.round((Date.now() - Number(ts)) / 1000);
+  
+
+      ReactTagManager.action({
+        event: 'back_to_web_time',
+        category: '채용상세',
+        elapsed_time: elapsedSec,
+      });
+  
+      localStorage.removeItem('external_link_open_ts');
+    };
+  
+    window.addEventListener('focus', handleReturn);
+   
+  
+    return () => {
+      window.removeEventListener('focus', handleReturn);
+    };
+  }, []);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const {
@@ -138,7 +164,15 @@ const LearningPage = () => {
             {jobs.map((item, index) => (
               <div
                 key={index}
-                onClick={() => setSelectedCardId(index)}
+                onClick={() => {
+                  setSelectedCardId(index);
+          
+                  ReactTagManager.action({
+                    event: 'academy_click',
+                    category: '학원정보',
+                    clickText: '학원 정보 카드 클릭',
+                  });
+                }}
                 className="cursor-pointer"
               >
                 <LearningCard
@@ -189,6 +223,7 @@ const LearningPage = () => {
                 selectedCard,
                 scrapStatusMap[selectedCard.trprId] || false
               )
+             
             }
           />
         </div>
