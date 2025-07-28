@@ -14,6 +14,7 @@ const Mypage = () => {
   const [quit, setIsQuit] = useState(false);
   const logout = useLogout();
   const navigate = useNavigate();
+  const [nicknameMessageVisible, setNicknameMessageVisible] = useState(false);
 
   const { data: InfoData } = useGetInfo();
 
@@ -22,10 +23,14 @@ const Mypage = () => {
       <div className="mb-[153px] mt-10 flex w-[796px] flex-col items-start">
         <div className="text-black font-T01-B">나의 계정</div>
 
-        <div className="mt-[60px] flex items-center space-x-11">
+        <div
+          className={`mt-[60px] flex items-center space-x-11 ${nicknameMessageVisible ? 'mb-10' : ''}`}
+        >
           <ProfileImageUploader imageUrl={InfoData?.profileImage} />
-
-          <Nickname nickname={InfoData?.nickname || ''} />
+          <Nickname
+            nickname={InfoData?.nickname || ''}
+            onMessageVisibleChange={setNicknameMessageVisible}
+          />
         </div>
 
         <div className="mt-10 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
@@ -42,7 +47,7 @@ const Mypage = () => {
             </div>
 
             <button
-              className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
+              className="flex items-center rounded-[10px] bg-purple-500 px-[10px] py-2 text-white font-B03-M"
               onClick={() => setIsPasswordModal(true)}
             >
               변경
@@ -81,7 +86,7 @@ const Mypage = () => {
             </div>
 
             <button
-              className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
+              className="flex items-center rounded-[10px] bg-purple-500 px-[10px] py-2 text-white font-B03-M"
               onClick={() => navigate('/jobselect')}
             >
               변경
