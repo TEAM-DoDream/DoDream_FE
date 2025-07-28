@@ -1,18 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@common/Button';
 import { useJobSelect } from '@hook/jobselect/useJobSelect';
 import Modal from '@common/modal/Modal.tsx';
 import { useNavigate } from 'react-router-dom';
+import { useGetInfo } from '@hook/mypage/useMypageQuery.ts';
 
 const JobSelect = () => {
   const { data } = useJobSelect();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
-
+  const { data: InfoData } = useGetInfo();
   const [selectedJob, setSelectedJob] = useState<{
     id: number;
     name: string;
   } | null>(null);
+
+  useEffect(() => {
+    if (InfoData?.job) {
+      setSelectedJob({
+        id: InfoData.job.jobId,
+        name: InfoData.job.jobName,
+      });
+    }
+  }, [InfoData]);
 
   const handlePick = (jobId: number, jobName: string) => {
     setSelectedJob((prev) =>
