@@ -1,10 +1,12 @@
+import { useEffect, useRef } from 'react';
 import Stepper from '@pages/onboard/components/Stepper';
 import stepQuestions from '@utils/data/onboard/onboardDummy';
 import { useOnboarding } from '@hook/useOnboarding';
 import Navigation from '@pages/onboard/components/Navigation';
 import Questions from '@pages/onboard/components/Questions';
-import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation.ts';
+import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation';
 import LoadingSpinner from '@common/LoadingSpinner';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const OnBoardingPage = () => {
   const {
@@ -21,18 +23,45 @@ const OnBoardingPage = () => {
   } = useOnboarding(stepQuestions);
 
   const { mutate, isPending } = useSubmitOnboardAnswers();
+
+  // 지연 없이 스텝 변경 시 exit 이벤트가 찍히지 않도록, 언마운트 시점에만 실행
+  const stepRef = useRef(curStep);
+  const questionRef = useRef(curQuestionIndex);
+  useEffect(() => {
+    stepRef.current = curStep;
+    questionRef.current = curQuestionIndex;
+  }, [curStep, curQuestionIndex]);
+
+  useEffect(() => {
+    return () => {
+      ReactTagManager.action({
+        event: 'onboarding_exit',
+        category: '온보딩',
+        source_page: `2.${stepRef.current + 1}.${questionRef.current + 1}`,
+        step: stepRef.current + 1,
+        question: questionRef.current + 1,
+      });
+    };
+  }, []);
+
   const handleSubmit = () => {
+    ReactTagManager.action({
+      event: 'onboarding_complete',
+      category: '온보딩',
+      clickText: '온보딩 질문 완료',
+      step: curStep + 1,
+      question: curQuestionIndex + 1,
+    });
     mutate(buildPayload());
   };
 
-  // 자격증 관련 질문인지 확인
-  const isLastLicenseQuestion = 
+  const isLastLicenseQuestion =
     currentQuestionData?.question === '자격증이 필요한 일도 괜찮으신가요?';
-  
-  // 스텝퍼 표시를 위한 값 계산
-  const displayStep = isLastLicenseQuestion ? stepQuestions.length - 1 : curStep;
-  const displayQuestionIndex = isLastLicenseQuestion 
-    ? (stepQuestions[stepQuestions.length - 1].questions?.length || 1) - 1 
+  const displayStep = isLastLicenseQuestion
+    ? stepQuestions.length - 1
+    : curStep;
+  const displayQuestionIndex = isLastLicenseQuestion
+    ? (stepQuestions[stepQuestions.length - 1].questions?.length || 1) - 1
     : curQuestionIndex;
 
   return (
@@ -71,7 +100,9 @@ const OnBoardingPage = () => {
             disableNext={
               curStep < stepQuestions.length - 1 && !currentQuestionData
             }
-            isLast={isLastLicenseQuestion || curStep === stepQuestions.length - 1}
+            isLast={
+              isLastLicenseQuestion || curStep === stepQuestions.length - 1
+            }
             onSubmit={handleSubmit}
           />
         </div>

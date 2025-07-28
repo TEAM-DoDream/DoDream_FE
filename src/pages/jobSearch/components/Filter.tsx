@@ -9,6 +9,7 @@ import {
   ParsedRegionData,
 } from '@utils/data/job/filterOptions.ts';
 import { useFilterStore } from '@store/filterStore';
+import { ReactTagManager } from 'react-gtm-ts';
 
 type Tag = { label: string; type: 'job' | 'location' };
 
@@ -42,6 +43,16 @@ const Filter = () => {
     return t;
   }, [job, location]);
 
+  const handleFilterEvent = (filterType: 'job_id' | 'region', value: string) => {
+    ReactTagManager.action({
+      event: 'filter_used_job',
+      category: '채용정보',
+      filter_type: filterType,
+      filter_value: value,
+      clickText: '필터 선택',
+    });
+  };
+
   const handleCitySelect = (city: string) => {
     setTempCity(city);
     if (city === selectedCity) {
@@ -53,8 +64,11 @@ const Filter = () => {
   };
 
   const handleDistrictSelect = (dist: string) => {
-    setSelection('location', `${tempCity} ${dist}`);
+    const fullLocation = `${tempCity} ${dist}`;
+    setSelection('location', fullLocation);
     setLocStep('city');
+   
+    handleFilterEvent('region', fullLocation);
   };
 
   const handleResetAll = () => {
@@ -72,7 +86,11 @@ const Filter = () => {
             placeholder="직업종류 선택"
             options={jobOptions}
             value={job}
-            onSelect={(v) => setSelection('job', v)}
+            onSelect={(v) => {
+              setSelection('job', v);
+             
+              handleFilterEvent('job_id', v);
+            }}
           />
         </div>
 

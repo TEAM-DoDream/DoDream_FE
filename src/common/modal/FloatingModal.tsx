@@ -6,6 +6,7 @@ import TwoArrow from '@assets/icons/stick_arrow.svg?react';
 import CalendarIcon from '@assets/icons/floating_calendar.svg?react';
 import Cursor from '@assets/icons/cursor.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { ReactTagManager } from 'react-gtm-ts';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -119,7 +120,15 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
                     ? 'bg-purple-150 text-purple-500 hover:bg-purple-200'
                     : 'cursor-not-allowed bg-purple-150 text-white'
                 }`}
-                onClick={handleSubmit}
+                onClick={() => {
+                  handleSubmit();
+                  ReactTagManager.action({
+                    event: 'floating_btn_click',
+                    source_page: '1.1',
+                    trigger_method: 'floating',
+                    click_text: '추가하기',
+                  });
+                }}
                 disabled={!isButtonActive}
               >
                 추가하기

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useAcademyFilterStore } from '@store/academyFilterStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useScrapTrainingMutation } from '@hook/scrap/training/useScrapTrainingMutation';
+import { ReactTagManager } from 'react-gtm-ts';
 
 interface CardDetailProps {
   item: AcademyItem;
@@ -147,6 +148,15 @@ const CardDetail = ({
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center rounded-xl bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600"
+            onClick={() => {
+              localStorage.setItem('external_link_open_ts', String(Date.now()));
+              ReactTagManager.action({
+                event: 'external_link_open',
+                category: '교육상세',
+                link_url: item.titleLink,
+                clickText: '고용24에서 보기',
+              });
+            }}
           >
             고용24에서 보기
           </a>
