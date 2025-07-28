@@ -9,8 +9,11 @@ interface ModalProps {
 const Modal = ({ onClose, jobId }: ModalProps) => {
   const { mutate: saveJob } = useJobSelectIdMutation();
   const handleSave = () => {
-    saveJob(jobId);
-    onClose();
+    saveJob(jobId, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#121212]/[0.5]">
