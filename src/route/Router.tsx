@@ -38,7 +38,6 @@ function PageViewTracker() {
   const { pathname, search } = useLocation();
   useEffect(() => {
     ReactGA.send({ hitType: 'pageview', page: pathname + search });
-    console.log(pathname + search);
   }, [pathname, search]);
   return null;
 }
