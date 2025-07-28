@@ -32,24 +32,26 @@ const JobSelect = () => {
         {data?.map((job, index) => (
           <div
             key={index}
-            className="flex w-full cursor-pointer flex-col items-start rounded-[18px] border border-gray-200 pb-5 hover:shadow-shadow2"
+            className="flex h-full w-full cursor-pointer flex-col items-start rounded-[18px] border border-gray-200 hover:shadow-shadow2"
           >
             <img
               src={job.imageUrl}
               alt={`${job.jobId}`}
               className="h-[180px] w-full rounded-t-[18px] object-cover"
             />
-            <div className="flex flex-col px-4">
-              <div className="mt-3 text-gray-900 font-T05-SB">
-                {job.jobName}
-              </div>
-              <div className="mt-[10px] text-gray-500 font-C01-R">
-                {job.jobDescription}
+            <div className="flex h-full w-full flex-col justify-between px-4 pb-5 pt-4">
+              <div>
+                <div className="text-gray-900 font-T05-SB">{job.jobName}</div>
+                <div className="mt-[10px] text-gray-500 font-C01-R">
+                  {job.jobDescription}
+                </div>
               </div>
 
-              <button className="font-B03-R mt-5 flex w-[49px] self-end text-nowrap rounded-[6px] border border-purple-500 bg-white px-3 py-[6px] text-purple-500 hover:bg-purple-50">
-                담기
-              </button>
+              <div className="mt-5 flex w-full justify-end">
+                <button className="font-B03-R text-nowrap rounded-[6px] border border-purple-500 bg-white px-3 py-[6px] text-purple-500 hover:bg-purple-50">
+                  담기
+                </button>
+              </div>
             </div>
           </div>
         ))}
