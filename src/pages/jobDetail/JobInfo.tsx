@@ -7,12 +7,12 @@ import LoadingSpinner from '@common/LoadingSpinner';
 import CostIcon from '@assets/icons/cost.svg?react';
 import CertificationIcon from '@assets/icons/certification.svg?react';
 import CalendarIcon from '@assets/icons/calendar.svg?react';
-import Button from '@common/Button';
+// import Button from '@common/Button';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
 import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
-import { useAddJobMutation } from '@hook/useAddJobMutation';
+// import { useAddJobMutation } from '@hook/useAddJobMutation';
 
 const JobInfo = () => {
   const navigate = useNavigate();
@@ -23,21 +23,21 @@ const JobInfo = () => {
     error,
   } = useJobDetailQuery(Number(jobId));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const addJobMutation = useAddJobMutation();
+  // const addJobMutation = useAddJobMutation();
 
   const isLoggedIn = !!localStorage.getItem('accessToken');
 
-  const handleAddJob = () => {
-    if (!jobId) return;
-    addJobMutation.mutate(Number(jobId), {
-      onSuccess: () => {
-        setIsModalOpen(true);
-      },
-      onError: () => {
-        alert('이미 담은 직업입니다.');
-      },
-    });
-  };
+  // const handleAddJob = () => {
+  //   if (!jobId) return;
+  //   addJobMutation.mutate(Number(jobId), {
+  //     onSuccess: () => {
+  //       setIsModalOpen(true);
+  //     },
+  //     onError: () => {
+  //       alert('이미 담은 직업입니다.');
+  //     },
+  //   });
+  // };
 
   if (isLoading)
     return (
@@ -118,7 +118,7 @@ const JobInfo = () => {
             relationship={jobDetail?.strong.relationship || ''}
           />
 
-          <div className="mt-[30px]">
+          {/* <div className="mt-[30px]">
             <Button
               text={
                 isLoggedIn
@@ -131,7 +131,7 @@ const JobInfo = () => {
               onClick={handleAddJob}
               disabled={!isLoggedIn}
             />
-          </div>
+          </div> */}
         </div>
 
         <ProfileCard />
