@@ -8,7 +8,7 @@ import { useSubmitOnboardAnswers } from '@hook/useOnboardMutation';
 import LoadingSpinner from '@common/LoadingSpinner';
 import { ReactTagManager } from 'react-gtm-ts';
 
-const OnBoardingPage  = () => {
+const OnBoardingPage = () => {
   const {
     curStep,
     curQuestionIndex,
@@ -37,6 +37,7 @@ const OnBoardingPage  = () => {
       ReactTagManager.action({
         event: 'onboarding_exit',
         category: '온보딩',
+        source_page: `2.${stepRef.current + 1}.${questionRef.current + 1}`,
         step: stepRef.current + 1,
         question: questionRef.current + 1,
       });
@@ -56,7 +57,9 @@ const OnBoardingPage  = () => {
 
   const isLastLicenseQuestion =
     currentQuestionData?.question === '자격증이 필요한 일도 괜찮으신가요?';
-  const displayStep = isLastLicenseQuestion ? stepQuestions.length - 1 : curStep;
+  const displayStep = isLastLicenseQuestion
+    ? stepQuestions.length - 1
+    : curStep;
   const displayQuestionIndex = isLastLicenseQuestion
     ? (stepQuestions[stepQuestions.length - 1].questions?.length || 1) - 1
     : curQuestionIndex;
