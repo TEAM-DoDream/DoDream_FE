@@ -29,9 +29,9 @@ const JobSelect = () => {
       </div>
 
       <div className="mt-11 grid w-full grid-cols-5 gap-x-5 gap-y-5">
-        {data?.map((job, index) => (
+        {data?.map((job) => (
           <div
-            key={index}
+            key={job.jobId}
             className="flex h-full w-full cursor-pointer flex-col items-start rounded-[18px] border border-gray-200 hover:shadow-shadow2"
           >
             <img
