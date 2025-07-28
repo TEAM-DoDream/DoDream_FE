@@ -6,7 +6,14 @@ import { Outlet } from 'react-router-dom';
 const ShowLayout = () => {
   const location = useLocation();
 
-  const excludedRoutes = ['/jobselect'];
+  const excludedRoutes = [
+    '/jobselect',
+    '/onboard',
+    '/jobrecommend',
+    '/mytodo/list',
+    '/mytodo/scrap',
+    '/mypage',
+  ];
 
   const shouldShowFloatingButton = !excludedRoutes.includes(location.pathname);
 
