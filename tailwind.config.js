@@ -141,6 +141,11 @@ export default {
           fontSize: '14px',
           lineHeight: 1.3,
         },
+        '.font-B03-R': {
+          '@apply font-default font-normal': {},
+          fontSize: '14px',
+          lineHeight: 1.3,
+        },
         //caption
         '.font-C01-M': {
           '@apply font-default font-medium': {},
