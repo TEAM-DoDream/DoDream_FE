@@ -2,10 +2,11 @@ import { useState } from 'react';
 import Button from '@common/Button';
 import { useJobSelect } from '@hook/jobselect/useJobSelect';
 import Modal from '@common/modal/Modal.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const JobSelect = () => {
   const { data } = useJobSelect();
-
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [selectedJob, setSelectedJob] = useState<{
@@ -105,6 +106,9 @@ const JobSelect = () => {
           color="primary"
           type="button"
           className="h-[71px] w-[196px] items-center justify-center font-T04-B"
+          onClick={() => {
+            navigate('/onboard');
+          }}
         />
       </div>
     </div>
