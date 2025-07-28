@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import PasswordChangeModal from '@common/modal/PasswordChangeModal';
-import LikeJobModal from '@common/modal/LikeJobModal';
 import Quit from '@common/modal/Quit';
 import useLogout from '@hook/useLogout';
 import { useGetInfo } from '@hook/mypage/useMypageQuery';
 import Nickname from './components/Nickname';
 import UpdateRegion from './components/UpdateRegion';
 import ProfileImageUploader from './components/ProfileImageUploader';
+import { useNavigate } from 'react-router-dom';
 
 const Mypage = () => {
   const [passwordModal, setIsPasswordModal] = useState(false);
-  const [likeJob, setIsLikeJob] = useState(false);
+
   const [quit, setIsQuit] = useState(false);
   const logout = useLogout();
+  const navigate = useNavigate();
 
   const { data: InfoData } = useGetInfo();
 
@@ -68,25 +69,24 @@ const Mypage = () => {
             <div className="flex items-center gap-5">
               <span className="text-gray-900 font-B01-B">담은 직업</span>
               <div className="flex flex-row gap-4">
-                {InfoData?.jobs?.slice(0, 5).map((job) => (
+                {InfoData?.job && (
                   <span
-                    key={job.jobId}
+                    key={InfoData.job.jobId}
                     className="rounded-full border border-purple-500 bg-purple-100 px-3 py-2 text-purple-500 font-B03-M"
                   >
-                    {job.jobName}
+                    {InfoData.job.jobName}
                   </span>
-                ))}
+                )}
               </div>
             </div>
 
             <button
               className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
-              onClick={() => setIsLikeJob(true)}
+              onClick={() => navigate('/jobselect')}
             >
               변경
             </button>
           </div>
-          {likeJob && <LikeJobModal onClose={() => setIsLikeJob(false)} />}
         </div>
 
         <div className="mt-[60px] flex gap-[26px]">

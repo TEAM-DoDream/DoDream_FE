@@ -8,12 +8,10 @@ export interface GetInfoProps {
   loginId: string;
   birthDate: string;
   regionName: string;
-  jobs: [
-    {
-      jobId: number;
-      jobName: string;
-    },
-  ];
+  job: {
+    jobId: number;
+    jobName: string;
+  };
 }
 const Mypage = async () => {
   try {

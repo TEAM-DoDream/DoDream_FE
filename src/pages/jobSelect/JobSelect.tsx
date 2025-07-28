@@ -1,8 +1,34 @@
+import { useEffect, useState } from 'react';
 import Button from '@common/Button';
 import { useJobSelect } from '@hook/jobselect/useJobSelect';
+import Modal from '@common/modal/Modal.tsx';
+import { useNavigate } from 'react-router-dom';
+import { useGetInfo } from '@hook/mypage/useMypageQuery.ts';
 
 const JobSelect = () => {
   const { data } = useJobSelect();
+  const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const { data: InfoData } = useGetInfo();
+  const [selectedJob, setSelectedJob] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (InfoData?.job) {
+      setSelectedJob({
+        id: InfoData.job.jobId,
+        name: InfoData.job.jobName,
+      });
+    }
+  }, [InfoData]);
+
+  const handlePick = (jobId: number, jobName: string) => {
+    setSelectedJob((prev) =>
+      prev?.id === jobId ? null : { id: jobId, name: jobName }
+    );
+  };
 
   return (
     <div className="flex flex-col items-start justify-center px-[120px] pb-[92px] pt-[90px]">
@@ -16,45 +42,72 @@ const JobSelect = () => {
       <div className="mt-[60px] flex flex-col">
         <div className="text-gray-600 font-B01-B">담은 직업</div>
         <div className="mt-1 flex flex-row items-center gap-[30px]">
-          <div className="text-gray-300 font-B01-M">
-            아직 담은 직업이 없어요
-          </div>
+          {selectedJob ? (
+            <span className="inline-block rounded-full border border-purple-500 bg-purple-50 px-4 py-1 text-purple-500 font-B01-M">
+              {selectedJob.name}
+            </span>
+          ) : (
+            <div className="text-gray-300 font-B01-M">
+              아직 담은 직업이 없어요
+            </div>
+          )}
           <Button
-            text="저장"
+            text={'저장'}
             color="primary"
             type="button"
             className="h-[42px] w-[85px] font-B03-SB"
+            disabled={!selectedJob}
+            onClick={() => {
+              setOpenModal(true);
+            }}
           />
         </div>
       </div>
+      {openModal && selectedJob && (
+        <Modal onClose={() => setOpenModal(false)} jobId={selectedJob.id} />
+      )}
 
       <div className="mt-11 grid w-full grid-cols-5 gap-x-5 gap-y-5">
-        {data?.map((job) => (
-          <div
-            key={job.jobId}
-            className="flex h-full w-full cursor-pointer flex-col items-start rounded-[18px] border border-gray-200 hover:shadow-shadow2"
-          >
-            <img
-              src={job.imageUrl}
-              alt={`${job.jobId}`}
-              className="h-[180px] w-full rounded-t-[18px] object-cover"
-            />
-            <div className="flex h-full w-full flex-col justify-between px-4 pb-5 pt-4">
-              <div>
-                <div className="text-gray-900 font-T05-SB">{job.jobName}</div>
-                <div className="mt-[10px] text-gray-500 font-C01-R">
-                  {job.jobDescription}
+        {data?.map((job) => {
+          const isActive = selectedJob?.id === job.jobId;
+          return (
+            <div
+              key={job.jobId}
+              className={`flex h-full w-full cursor-pointer flex-col items-start rounded-[18px] border ${
+                isActive
+                  ? 'border-purple-500 shadow-shadow2'
+                  : 'border-gray-200'
+              }`}
+            >
+              <img
+                src={job.imageUrl}
+                alt={`${job.jobId}`}
+                className="h-[180px] w-full rounded-t-[18px] object-cover"
+              />
+              <div className="flex h-full w-full flex-col justify-between px-4 pb-5 pt-4">
+                <div>
+                  <div className="text-gray-900 font-T05-SB">{job.jobName}</div>
+                  <div className="mt-[10px] text-gray-500 font-C01-R">
+                    {job.jobDescription}
+                  </div>
+                </div>
+
+                <div className="mt-5 flex w-full justify-end">
+                  <button
+                    onClick={() => handlePick(job.jobId, job.jobName)}
+                    className={`whitespace-nowrap rounded-[6px] border px-3 py-[6px] font-B03-R ${
+                      isActive
+                        ? 'border-purple-500 bg-purple-500 text-white'
+                        : 'border-purple-500 bg-white text-purple-500 hover:bg-purple-50'
+                    }`}
+                  >
+                    {isActive ? '담기 취소' : '담기'}
+                  </button>
                 </div>
               </div>
-
-              <div className="mt-5 flex w-full justify-end">
-                <button className="font-B03-R text-nowrap rounded-[6px] border border-purple-500 bg-white px-3 py-[6px] text-purple-500 hover:bg-purple-50">
-                  담기
-                </button>
-              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-[60px] flex w-full justify-center">
@@ -63,6 +116,9 @@ const JobSelect = () => {
           color="primary"
           type="button"
           className="h-[71px] w-[196px] items-center justify-center font-T04-B"
+          onClick={() => {
+            navigate('/onboard');
+          }}
         />
       </div>
     </div>

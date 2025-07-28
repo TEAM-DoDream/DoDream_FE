@@ -14,7 +14,7 @@ const NavItems = [
     label: '직업 정보',
     path: '/jobfound',
     match: (pathname: string) =>
-      (pathname.startsWith('/job') && pathname !== '/jobsearch') ||
+      (pathname.startsWith('/jobfound') && pathname !== '/jobsearch') ||
       pathname.startsWith('/others'),
   },
   //배움터 찾기
