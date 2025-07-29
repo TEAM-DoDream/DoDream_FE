@@ -47,7 +47,7 @@ const UpdateRegion = ({ regionName }: RegionCardProps) => {
         </div>
 
         <button
-          className="flex items-center rounded-[10px] bg-gray-900 px-[10px] py-2 text-white font-B03-M"
+          className="flex items-center rounded-[10px] bg-purple-500 px-[10px] py-2 text-white font-B03-M"
           onClick={() => setRegionModal(true)}
         >
           변경
