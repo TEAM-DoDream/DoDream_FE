@@ -28,6 +28,7 @@ const JobSelect = () => {
     setSelectedJob((prev) =>
       prev?.id === jobId ? null : { id: jobId, name: jobName }
     );
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
