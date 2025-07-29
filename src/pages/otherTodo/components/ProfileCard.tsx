@@ -75,6 +75,7 @@ const ProfileCard = ({
                 : ['등록된 할 일이 없습니다.']
             }
             className="flex flex-col gap-3"
+            showAddButton={false}
           />
         )}
       </div>
