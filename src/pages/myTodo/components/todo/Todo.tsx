@@ -148,7 +148,7 @@ const Todo = () => {
   if (!jobsData || !Array.isArray(jobsData) || jobsData.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <EmptyTodo onNavigate={() => navigate('/jobsearch')} />
+        <EmptyTodo onNavigate={() => navigate('/jobselect')} />
       </div>
     );
   }
@@ -226,8 +226,9 @@ const Todo = () => {
             ReactTagManager.action({
               event: 'my_todo_add',
               category: '할 일 목록',
-              clickText: '[나의 할일] 페이지> 할 일 작성 [추가하기] 버튼 클릭 시 ',
-            }); 
+              clickText:
+                '[나의 할일] 페이지> 할 일 작성 [추가하기] 버튼 클릭 시 ',
+            });
           }}
         >
           <Plus className="h-6 w-6" />
