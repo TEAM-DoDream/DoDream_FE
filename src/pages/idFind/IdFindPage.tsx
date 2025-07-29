@@ -10,30 +10,33 @@ const IdFindPage = () => {
   const navigate = useNavigate();
   const { mutate: verify } = useVerifyMutation();
 
-  // useState email, setEmail 삭제
-
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<IdFindFormData>({
     resolver: zodResolver(idFindSchema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const handleEmail = () => {
-    verify({
-      email: watch('email'), 
-      type: 'FIND_ID',
-    }, {
-      onSuccess: () => {
-        navigate('/verification', { state: { email: watch('email'), type: 'FIND_ID' } });
+    verify(
+      {
+        email: watch('email'),
+        type: 'FIND_ID',
       },
-      onError: (error) => {
-        alert(error);
-      },
-    });
+      {
+        onSuccess: () => {
+          navigate('/verification', {
+            state: { email: watch('email'), type: 'FIND_ID' },
+          });
+        },
+        onError: (error) => {
+          alert(error);
+        },
+      }
+    );
   };
 
   const onSubmit = () => {
@@ -58,7 +61,7 @@ const IdFindPage = () => {
             value={watch('email')}
           />
           {errors.email && (
-            <p className="mb-4 text-red-500 text-sm">{errors.email.message}</p>
+            <p className="mb-4 text-sm text-red-500">{errors.email.message}</p>
           )}
           <div className="mt-8 h-[60px] w-full font-T05-SB">
             <Button

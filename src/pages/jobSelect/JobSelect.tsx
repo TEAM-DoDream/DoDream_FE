@@ -1,33 +1,54 @@
-import { useEffect, useState } from 'react';
-import Button from '@common/Button';
-import { useJobSelect } from '@hook/jobselect/useJobSelect';
-import Modal from '@common/modal/Modal.tsx';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import Button from '@common/Button';
+import Modal from '@common/modal/Modal.tsx';
+import ToastModal from '@common/modal/ToastModal.tsx';
+import { useJobSelect } from '@hook/jobselect/useJobSelect';
 import { useGetInfo } from '@hook/mypage/useMypageQuery.ts';
+import { useJobSelectIdMutation } from '@hook/jobselect/useJobSelectIdMutation.ts';
 
 const JobSelect = () => {
-  const { data } = useJobSelect();
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const { data: InfoData } = useGetInfo();
+  const queryClient = useQueryClient();
+  const { data: jobList } = useJobSelect();
+  const { data: info } = useGetInfo();
+  const saveJobMutation = useJobSelectIdMutation();
+  const initialJobIdRef = useRef<number | null>(info?.job?.jobId ?? null);
   const [selectedJob, setSelectedJob] = useState<{
     id: number;
     name: string;
-  } | null>(null);
+  } | null>(info?.job ? { id: info.job.jobId, name: info.job.jobName } : null);
+  const [openModal, setOpenModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    if (InfoData?.job) {
-      setSelectedJob({
-        id: InfoData.job.jobId,
-        name: InfoData.job.jobName,
-      });
+    if (info?.job) {
+      initialJobIdRef.current = info.job.jobId;
+      setSelectedJob({ id: info.job.jobId, name: info.job.jobName });
+    } else {
+      initialJobIdRef.current = null;
+      setSelectedJob(null);
     }
-  }, [InfoData]);
+  }, [info]);
 
   const handlePick = (jobId: number, jobName: string) => {
-    setSelectedJob((prev) =>
-      prev?.id === jobId ? null : { id: jobId, name: jobName }
-    );
+    if (initialJobIdRef.current === null) {
+      saveJobMutation.mutate(jobId, {
+        onSuccess: () => {
+          initialJobIdRef.current = jobId;
+          setSelectedJob({ id: jobId, name: jobName });
+          queryClient.invalidateQueries({ queryKey: ['mypageInfo'] });
+          navigate('/', { state: { toast: '직업이 추가되었습니다' } });
+          setTimeout(() => setShowToast(false), 2000);
+        },
+      });
+    } else {
+      setSelectedJob((prev) =>
+        prev?.id === jobId ? null : { id: jobId, name: jobName }
+      );
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -52,23 +73,24 @@ const JobSelect = () => {
             </div>
           )}
           <Button
-            text={'저장'}
+            text="저장"
             color="primary"
             type="button"
             className="h-[42px] w-[85px] font-B03-SB"
-            disabled={!selectedJob}
-            onClick={() => {
-              setOpenModal(true);
-            }}
+            disabled={
+              !selectedJob || selectedJob.id === initialJobIdRef.current
+            }
+            onClick={() => setOpenModal(true)}
           />
         </div>
       </div>
+
       {openModal && selectedJob && (
         <Modal onClose={() => setOpenModal(false)} jobId={selectedJob.id} />
       )}
 
       <div className="mt-11 grid w-full grid-cols-5 gap-x-5 gap-y-5">
-        {data?.map((job) => {
+        {jobList?.map((job) => {
           const isActive = selectedJob?.id === job.jobId;
           return (
             <div
@@ -81,7 +103,7 @@ const JobSelect = () => {
             >
               <img
                 src={job.imageUrl}
-                alt={`${job.jobId}`}
+                alt={job.jobName}
                 className="h-[180px] w-full rounded-t-[18px] object-cover"
               />
               <div className="flex h-full w-full flex-col justify-between px-4 pb-5 pt-4">
@@ -91,7 +113,6 @@ const JobSelect = () => {
                     {job.jobDescription}
                   </div>
                 </div>
-
                 <div className="mt-5 flex w-full justify-end">
                   <button
                     onClick={() => handlePick(job.jobId, job.jobName)}
@@ -116,11 +137,15 @@ const JobSelect = () => {
           color="primary"
           type="button"
           className="h-[71px] w-[196px] items-center justify-center font-T04-B"
-          onClick={() => {
-            navigate('/onboard');
-          }}
+          onClick={() => navigate('/onboard')}
         />
       </div>
+
+      {showToast && (
+        <div className="fixed left-1/2 top-5 z-50 -translate-x-1/2 transform">
+          <ToastModal text={'직업이 추가되었습니다'} />
+        </div>
+      )}
     </div>
   );
 };
