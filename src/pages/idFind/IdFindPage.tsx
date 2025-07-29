@@ -33,8 +33,6 @@ const IdFindPage = () => {
           });
         },
         onError: (error) => {
-          console.log('rererere');
-          console.log(error);
           alert(error);
         },
       }
