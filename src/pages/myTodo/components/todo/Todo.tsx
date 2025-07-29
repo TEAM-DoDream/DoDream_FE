@@ -2,38 +2,18 @@ import { useEffect, useState } from 'react';
 import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
 import Divider from '@common/Divider';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import EmptyTodo from './EmptyTodo';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
-import { useQueryClient } from '@tanstack/react-query';
 import { ReactTagManager } from 'react-gtm-ts';
 
 const Todo = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const queryClient = useQueryClient();
-
-  const [refreshCounter, _setRefreshCounter] = useState(0);
 
   const { data: todoData, isLoading: isTodoLoading } = useMdTodoQuery();
-  const [selectedJobId, _setSelectedJobId] = useState<number | null>(null);
-
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    if (location.pathname === '/mytodo/list') {
-      if (selectedJobId) {
-        queryClient.refetchQueries({
-          queryKey: ['todoGroup', selectedJobId],
-          exact: true,
-        });
-      } else {
-        queryClient.refetchQueries({ queryKey: ['mdTodo'], exact: true });
-      }
-    }
-  }, [selectedJobId, queryClient, refreshCounter, location.pathname]);
 
   useEffect(() => {
     ReactTagManager.action({
@@ -52,14 +32,6 @@ const Todo = () => {
 
     setCheckedIds(newIds);
   };
-
-  // const handleAddTodo = () => {
-  //   if (selectedJobId) {
-  //     navigate(`/mytodo/add/${selectedJobId}`);
-  //   } else if (todoData?.todoGroupId) {
-  //     navigate(`/mytodo/add/${todoData.todoGroupId}`);
-  //   }
-  // };
 
   if (isTodoLoading && !todoData) {
     return (
@@ -87,10 +59,11 @@ const Todo = () => {
 
   return (
     <div className="mb-[95px] mt-10 flex flex-col px-[120px]">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="relative">
-          <div className="flex cursor-pointer items-center gap-2 text-gray-900 font-T02-B"></div>
-          <div className="absolute top-full z-10 mt-2 w-[366px] rounded-2xl border bg-white p-2 shadow"></div>
+          <div className="flex cursor-pointer items-center text-gray-900 font-T02-B">
+            {todoData?.jobName}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 text-gray-500 font-B03-M">
