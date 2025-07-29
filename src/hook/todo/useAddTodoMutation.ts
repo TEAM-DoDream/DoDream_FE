@@ -23,7 +23,7 @@ export const useAddTodoMutation = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['addTodo'] });
+      queryClient.invalidateQueries({ queryKey: ['mdTodo'] });
     },
   });
 };
