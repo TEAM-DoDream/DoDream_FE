@@ -71,10 +71,21 @@ const CheckList = ({
     if (!trimmedText) return;
 
     if (item.id) {
-      updateTodo({
-        todoId: item.id,
-        todoTitle: trimmedText,
-      });
+      updateTodo(
+        {
+          todoId: item.id,
+          todoTitle: trimmedText,
+        },
+        {
+          onSuccess: () => {
+            setEditIndex(null);
+            setEditText('');
+          },
+          onError: () => {
+            alert('할 일 수정에 실패했습니다.');
+          },
+        }
+      );
       setEditIndex(null);
       setEditText('');
       return;
