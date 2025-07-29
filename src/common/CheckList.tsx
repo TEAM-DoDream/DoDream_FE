@@ -273,7 +273,7 @@ const CheckList = ({
       )}
       {showAddButton && (
         <button
-          className="mt-[16px] flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
+          className="flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
           onClick={() => {
             const newItem = { text: '' };
             const newList = [...listItems, newItem];
