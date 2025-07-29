@@ -85,6 +85,7 @@ const DreamerCard = ({
                 : ['할 일이 없습니다.']
             }
             className="flex w-full flex-col gap-3"
+            showAddButton={false}
           />
         )}
       </div>

@@ -1,5 +1,6 @@
 import api from '@hook/api';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 interface VerifyProps {
   email: string;
@@ -15,8 +16,8 @@ const EmailVerify = async (payload: VerifyProps) => {
     );
     return response.data.data;
   } catch (error) {
-    console.error('이메일 전송 문자를 보내는데 실패했습니다.:', error);
-    throw error;
+    const axiosError = error as AxiosError<{ message?: string }>;
+    throw new Error(axiosError.response?.data?.message || '오류 발생');
   }
 };
 

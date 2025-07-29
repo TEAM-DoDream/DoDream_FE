@@ -33,14 +33,15 @@ export const useLoginMutation = () => {
             headers: { Authorization: `Bearer ${res.data.accessToken}` },
           });
           const todoData = TodoDataSchema.parse(todoResp.data);
-          if (todoData.todos.length === 0) {
+
+          if (!todoData.todos || todoData.todos.length === 0) {
             alert('직업을 선택해주세요!');
             navigate('/jobselect');
           }
           queryClient.setQueryData(['mdTodo'], todoData);
-        } catch (err) {
-          console.error('Todo 조회 중 에러:', err);
           navigate('/');
+        } catch (err) {
+          alert(err);
         }
       } else {
         alert('로그인에 실패했습니다. 다시 시도해주세요.');
