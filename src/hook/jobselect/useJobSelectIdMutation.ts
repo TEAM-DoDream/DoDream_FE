@@ -15,7 +15,6 @@ export const useJobSelectIdMutation = () => {
     onSuccess: (data) => {
       const { jobId } = data;
       queryClient.setQueryData<number>(['selectedJobId'], jobId);
-      alert('직업이 변경되었습니다!');
     },
 
     onError: (error: AxiosError) => {
