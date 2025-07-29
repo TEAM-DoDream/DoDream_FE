@@ -12,12 +12,7 @@ import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation.ts';
 import Plus from '@assets/icons/plus.svg?react';
 import { useUpdateTodoMutation } from '@hook/todo/useUpdateTodoMutation.ts';
 
-type ChecklistItem =
-  | string
-  | {
-      id?: number;
-      text: string;
-    };
+type ChecklistItem = string | { id?: number; text: string };
 
 interface CheckListProps {
   lists: ChecklistItem[];
@@ -41,7 +36,8 @@ const CheckList = ({
     typeof item === 'string' ? { text: item } : item
   );
 
-  const [listItems, setListItems] = useState(normalized);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editText, setEditText] = useState<string>('');
   const [showToast, setShowToast] = useState(false);
   const [lastDeleted, setLastDeleted] = useState<{
     item: { id?: number; text: string; hasMemo?: boolean };
@@ -49,11 +45,9 @@ const CheckList = ({
     checked: boolean;
   } | null>(null);
 
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [editText, setEditText] = useState<string>('');
-
   const deleteTodoMutation = useDeleteTodoMutation();
   const { mutate } = useAddTodoMutation();
+
   const toggleCheck = (id?: number) => {
     if (id === undefined) return;
     let next: number[];
@@ -72,7 +66,7 @@ const CheckList = ({
 
   const handleSaveEdit = () => {
     if (editIndex === null) return;
-    const item = listItems[editIndex];
+    const item = normalized[editIndex];
     const trimmedText = editText.trim();
     if (!trimmedText) return;
 
@@ -81,10 +75,6 @@ const CheckList = ({
         todoId: item.id,
         todoTitle: trimmedText,
       });
-
-      const updatedItems = [...listItems];
-      updatedItems[editIndex] = { ...item, text: trimmedText };
-      setListItems(updatedItems);
       setEditIndex(null);
       setEditText('');
       return;
@@ -93,14 +83,7 @@ const CheckList = ({
     mutate(
       { todoTitle: trimmedText },
       {
-        onSuccess: (res) => {
-          const newId = res.data.todoId;
-          const updatedItems = [...listItems];
-          updatedItems[editIndex] = {
-            id: newId,
-            text: trimmedText,
-          };
-          setListItems(updatedItems);
+        onSuccess: () => {
           setEditIndex(null);
           setEditText('');
         },
@@ -112,17 +95,13 @@ const CheckList = ({
   };
 
   const handleDelete = (index: number) => {
-    const deleted = listItems[index];
+    const deleted = normalized[index];
     const deletedId = deleted.id;
     const wasChecked = deletedId ? checkedIds.includes(deletedId) : false;
 
     if (deletedId) {
       deleteTodoMutation.mutate({ todoId: deletedId });
     }
-
-    const newItems = [...listItems];
-    newItems.splice(index, 1);
-    setListItems(newItems);
 
     if (deletedId) {
       onChange?.(checkedIds.filter((x) => x !== deletedId));
@@ -138,11 +117,7 @@ const CheckList = ({
 
   const handleUndo = () => {
     if (!lastDeleted) return;
-    const { item, index, checked } = lastDeleted;
-
-    const newItems = [...listItems];
-    newItems.splice(index, 0, item);
-    setListItems(newItems);
+    const { item, checked } = lastDeleted;
 
     if (item.id !== undefined) {
       let next = [...checkedIds];
@@ -156,7 +131,7 @@ const CheckList = ({
   };
 
   const handleEdit = (index: number) => {
-    const item = listItems[index];
+    const item = normalized[index];
     setEditIndex(index);
     setEditText(item.text);
   };
@@ -168,7 +143,7 @@ const CheckList = ({
 
   return (
     <div className={className}>
-      {listItems.map(({ text, id }, idx) => {
+      {normalized.map(({ text, id }, idx) => {
         const done = id !== undefined && checkedIds.includes(id);
         const isEditing = editIndex === idx;
 
@@ -271,14 +246,12 @@ const CheckList = ({
           />
         </div>
       )}
+
       {showAddButton && (
         <button
           className="flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
           onClick={() => {
-            const newItem = { text: '' };
-            const newList = [...listItems, newItem];
-            setListItems(newList);
-            setEditIndex(newList.length - 1);
+            setEditIndex(normalized.length);
             setEditText('');
             ReactTagManager.action({
               event: 'my_todo_add',

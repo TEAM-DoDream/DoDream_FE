@@ -11,9 +11,22 @@ import { ReactTagManager } from 'react-gtm-ts';
 const Todo = () => {
   const navigate = useNavigate();
 
-  const { data: todoData, isLoading: isTodoLoading } = useMdTodoQuery();
+  const {
+    data: todoData,
+    isLoading: isTodoLoading,
+    refetch,
+  } = useMdTodoQuery();
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (todoData?.todos) {
+      const completed = todoData.todos
+        .filter((t) => t.completed)
+        .map((t) => t.todoId);
+      setCheckedIds(completed);
+    }
+  }, [todoData]);
 
   useEffect(() => {
     ReactTagManager.action({
@@ -27,8 +40,22 @@ const Todo = () => {
     const added = newIds.filter((id) => !checkedIds.includes(id));
     const removed = checkedIds.filter((id) => !newIds.includes(id));
 
-    added.forEach((todoId) => completeTodo({ todoId, completed: true }));
-    removed.forEach((todoId) => completeTodo({ todoId, completed: false }));
+    Promise.all([
+      ...added.map(
+        (todoId) =>
+          new Promise((resolve) =>
+            completeTodo({ todoId, completed: true }, { onSuccess: resolve })
+          )
+      ),
+      ...removed.map(
+        (todoId) =>
+          new Promise((resolve) =>
+            completeTodo({ todoId, completed: false }, { onSuccess: resolve })
+          )
+      ),
+    ]).then(() => {
+      refetch();
+    });
 
     setCheckedIds(newIds);
   };
@@ -48,6 +75,7 @@ const Todo = () => {
       </div>
     );
   }
+
   const totalView = todoData?.totalView;
   const checklistItems = todoData?.todos.map((todo) => ({
     id: todo.todoId,

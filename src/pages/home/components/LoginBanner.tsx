@@ -8,8 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
 import CheckList from '@common/CheckList';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const LoginBanner = () => {
   const { data: jobList } = useBannerQuery();
@@ -18,30 +19,37 @@ const LoginBanner = () => {
   const setSelection = useFilterStore((s) => s.setSelection);
   const { data: todoData, isLoading } = useMdTodoQuery();
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
-
+  const queryClient = useQueryClient();
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
-  const todoItems = useMemo(() => {
-    return (
-      todoData?.todos
-        .filter((t) => !t.completed)
-        .slice(0, 4)
-        .map((t) => ({ id: t.todoId, text: t.title })) ?? []
-    );
-  }, [todoData]);
+  const todoItems =
+    todoData?.todos
+      .filter((t) => !t.completed)
+      .slice(0, 4)
+      .map((t) => ({ id: t.todoId, text: t.title })) ?? [];
 
   const handleCheckChange = (newIds: number[]) => {
-    const added = newIds.filter((id) => !checkedIds.includes(id));
-    const removed = checkedIds.filter((id) => !newIds.includes(id));
-    
-    added.forEach((todoId) => 
-      completeTodo({ todoId, completed: true })
-    );
-    
-    removed.forEach((todoId) => 
-      completeTodo({ todoId, completed: false })
-    );
-    
+    const updated = [
+      ...newIds
+        .filter((id) => !checkedIds.includes(id))
+        .map((id) => ({ id, completed: true })),
+      ...checkedIds
+        .filter((id) => !newIds.includes(id))
+        .map((id) => ({ id, completed: false })),
+    ];
+
+    Promise.all(
+      updated.map(
+        ({ id, completed }) =>
+          new Promise((resolve) =>
+            completeTodo({ todoId: id, completed }, { onSuccess: resolve })
+          )
+      )
+    ).then(() => {
+      queryClient.invalidateQueries({ queryKey: ['mdTodo'] });
+      setCheckedIds([]);
+    });
+
     setCheckedIds(newIds);
   };
 
