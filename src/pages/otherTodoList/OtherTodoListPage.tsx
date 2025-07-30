@@ -24,15 +24,23 @@ const OtherTodoListPage = () => {
   } = useEachTodosQuery(Number(todoGroupId));
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (isError) {
     <div>에러가 발생했습니다.</div>;
   }
 
-  if (!eachTodos) return <div>데이터가 없습니다.</div>;
-
+  if (!eachTodos)
+    return (
+      <div className="flex h-full items-center justify-center text-gray-900">
+        데이터가 없습니다.
+      </div>
+    );
 
   return (
     <>
