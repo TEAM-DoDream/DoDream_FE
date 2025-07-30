@@ -7,6 +7,7 @@ import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import EmptyTodo from './EmptyTodo';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
 import { ReactTagManager } from 'react-gtm-ts';
+import LoadingSpinner from '@common/LoadingSpinner.tsx';
 
 const Todo = () => {
   const navigate = useNavigate();
@@ -62,13 +63,13 @@ const Todo = () => {
 
   if (isTodoLoading && !todoData) {
     return (
-      <div className="py-4 text-gray-500 font-B01-M">
-        직업 목록을 불러오는 중...
+      <div className="flex h-screen items-center justify-center">
+        <LoadingSpinner />
       </div>
     );
   }
 
-  if (todoData === null) {
+  if (todoData?.todos.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center">
         <EmptyTodo onNavigate={() => navigate('/jobselect')} />
