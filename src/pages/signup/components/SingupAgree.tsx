@@ -51,7 +51,7 @@ const SingupAgree = ({ onNext, setEmail }: SignupProps) => {
       setEmail(data.email);
       onNext();
     } catch (err) {
-      alert('이메일 인증 요청에 실패했습니다. 다시 시도해주세요.');
+      alert('이미 가입된 이메일 주소입니다.');
     }
   };
   return (
