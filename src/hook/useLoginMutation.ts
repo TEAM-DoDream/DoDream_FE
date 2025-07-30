@@ -35,11 +35,11 @@ export const useLoginMutation = () => {
           const todoData = TodoDataSchema.parse(todoResp.data);
 
           if (!todoData.todos || todoData.todos.length === 0) {
-            alert('직업을 선택해주세요!');
             navigate('/jobselect');
+          } else {
+            queryClient.setQueryData(['mdTodo'], todoData);
+            navigate('/');
           }
-          queryClient.setQueryData(['mdTodo'], todoData);
-          navigate('/');
         } catch (err) {
           alert(err);
         }
