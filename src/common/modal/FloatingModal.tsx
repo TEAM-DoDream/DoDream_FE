@@ -1,12 +1,11 @@
 import { useState } from 'react';
-// import { useFloatingAddJob } from '@hook/floating/FloatingAddJob';
-import { useFloatingSubmitMutation } from '@hook/floating/FloatingButtonMutation';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import TwoArrow from '@assets/icons/stick_arrow.svg?react';
 import CalendarIcon from '@assets/icons/floating_calendar.svg?react';
 import Cursor from '@assets/icons/cursor.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { ReactTagManager } from 'react-gtm-ts';
+import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -15,12 +14,10 @@ interface FloatingModalProps {
 
 const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const [taskText, setTaskText] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const isLoggedIn = !!localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  // const { data: addjobs } = useFloatingAddJob();
-  const { mutate } = useFloatingSubmitMutation();
+  const { mutate } = useAddTodoMutation();
   const { data: hasJob, isLoading } = useMdTodoQuery();
 
   const hasNoJob =
@@ -32,24 +29,15 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
     !hasJob.todoGroupId;
 
   const handleSubmit = () => {
-    if (
-      !isLoggedIn ||
-      !taskText.trim() ||
-      selectedCategory === null ||
-      hasNoJob
-    )
-      return;
+    if (!isLoggedIn || !taskText.trim() || hasNoJob) return;
 
     mutate(
       {
-        todoGroupId: selectedCategory,
         todoTitle: taskText,
-        isPublic: true,
       },
       {
         onSuccess: () => {
           setTaskText('');
-          setSelectedCategory(null);
           onAddTask();
           onClose();
         },
