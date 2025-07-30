@@ -15,7 +15,7 @@ const Banner = ({ goToOnboard = false }: BannerProps) => {
 
   const handleClick = () => {
     if (goToOnboard) {
-      navigate('/onboard');
+      navigate('/jobselect');
     } else {
       navigate('/login');
     }
@@ -30,7 +30,7 @@ const Banner = ({ goToOnboard = false }: BannerProps) => {
           className="absolute right-0 flex cursor-pointer items-center rounded-full bg-white py-[6px] pl-4 pr-1"
           onClick={handleClick}
         >
-          <div className="text-gray-500 font-B02-SB">직업 추천받기</div>
+          <div className="text-gray-500 font-B02-SB">직업 담으러 가기</div>
           <MyDreamArrow />
         </div>
 
