@@ -44,6 +44,7 @@ const CheckList = ({
     index: number;
     checked: boolean;
   } | null>(null);
+  const [isAddingNew, setIsAddingNew] = useState(false);
 
   const deleteTodoMutation = useDeleteTodoMutation();
   const { mutate } = useAddTodoMutation();
@@ -65,11 +66,28 @@ const CheckList = ({
   };
 
   const handleSaveEdit = () => {
-    if (editIndex === null) return;
-    const item = normalized[editIndex];
+    if (editIndex === null && !isAddingNew) return;
     const trimmedText = editText.trim();
     if (!trimmedText) return;
 
+    if (isAddingNew) {
+      mutate(
+        { todoTitle: trimmedText },
+        {
+          onSuccess: () => {
+            setIsAddingNew(false);
+            setEditIndex(null);
+            setEditText('');
+          },
+          onError: () => {
+            alert('할 일 추가에 실패했습니다.');
+          },
+        }
+      );
+      return;
+    }
+
+    const item = normalized[editIndex!];
     if (item.id) {
       updateTodo(
         {
@@ -150,17 +168,25 @@ const CheckList = ({
   const handleCancelEdit = () => {
     setEditIndex(null);
     setEditText('');
+    setIsAddingNew(false);
   };
+
+  const renderItems = [...normalized];
+  if (isAddingNew) {
+    renderItems.push({ text: '', id: undefined });
+  }
 
   return (
     <div className={className}>
-      {normalized.map(({ text, id }, idx) => {
+      {renderItems.map((item, idx) => {
+        const { text, id } = item;
         const done = id !== undefined && checkedIds.includes(id);
-        const isEditing = editIndex === idx;
+        const isEditing =
+          editIndex === idx || (isAddingNew && idx === renderItems.length - 1);
 
         return (
           <div
-            key={id ?? idx}
+            key={id ?? `new-${idx}`}
             className="group flex w-full max-w-[940px] items-center justify-between gap-2 rounded-lg px-2 py-1 hover:bg-gray-50"
           >
             <div className="flex w-full items-center gap-2">
@@ -258,11 +284,11 @@ const CheckList = ({
         </div>
       )}
 
-      {showAddButton && (
+      {showAddButton && !isAddingNew && (
         <button
           className="flex w-full items-center justify-center gap-[6px] rounded-2xl bg-purple-500 py-[14px] text-white font-T05-SB hover:bg-purple-600"
           onClick={() => {
-            setEditIndex(normalized.length);
+            setIsAddingNew(true);
             setEditText('');
             ReactTagManager.action({
               event: 'my_todo_add',
