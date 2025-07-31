@@ -69,7 +69,7 @@ const Todo = () => {
     );
   }
 
-  if (todoData?.todos.length === 0) {
+  if (todoData?.jobName === null) {
     return (
       <div className="flex h-screen items-center justify-center">
         <EmptyTodo onNavigate={() => navigate('/jobselect')} />
