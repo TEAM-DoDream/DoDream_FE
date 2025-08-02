@@ -293,6 +293,7 @@ const CheckList = ({
             ReactTagManager.action({
               event: 'my_todo_add',
               category: '할 일 목록',
+              trigger_method: 'inline',
               clickText:
                 '[나의 할일] 페이지> 할 일 작성 [추가하기] 버튼 클릭 시 ',
             });

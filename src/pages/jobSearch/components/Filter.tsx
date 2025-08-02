@@ -28,12 +28,10 @@ const Filter = () => {
   const selectedDistrict = location.split(' ')[1] || '';
 
   useEffect(() => {
-    const getRegionData = async () => {
+    (async () => {
       const data = await fetchRegions();
       setRegionData(data);
-    };
-    
-    getRegionData();
+    })();
   }, []);
 
   const tags = useMemo<Tag[]>(() => {
@@ -43,31 +41,33 @@ const Filter = () => {
     return t;
   }, [job, location]);
 
-  const handleFilterEvent = (filterType: 'job_id' | 'region', value: string) => {
+  const handleFilterEvent = (filterType: 'job_id' | 'region', v: string) => {
+    const currentJob = filterType === 'job_id' ? v : job || '';
+    const currentRegion = filterType === 'region' ? v : location || '';
+
     ReactTagManager.action({
       event: 'filter_used_job',
       category: '채용정보',
-      filter_type: filterType,
-      filter_value: value,
-      clickText: '필터 선택',
+      job_id: currentJob,
+      region: currentRegion,
+      method: filterType,
+      clickText:
+        filterType === 'job_id'
+          ? `직업종류 필터: ${currentJob}`
+          : `거주지 필터: ${currentRegion}`,
     });
   };
 
   const handleCitySelect = (city: string) => {
     setTempCity(city);
-    if (city === selectedCity) {
-      setLocStep('district');
-    } else {
-      setSelection('location', '');
-      setLocStep('district');
-    }
+    setLocStep('district');
   };
 
   const handleDistrictSelect = (dist: string) => {
     const fullLocation = `${tempCity} ${dist}`;
     setSelection('location', fullLocation);
     setLocStep('city');
-   
+
     handleFilterEvent('region', fullLocation);
   };
 
@@ -82,13 +82,12 @@ const Filter = () => {
       <div className="mt-2 flex flex-col gap-4 md:flex-row">
         <div className="w-[560px]">
           <DropDown
-            title={'직업종류'}
+            title="직업종류"
             placeholder="직업종류 선택"
             options={jobOptions}
             value={job}
             onSelect={(v) => {
               setSelection('job', v);
-             
               handleFilterEvent('job_id', v);
             }}
           />
@@ -99,17 +98,22 @@ const Filter = () => {
             title="거주지"
             placeholder="거주지 선택"
             options={
-              locStep === 'city' ? regionData.cityOptions : (regionData.districtMap[tempCity] ?? [])
+              locStep === 'city'
+                ? regionData.cityOptions
+                : regionData.districtMap[tempCity] || []
             }
             value={locStep === 'city' ? selectedCity : selectedDistrict}
             onSelect={(v) => {
-              if (locStep === 'city') handleCitySelect(v);
-              else handleDistrictSelect(v);
+              if (locStep === 'city') {
+                handleCitySelect(v);
+              } else {
+                handleDistrictSelect(v);
+              }
             }}
             backButton={
               locStep === 'district'
                 ? {
-                    label: `${tempCity}`,
+                    label: tempCity,
                     onClick: () => setLocStep('city'),
                   }
                 : undefined
