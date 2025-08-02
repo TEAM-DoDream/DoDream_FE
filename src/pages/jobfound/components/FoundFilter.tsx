@@ -30,13 +30,23 @@ const FoundFilter = () => {
     return t;
   }, [require, workTime, bodyActivity]);
 
-  const handleFilterEvent = (filterType: 'cert' | 'work_time' | 'activity_level', value: string) => {
+  const handleFilterEvent = (
+    filterType: 'cert' | 'work_time' | 'activity_level',
+    value: string
+  ) => {
+    const certVal = filterType === 'cert' ? value : require || '';
+    const workTimeVal = filterType === 'work_time' ? value : workTime || '';
+    const activityLevelVal =
+      filterType === 'activity_level' ? value : bodyActivity || '';
+
     ReactTagManager.action({
       event: 'filter_used_recruit',
       category: '직업정보',
-      filter_type: filterType,
-      filter_value: value,
-      clickText: '필터 선택',
+      cert: certVal,
+      work_time: workTimeVal,
+      activity_level: activityLevelVal,
+      method: filterType,
+      clickText: `필터 선택: ${value}`,
     });
   };
 
@@ -61,7 +71,7 @@ const FoundFilter = () => {
 
           <DropDown
             title="근무시간대"
-            placeholder="근무 시간대를 선택"
+            placeholder="근무시간대를 선택"
             options={workTimeOptions}
             value={workTime}
             onSelect={(v) => {
@@ -82,7 +92,8 @@ const FoundFilter = () => {
           />
         </div>
 
-        <div className="mt-5 flex flex-row justify-between">
+        {/* 선택된 태그 & 리셋 버튼 */}
+        <div className="mt-5 flex w-full justify-between">
           <div className="flex flex-wrap gap-4">
             {tags.map((tag) => (
               <span
@@ -103,4 +114,5 @@ const FoundFilter = () => {
     </div>
   );
 };
+
 export default FoundFilter;
