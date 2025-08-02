@@ -7,6 +7,7 @@ import ToastModal from '@common/modal/ToastModal.tsx';
 import { useJobSelect } from '@hook/jobselect/useJobSelect';
 import { useGetInfo } from '@hook/mypage/useMypageQuery.ts';
 import { useJobSelectIdMutation } from '@hook/jobselect/useJobSelectIdMutation.ts';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const JobSelect = () => {
   const navigate = useNavigate();
@@ -36,6 +37,12 @@ const JobSelect = () => {
     if (initialJobIdRef.current === null) {
       saveJobMutation.mutate(jobId, {
         onSuccess: () => {
+          ReactTagManager.action({
+            event: 'job_select',
+            job_id: jobId,
+            category: 'JobSelect',
+            clickText: '직업 담기',
+        });
           initialJobIdRef.current = jobId;
           setSelectedJob({ id: jobId, name: jobName });
           queryClient.invalidateQueries({ queryKey: ['mypageInfo'] });
