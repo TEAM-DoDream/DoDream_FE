@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import BackIcon from '@assets/icons/back.svg?react';
 import { useEachTodosQuery } from '@hook/useJobQuery.ts';
 import BaseImg from '@assets/images/profile.png';
@@ -8,11 +8,13 @@ import { ReactTagManager } from 'react-gtm-ts';
 import { useEffect } from 'react';
 
 const OtherTodoListPage = () => {
+  const location = useLocation();
   useEffect(() => {
     ReactTagManager.action({
       event: 'others_todo_view',
       category: '할 일 목록',
       clickText: '타인의 할 일 페이지 진입 시',
+      source_page: location.pathname,
     });
   }, []);
   const navigate = useNavigate();
@@ -32,7 +34,6 @@ const OtherTodoListPage = () => {
   }
 
   if (!eachTodos) return <div>데이터가 없습니다.</div>;
-
 
   return (
     <>

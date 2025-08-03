@@ -15,28 +15,28 @@ import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
 import { useScrapTrainingMutation } from '@hook/scrap/training/useScrapTrainingMutation';
 import { useQueryClient } from '@tanstack/react-query';
 import { ReactTagManager } from 'react-gtm-ts';
+import { useLocation } from 'react-router-dom';
 
 const LearningPage = () => {
-
+  const location = useLocation();
   useEffect(() => {
     const handleReturn = () => {
       const ts = localStorage.getItem('external_link_open_ts');
       if (!ts) return;
       const elapsedSec = Math.round((Date.now() - Number(ts)) / 1000);
-  
 
       ReactTagManager.action({
         event: 'back_to_web_time',
         category: '채용상세',
         elapsed_time: elapsedSec,
+        source_page: location.pathname,
       });
-  
+
       localStorage.removeItem('external_link_open_ts');
     };
-  
+
     window.addEventListener('focus', handleReturn);
-   
-  
+
     return () => {
       window.removeEventListener('focus', handleReturn);
     };
@@ -166,11 +166,12 @@ const LearningPage = () => {
                 key={index}
                 onClick={() => {
                   setSelectedCardId(index);
-          
+
                   ReactTagManager.action({
                     event: 'academy_click',
                     category: '학원정보',
                     clickText: '학원 정보 카드 클릭',
+                    source_page: location.pathname,
                   });
                 }}
                 className="cursor-pointer"
@@ -223,7 +224,6 @@ const LearningPage = () => {
                 selectedCard,
                 scrapStatusMap[selectedCard.trprId] || false
               )
-             
             }
           />
         </div>
