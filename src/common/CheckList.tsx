@@ -277,7 +277,6 @@ const CheckList = ({
           <ToastModal
             icon={<Info className="h-6 w-6 text-white" />}
             text="할일 목록 1개가 삭제되었습니다"
-            undoText="삭제취소"
             onUndo={handleUndo}
             width="w-[469px]"
           />
