@@ -9,7 +9,6 @@ import {
   fetchRegions,
   ParsedRegionData,
 } from '@utils/data/job/filterOptions.ts';
-
 import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
 import { ReactTagManager } from 'react-gtm-ts';
 
@@ -19,9 +18,9 @@ type Tag = {
 };
 
 const Filter = () => {
-  const { job, location, setSelection, trainingCourse, removeTag, reset } =
+  const { job, location, trainingCourse, setSelection, removeTag, reset } =
     useAcademyFilterStore();
-    
+
   const [regionData, setRegionData] = useState<ParsedRegionData>({
     cityOptions: defaultCityOptions,
     districtMap: defaultDistrictMap,
@@ -33,14 +32,12 @@ const Filter = () => {
 
   const selectedCity = location.split(' ')[0] || '';
   const selectedDistrict = location.split(' ')[1] || '';
-  
+
   useEffect(() => {
-    const getRegionData = async () => {
+    (async () => {
       const data = await fetchRegions();
       setRegionData(data);
-    };
-    
-    getRegionData();
+    })();
   }, []);
 
   const tags = useMemo<Tag[]>(() => {
@@ -52,31 +49,39 @@ const Filter = () => {
     return t;
   }, [job, location, trainingCourse]);
 
-  const handleFilterEvent = (filterType: 'job_id' | 'region' | 'training_course', value: string) => {
+  const handleFilterEvent = (
+    filterType: 'job_id' | 'region' | 'training_course',
+    value: string
+  ) => {
+    const currentJob = filterType === 'job_id' ? value : (job ?? '');
+    const currentRegion = filterType === 'region' ? value : (location ?? '');
+    const currentCourse =
+      filterType === 'training_course' ? value : (trainingCourse ?? '');
+
     ReactTagManager.action({
       event: 'filter_used_academy',
       category: '학원정보',
-      filter_type: filterType,
-      filter_value: value,
-      clickText: '필터 선택',
+      job_id: currentJob,
+      region: currentRegion,
+      method: currentCourse,
+      clickText:
+        filterType === 'job_id'
+          ? `직업종류 필터: ${currentJob}`
+          : filterType === 'region'
+            ? `거주지 필터: ${currentRegion}`
+            : `훈련과정 필터: ${currentCourse}`,
     });
   };
 
   const handleCitySelect = (city: string) => {
     setTempCity(city);
-    if (city === selectedCity) {
-      setLocStep('district');
-    } else {
-      setSelection('location', '');
-      setLocStep('district');
-    }
+    setLocStep('district');
   };
 
   const handleDistrictSelect = (dist: string) => {
     const fullLocation = `${tempCity} ${dist}`;
     setSelection('location', fullLocation);
     setLocStep('city');
-   
     handleFilterEvent('region', fullLocation);
   };
 
@@ -91,13 +96,12 @@ const Filter = () => {
       <div className="mt-2 flex flex-col gap-4 md:flex-row">
         <div className="w-[386px]">
           <DropDown
-            title={'직업종류'}
+            title="직업종류"
             placeholder="직업종류 선택"
             options={jobOptions}
             value={job}
             onSelect={(v) => {
               setSelection('job', v);
-             
               handleFilterEvent('job_id', v);
             }}
           />
@@ -106,9 +110,11 @@ const Filter = () => {
         <div className="w-[386px]">
           <DropDown
             title="거주지"
-            placeholder={'거주지 선택'}
+            placeholder="거주지 선택"
             options={
-              locStep === 'city' ? regionData.cityOptions : (regionData.districtMap[tempCity] ?? [])
+              locStep === 'city'
+                ? regionData.cityOptions
+                : regionData.districtMap[tempCity] || []
             }
             value={locStep === 'city' ? selectedCity : selectedDistrict}
             onSelect={(v) => {
@@ -117,10 +123,7 @@ const Filter = () => {
             }}
             backButton={
               locStep === 'district'
-                ? {
-                    label: `${tempCity}`,
-                    onClick: () => setLocStep('city'),
-                  }
+                ? { label: tempCity, onClick: () => setLocStep('city') }
                 : undefined
             }
             keepOpenOnSelect={locStep === 'city'}
@@ -129,13 +132,12 @@ const Filter = () => {
 
         <div className="w-[386px]">
           <DropDown
-            title={'훈련과정'}
+            title="훈련과정"
             placeholder="과정 선택"
             options={trainingOptions}
             value={trainingCourse}
             onSelect={(v) => {
               setSelection('trainingCourse', v);
-             
               handleFilterEvent('training_course', v);
             }}
           />
