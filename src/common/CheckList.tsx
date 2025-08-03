@@ -62,6 +62,7 @@ const CheckList = ({
     ReactTagManager.action({
       event: 'my_todo_check',
       clickText: '할 일 체크 시',
+      source_page: location.pathname,
     });
   };
 
