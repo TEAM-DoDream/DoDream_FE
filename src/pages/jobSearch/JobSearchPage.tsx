@@ -18,9 +18,8 @@ import { useLocation } from 'react-router-dom';
 
 const sortOptions = ['마감 임박순', '마감 여유순'];
 
-const location = useLocation();
-
 const JobSearchPage = () => {
+  const locations = useLocation();
   useEffect(() => {
     const handleReturn = () => {
       const ts = localStorage.getItem('external_link_open_ts');
@@ -31,7 +30,7 @@ const JobSearchPage = () => {
         event: 'back_to_web_time',
         category: '채용상세',
         elapsed_time: elapsedSec,
-        source_page: location.pathname,
+        source_page: locations.pathname,
       });
 
       localStorage.removeItem('external_link_open_ts');
