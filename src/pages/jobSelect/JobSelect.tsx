@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import Button from '@common/Button';
@@ -7,6 +7,7 @@ import ToastModal from '@common/modal/ToastModal.tsx';
 import { useJobSelect } from '@hook/jobselect/useJobSelect';
 import { useGetInfo } from '@hook/mypage/useMypageQuery.ts';
 import { useJobSelectIdMutation } from '@hook/jobselect/useJobSelectIdMutation.ts';
+import { ReactTagManager } from 'react-gtm-ts';
 
 const JobSelect = () => {
   const navigate = useNavigate();
@@ -14,41 +15,66 @@ const JobSelect = () => {
   const { data: jobList } = useJobSelect();
   const { data: info } = useGetInfo();
   const saveJobMutation = useJobSelectIdMutation();
-  const initialJobIdRef = useRef<number | null>(info?.job?.jobId ?? null);
   const [selectedJob, setSelectedJob] = useState<{
     id: number;
     name: string;
   } | null>(info?.job ? { id: info.job.jobId, name: info.job.jobName } : null);
   const [openModal, setOpenModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [pendingJob, setPendingJob] = useState<{ id: number; name: string } | null>(null);
+  const [isFirstJobModal, setIsFirstJobModal] = useState(false);
+  const [hasEverSelectedJob, setHasEverSelectedJob] = useState(false);
 
   useEffect(() => {
     if (info?.job) {
-      initialJobIdRef.current = info.job.jobId;
       setSelectedJob({ id: info.job.jobId, name: info.job.jobName });
+      setHasEverSelectedJob(true);
     } else {
-      initialJobIdRef.current = null;
       setSelectedJob(null);
+      setHasEverSelectedJob(false);
     }
   }, [info]);
 
   const handlePick = (jobId: number, jobName: string) => {
-    if (initialJobIdRef.current === null) {
-      saveJobMutation.mutate(jobId, {
-        onSuccess: () => {
-          initialJobIdRef.current = jobId;
-          setSelectedJob({ id: jobId, name: jobName });
-          queryClient.invalidateQueries({ queryKey: ['mypageInfo'] });
-          navigate('/', { state: { toast: '직업이 추가되었습니다' } });
-          setTimeout(() => setShowToast(false), 2000);
-        },
-      });
+    if (!hasEverSelectedJob) {
+      setPendingJob({ id: jobId, name: jobName });
+      setIsFirstJobModal(true);
+      setOpenModal(true);
     } else {
       setSelectedJob((prev) =>
         prev?.id === jobId ? null : { id: jobId, name: jobName }
       );
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  const handleModalConfirm = () => {
+    if (isFirstJobModal && pendingJob) {
+      saveJobMutation.mutate(pendingJob.id, {
+        onSuccess: () => {
+          ReactTagManager.action({
+            event: 'job_select',
+            job_id: pendingJob.id,
+            category: 'JobSelect',
+            clickText: '직업 담기',
+          });
+          setSelectedJob({ id: pendingJob.id, name: pendingJob.name });
+          setHasEverSelectedJob(true);
+          queryClient.invalidateQueries({ queryKey: ['mypageInfo'] });
+          setOpenModal(false);
+          setPendingJob(null);
+          setIsFirstJobModal(false);
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 2000);
+          navigate('/', { state: { toast: '직업이 추가되었습니다' } });
+        },
+      });
+    }
+  };
+
+  const handleSaveButton = () => {
+    setIsFirstJobModal(false);
+    setOpenModal(true);
   };
 
   return (
@@ -78,15 +104,24 @@ const JobSelect = () => {
             type="button"
             className="h-[42px] w-[85px] font-B03-SB"
             disabled={
-              !selectedJob || selectedJob.id === initialJobIdRef.current
+              !selectedJob || (hasEverSelectedJob && selectedJob.id === info?.job?.jobId)
             }
-            onClick={() => setOpenModal(true)}
+            onClick={handleSaveButton}
           />
         </div>
       </div>
 
-      {openModal && selectedJob && (
-        <Modal onClose={() => setOpenModal(false)} jobId={selectedJob.id} />
+      {openModal && (
+        <Modal 
+          onClose={() => {
+            setOpenModal(false);
+            setPendingJob(null);
+            setIsFirstJobModal(false);
+          }} 
+          jobId={pendingJob?.id || selectedJob?.id || 0}
+          onConfirm={isFirstJobModal ? handleModalConfirm : undefined}
+          isFirstJob={isFirstJobModal}
+        />
       )}
 
       <div className="mt-11 grid w-full grid-cols-5 gap-x-5 gap-y-5">
