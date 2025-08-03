@@ -1,18 +1,19 @@
 import Divider from '@common/Divider.tsx';
 import LoginImageComponent from '@pages/login/components/LoginImage.tsx';
 import LoginForm from '@pages/login/components/LoginForm.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactTagManager } from 'react-gtm-ts';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  
+  const location = useLocation();
   const handleSignupClick = (e: React.MouseEvent) => {
-    e.preventDefault();  
+    e.preventDefault();
     ReactTagManager.action({
       event: 'signup_start',
       category: 'Signup',
       clickText: '회원가입',
+      source_page: location.pathname,
     });
     setTimeout(() => {
       navigate('/signup');

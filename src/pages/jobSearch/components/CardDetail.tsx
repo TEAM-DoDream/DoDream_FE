@@ -6,6 +6,7 @@ import { useScrapRecruitMutation } from '@hook/scrap/recruit/useScrapRecruitMuta
 import { useScrapCheckQuery } from '@hook/scrap/useScrapCheckQuery';
 import { useState, useEffect } from 'react';
 import { ReactTagManager } from 'react-gtm-ts';
+import { useLocation } from 'react-router-dom';
 
 interface CardDetailProps {
   item: RecruitItem;
@@ -21,7 +22,7 @@ const CardDetail = ({
   const [isScrap, setIsScrap] = useState(propIsScrap || false);
   const { mutate: scrapRecruit } = useScrapRecruitMutation();
   const isLoggedIn = !!localStorage.getItem('accessToken');
-
+  const location = useLocation();
   const { data: scrapCheckData } = useScrapCheckQuery({
     category: 'RECRUIT',
     idList: [item.id],
@@ -121,7 +122,7 @@ const CardDetail = ({
           className="flex items-center justify-center rounded-xl bg-purple-500 px-[30px] py-[18px] text-white font-T05-SB hover:bg-purple-600"
           onClick={() => {
             localStorage.setItem('external_link_open_ts', String(Date.now()));
-            
+
             ReactTagManager.action({
               event: 'external_link_open',
               category: '채용상세',
@@ -130,6 +131,7 @@ const CardDetail = ({
               job_id: item.id,
               company: item.companyName,
               title: item.title,
+              source_page: location.pathname,
             });
           }}
         >

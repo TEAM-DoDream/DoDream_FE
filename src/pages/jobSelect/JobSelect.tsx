@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import Button from '@common/Button';
 import Modal from '@common/modal/Modal.tsx';
@@ -21,10 +21,13 @@ const JobSelect = () => {
   } | null>(info?.job ? { id: info.job.jobId, name: info.job.jobName } : null);
   const [openModal, setOpenModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [pendingJob, setPendingJob] = useState<{ id: number; name: string } | null>(null);
+  const [pendingJob, setPendingJob] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
   const [isFirstJobModal, setIsFirstJobModal] = useState(false);
   const [hasEverSelectedJob, setHasEverSelectedJob] = useState(false);
-
+  const location = useLocation();
   useEffect(() => {
     if (info?.job) {
       setSelectedJob({ id: info.job.jobId, name: info.job.jobName });
@@ -57,6 +60,7 @@ const JobSelect = () => {
             job_id: pendingJob.id,
             category: 'JobSelect',
             clickText: '직업 담기',
+            source_page: location.pathname,
           });
           setSelectedJob({ id: pendingJob.id, name: pendingJob.name });
           setHasEverSelectedJob(true);
@@ -104,7 +108,8 @@ const JobSelect = () => {
             type="button"
             className="h-[42px] w-[85px] font-B03-SB"
             disabled={
-              !selectedJob || (hasEverSelectedJob && selectedJob.id === info?.job?.jobId)
+              !selectedJob ||
+              (hasEverSelectedJob && selectedJob.id === info?.job?.jobId)
             }
             onClick={handleSaveButton}
           />
@@ -112,12 +117,12 @@ const JobSelect = () => {
       </div>
 
       {openModal && (
-        <Modal 
+        <Modal
           onClose={() => {
             setOpenModal(false);
             setPendingJob(null);
             setIsFirstJobModal(false);
-          }} 
+          }}
           jobId={pendingJob?.id || selectedJob?.id || 0}
           onConfirm={isFirstJobModal ? handleModalConfirm : undefined}
           isFirstJob={isFirstJobModal}

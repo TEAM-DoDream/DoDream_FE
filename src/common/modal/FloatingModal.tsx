@@ -3,7 +3,7 @@ import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import TwoArrow from '@assets/icons/stick_arrow.svg?react';
 import CalendarIcon from '@assets/icons/floating_calendar.svg?react';
 import Cursor from '@assets/icons/cursor.svg?react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation';
 
@@ -16,6 +16,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const [taskText, setTaskText] = useState('');
   const isLoggedIn = !!localStorage.getItem('accessToken');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { mutate } = useAddTodoMutation();
   const { data: hasJob, isLoading } = useMdTodoQuery();
@@ -112,7 +113,7 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
                   handleSubmit();
                   ReactTagManager.action({
                     event: 'floating_btn_click',
-                    source_page: '1.1',
+                    source_page: location.pathname,
                     trigger_method: 'floating',
                     click_text: '추가하기',
                   });

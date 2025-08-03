@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@common/Button';
 import { useJobSelectIdMutation } from '@hook/jobselect/useJobSelectIdMutation.ts';
 import ToastModal from '@common/modal/ToastModal.tsx';
@@ -12,10 +12,16 @@ interface ModalProps {
   isFirstJob?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, jobId, onConfirm, isFirstJob = false }) => {
+const Modal: React.FC<ModalProps> = ({
+  onClose,
+  jobId,
+  onConfirm,
+  isFirstJob = false,
+}) => {
   const navigate = useNavigate();
   const saveJob = useJobSelectIdMutation();
   const [showToast, setShowToast] = useState(false);
+  const location = useLocation();
 
   const handleSave = () => {
     if (onConfirm) {
@@ -28,6 +34,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, jobId, onConfirm, isFirstJob = f
             job_id: jobId,
             category: 'JobSelect',
             clickText: '직업 담기',
+            location: location.pathname,
           });
           onClose();
           navigate('/', { state: { toast: '직업이 변경되었습니다' } });
@@ -43,13 +50,13 @@ const Modal: React.FC<ModalProps> = ({ onClose, jobId, onConfirm, isFirstJob = f
       return {
         title: '직업을 선택하시겠습니까?',
         description: '선택한 직업을 바탕으로 나만의 할 일을 작성할 수 있어요.',
-        toastMessage: '직업이 추가되었습니다'
+        toastMessage: '직업이 추가되었습니다',
       };
     } else {
       return {
         title: '직업을 변경하시겠습니까?',
         description: '이전 직업에 대한 할 일 목록은 삭제됩니다.',
-        toastMessage: '직업이 변경되었습니다'
+        toastMessage: '직업이 변경되었습니다',
       };
     }
   };

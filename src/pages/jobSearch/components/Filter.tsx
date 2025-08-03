@@ -10,6 +10,7 @@ import {
 } from '@utils/data/job/filterOptions.ts';
 import { useFilterStore } from '@store/filterStore';
 import { ReactTagManager } from 'react-gtm-ts';
+import { useLocation } from 'react-router-dom';
 
 type Tag = { label: string; type: 'job' | 'location' };
 
@@ -23,7 +24,7 @@ const Filter = () => {
 
   const [locStep, setLocStep] = useState<'city' | 'district'>('city');
   const [tempCity, setTempCity] = useState('');
-
+  const locations = useLocation();
   const selectedCity = location.split(' ')[0] || '';
   const selectedDistrict = location.split(' ')[1] || '';
 
@@ -51,6 +52,7 @@ const Filter = () => {
       job_id: currentJob,
       region: currentRegion,
       method: filterType,
+      source_page: locations.pathname,
       clickText:
         filterType === 'job_id'
           ? `직업종류 필터: ${currentJob}`

@@ -38,13 +38,11 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: signupUser,
     onSuccess: () => {
-  
       ReactTagManager.action({
-          event: 'signup_complete',
-          category: 'Signup',
-          clickText: '회원가입 완료',
+        event: 'signup_complete',
+        category: 'Signup',
+        clickText: '회원가입 완료',
       });
-    
 
       navigate('/login');
     },

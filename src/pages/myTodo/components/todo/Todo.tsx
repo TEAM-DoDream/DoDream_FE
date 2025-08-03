@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Eye from '@assets/icons/show_pw.svg?react';
 import CheckList from '@common/CheckList';
 import Divider from '@common/Divider';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
 import EmptyTodo from './EmptyTodo';
 import { useMdTodoCompleteMutation } from '@hook/mydream/useMdTodoCompleMutation';
@@ -19,7 +19,7 @@ const Todo = () => {
   } = useMdTodoQuery();
   const { mutate: completeTodo } = useMdTodoCompleteMutation();
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
-
+  const location = useLocation();
   useEffect(() => {
     if (todoData?.todos) {
       const completed = todoData.todos
@@ -34,6 +34,7 @@ const Todo = () => {
       event: 'my_todo_page',
       category: '할 일 목록',
       clickText: '[나의 할일] 페이지 클릭 시 (진입)',
+      source_page: location.pathname,
     });
   }, []);
 
