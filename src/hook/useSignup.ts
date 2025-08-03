@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import api from './api';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactTagManager } from 'react-gtm-ts';
 
 export interface SignupRequest {
@@ -12,6 +12,7 @@ export interface SignupRequest {
   regionCode?: string | null;
   email: string;
 }
+const location = useLocation();
 
 const signupUser = async (data: SignupRequest) => {
   const response = await api.post(`/v1/member/auth/sign-up`, data);
@@ -38,13 +39,12 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: signupUser,
     onSuccess: () => {
-  
       ReactTagManager.action({
-          event: 'signup_complete',
-          category: 'Signup',
-          clickText: '회원가입 완료',
+        event: 'signup_complete',
+        category: 'Signup',
+        clickText: '회원가입 완료',
+        location: location.pathname,
       });
-    
 
       navigate('/login');
     },

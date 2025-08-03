@@ -61,12 +61,12 @@ const JobRecommendPage = () => {
   };
 
   const handleAddJob = (jobId: number) => {
- 
     ReactTagManager.action({
       event: 'job_selected_from_result',
       category: '온보딩',
       job_id: jobId,
       clickText: '온보딩 결과에서 직업 선택',
+      source_page: location.pathname,
     });
 
     addJob(jobId, {

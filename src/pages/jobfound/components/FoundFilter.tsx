@@ -4,6 +4,7 @@ import ResetButton from '@common/ResetButton';
 import { useFilterStore } from '@store/filterStore';
 import Cancel from '@assets/icons/purplecancel.svg?react';
 import { ReactTagManager } from 'react-gtm-ts';
+import { useLocation } from 'react-router-dom';
 
 type Tag = { label: string; type: 'require' | 'workTime' | 'bodyActivity' };
 
@@ -29,7 +30,7 @@ const FoundFilter = () => {
     if (bodyActivity) t.push({ label: bodyActivity, type: 'bodyActivity' });
     return t;
   }, [require, workTime, bodyActivity]);
-
+  const location = useLocation();
   const handleFilterEvent = (
     filterType: 'cert' | 'work_time' | 'activity_level',
     value: string
@@ -47,6 +48,7 @@ const FoundFilter = () => {
       activity_level: activityLevelVal,
       method: filterType,
       clickText: `필터 선택: ${value}`,
+      source_page: location.pathname,
     });
   };
 

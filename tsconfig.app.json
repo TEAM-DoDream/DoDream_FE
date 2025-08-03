@@ -26,6 +26,8 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "jsx": "react-jsx",
 
     /* Linting */

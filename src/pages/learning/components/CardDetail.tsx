@@ -6,6 +6,7 @@ import { useAcademyFilterStore } from '@store/academyFilterStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useScrapTrainingMutation } from '@hook/scrap/training/useScrapTrainingMutation';
 import { ReactTagManager } from 'react-gtm-ts';
+import { useLocation } from 'react-router-dom';
 
 interface CardDetailProps {
   item: AcademyItem;
@@ -47,7 +48,7 @@ const CardDetail = ({
     useShallow((s) => ({ trainingCourse: s.trainingCourse }))
   );
   const trainingType = trainingCourse || '이론 위주';
-
+  const locations = useLocation();
   const handleScrap = () => {
     if (onScrapClick) {
       onScrapClick();
@@ -155,6 +156,7 @@ const CardDetail = ({
                 category: '교육상세',
                 link_url: item.titleLink,
                 clickText: '고용24에서 보기',
+                source_page: locations.pathname,
               });
             }}
           >
