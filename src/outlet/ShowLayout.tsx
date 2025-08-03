@@ -13,6 +13,8 @@ const ShowLayout = () => {
     '/mytodo/list',
     '/mytodo/scrap',
     '/mypage',
+    '/mytodo/scrap/edu',
+    '/mytodo/scrap/job',
   ];
 
   const shouldShowFloatingButton = !excludedRoutes.includes(location.pathname);
