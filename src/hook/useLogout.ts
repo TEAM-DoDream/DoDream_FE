@@ -7,7 +7,7 @@ const useLogout = () => {
   const navigate = useNavigate();
   const clearUser = useUserStore((state) => state.clearUser);
 
-  const logout = useCallback(async () => {
+  return useCallback(async () => {
     try {
       await api.post('/v1/member/auth/logout');
     } catch (err) {
@@ -19,8 +19,6 @@ const useLogout = () => {
       navigate('/');
     }
   }, [navigate, clearUser]);
-
-  return logout;
 };
 
 export default useLogout;
