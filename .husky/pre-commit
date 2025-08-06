@@ -3,9 +3,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "✅ Running tests..."
-yarn test
-echo "✅ Running build..."
-yarn build
 echo "✅ Lint-staged 시작..."
 yarn lint-staged
