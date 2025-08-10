@@ -24,11 +24,21 @@ export const jobOptions = [
 export const cityOptions = [
   '서울',
   '부산',
-  '인천',
   '대구',
+  '인천',
   '광주',
   '대전',
   '울산',
+  '세종',
+  '경기',
+  '강원',
+  '충북',
+  '충남',
+  '전북',
+  '전남',
+  '경북',
+  '경남',
+  '제주',
 ];
 
 export const districtMap: Record<string, string[]> = {
@@ -55,6 +65,7 @@ export const districtMap: Record<string, string[]> = {
     '영등포구',
     '용산구',
     '은평구',
+    '종로구',
     '중구',
     '중랑구',
   ],
@@ -76,6 +87,17 @@ export const districtMap: Record<string, string[]> = {
     '중구',
     '해운대구',
   ],
+  대구: [
+    '군위군',
+    '남구',
+    '달서구',
+    '달성군',
+    '동구',
+    '북구',
+    '서구',
+    '수성구',
+    '중구',
+  ],
   인천: [
     '강화군',
     '계양구',
@@ -88,78 +110,179 @@ export const districtMap: Record<string, string[]> = {
     '옹진군',
     '중구',
   ],
-  대구: [
-    '군위군',
-    '남구',
-    '달서구',
-    '달성군',
-    '동구',
-    '북구',
-    '서구',
-    '수성구',
-    '중구',
-  ],
   광주: ['광산구', '남구', '동구', '북구', '서구'],
   대전: ['대덕구', '동구', '서구', '유성구', '중구'],
   울산: ['남구', '동구', '북구', '울주군', '중구'],
+  세종: ['특별시'],
+  경기: [
+    '수원시',
+    '고양시',
+    '용인시',
+    '성남시',
+    '화성시',
+    '부천시',
+    '남양주시',
+    '안산시',
+    '평택시',
+    '안양시',
+    '시흥시',
+    '파주시',
+    '의정부시',
+    '김포시',
+    '광주시',
+    '광명시',
+    '하남시',
+    '군포시',
+    '오산시',
+    '양주시',
+    '이천시',
+    '구리시',
+    '안성시',
+    '의왕시',
+    '포천시',
+    '양평군',
+    '여주시',
+    '동두천시',
+    '가평군',
+    '과천시',
+    '연천군',
+  ],
+  강원: [
+    '춘천시',
+    '원주시',
+    '강릉시',
+    '동해시',
+    '태백시',
+    '속초시',
+    '삼척시',
+    '홍천군',
+    '횡성군',
+    '영월군',
+    '평창군',
+    '정선군',
+    '철원군',
+    '화천군',
+    '양구군',
+    '인제군',
+    '고성군',
+    '양양군',
+  ],
+  충북: [
+    // 충청북도
+    '청주시',
+    '충주시',
+    '제천시',
+    '보은군',
+    '옥천군',
+    '영동군',
+    '증평군',
+    '진천군',
+    '괴산군',
+    '음성군',
+    '단양군',
+  ],
+  충남: [
+    '천안시',
+    '공주시',
+    '보령시',
+    '아산시',
+    '서산시',
+    '논산시',
+    '계룡시',
+    '당진시',
+    '금산군',
+    '부여군',
+    '서천군',
+    '청양군',
+    '홍성군',
+    '예산군',
+    '태안군',
+  ],
+  전북: [
+    '전주시',
+    '군산시',
+    '익산시',
+    '정읍시',
+    '남원시',
+    '김제시',
+    '완주군',
+    '진안군',
+    '무주군',
+    '장수군',
+    '임실군',
+    '순창군',
+    '고창군',
+    '부안군',
+  ],
+  전남: [
+    '목포시',
+    '여수시',
+    '순천시',
+    '나주시',
+    '광양시',
+    '담양군',
+    '곡성군',
+    '구례군',
+    '고흥군',
+    '보성군',
+    '화순군',
+    '장흥군',
+    '강진군',
+    '해남군',
+    '영암군',
+    '무안군',
+    '함평군',
+    '영광군',
+    '장성군',
+    '완도군',
+    '진도군',
+    '신안군',
+  ],
+  경북: [
+    '포항시',
+    '구미시',
+    '경산시',
+    '경주시',
+    '안동시',
+    '김천시',
+    '영주시',
+    '상주시',
+    '영천시',
+    '문경시',
+    '칠곡군',
+    '의성군',
+    '청도군',
+    '예천군',
+    '성주군',
+    '고령군',
+    '군위군',
+    '봉화군',
+    '울진군',
+    '영덕군',
+    '청송군',
+    '영양군',
+    '울릉군',
+  ],
+  경남: [
+    '창원시',
+    '김해시',
+    '양산시',
+    '진주시',
+    '거제시',
+    '통영시',
+    '사천시',
+    '밀양시',
+    '함안군',
+    '거창군',
+    '창녕군',
+    '고성군',
+    '하동군',
+    '합천군',
+    '남해군',
+    '함양군',
+    '산청군',
+  ],
+  제주: ['제주시', '서귀포시'],
 };
 
 export const trainingOptions = ['이론 위주', '실습 위주'];
-
-import api from '@hook/api';
-
-export interface Region {
-  regionCode: string | null;
-  regionName: string;
-}
-
-export interface ParsedRegionData {
-  cityOptions: string[];
-  districtMap: Record<string, string[]>;
-  regionList: Region[];
-}
-
-export const fetchRegions = async (): Promise<ParsedRegionData> => {
-  try {
-    const response = await api.get<{ data: Region[] }>('/v1/region/all');
-    const regions = response.data.data;
-
-    const map: Record<string, string[]> = {};
-    const cities: string[] = [];
-
-    regions.forEach(({ regionName }) => {
-      const parsing = regionName.trim().split(/\s+/);
-
-      if (parsing.length < 2) return;
-
-      const city = parsing[0];
-      const district = parsing.slice(1).join(' ');
-
-      if (!cities.includes(city)) {
-        cities.push(city);
-      }
-
-      if (map[city]) {
-        if (!map[city].includes(district)) {
-          map[city].push(district);
-        }
-      } else {
-        map[city] = [district];
-      }
-    });
-
-    return {
-      cityOptions: cities,
-      districtMap: map,
-      regionList: regions,
-    };
-  } catch (error) {
-    console.error('지역 데이터를 가져오는 중 오류가 발생했습니다:', error);
-
-    return {
-      cityOptions,
-      districtMap,
-      regionList: [],
-    };
-  }
-};

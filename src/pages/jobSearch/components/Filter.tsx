@@ -1,39 +1,32 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import DropDown from '@common/DropDown';
 import ResetButton from '@common/ResetButton';
-import {
-  jobOptions,
-  districtMap as defaultDistrictMap,
-  cityOptions as defaultCityOptions,
-  fetchRegions,
-  ParsedRegionData,
-} from '@utils/data/job/filterOptions.ts';
+import { jobOptions } from '@utils/data/job/filterOptions';
+import { useRegionsQuery } from '@hook/common/useRegionsQuery';
 import { useFilterStore } from '@store/filterStore';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useLocation } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 type Tag = { label: string; type: 'job' | 'location' };
 
 const Filter = () => {
-  const { job, location, setSelection, removeTag, reset } = useFilterStore();
-  const [regionData, setRegionData] = useState<ParsedRegionData>({
-    cityOptions: defaultCityOptions,
-    districtMap: defaultDistrictMap,
-    regionList: [],
-  });
+  const { job, location, setSelection, removeTag, reset } = useFilterStore(
+    useShallow((s) => ({
+      job: s.job,
+      location: s.location,
+      setSelection: s.setSelection,
+      removeTag: s.removeTag,
+      reset: s.reset,
+    }))
+  );
+  const { data: regionData } = useRegionsQuery();
 
   const [locStep, setLocStep] = useState<'city' | 'district'>('city');
   const [tempCity, setTempCity] = useState('');
   const locations = useLocation();
   const selectedCity = location.split(' ')[0] || '';
   const selectedDistrict = location.split(' ')[1] || '';
-
-  useEffect(() => {
-    (async () => {
-      const data = await fetchRegions();
-      setRegionData(data);
-    })();
-  }, []);
 
   const tags = useMemo<Tag[]>(() => {
     const t: Tag[] = [];
@@ -101,8 +94,8 @@ const Filter = () => {
             placeholder="거주지 선택"
             options={
               locStep === 'city'
-                ? regionData.cityOptions
-                : regionData.districtMap[tempCity] || []
+                ? regionData?.cityOptions || []
+                : regionData?.districtMap[tempCity] || []
             }
             value={locStep === 'city' ? selectedCity : selectedDistrict}
             onSelect={(v) => {
