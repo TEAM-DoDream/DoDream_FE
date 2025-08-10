@@ -11,11 +11,20 @@ import {
 import { useFilterStore } from '@store/filterStore';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useLocation } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 type Tag = { label: string; type: 'job' | 'location' };
 
 const Filter = () => {
-  const { job, location, setSelection, removeTag, reset } = useFilterStore();
+  const { job, location, setSelection, removeTag, reset } = useFilterStore(
+    useShallow((s) => ({
+      job: s.job,
+      location: s.location,
+      setSelection: s.setSelection,
+      removeTag: s.removeTag,
+      reset: s.reset,
+    }))
+  );
   const [regionData, setRegionData] = useState<ParsedRegionData>({
     cityOptions: defaultCityOptions,
     districtMap: defaultDistrictMap,
