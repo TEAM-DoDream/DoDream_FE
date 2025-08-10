@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchRegions } from '@hook/common/regionApi';
-import { ParsedRegionData } from '@type/filter/region.ts';
+import { ParsedRegionData } from '@type/filter/region';
 import { cityOptions, districtMap } from '@utils/data/job/filterOptions';
 
 export const useRegionsQuery = () => {

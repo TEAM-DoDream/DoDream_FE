@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import DropDown from '@common/DropDown';
 import ResetButton from '@common/ResetButton';
-import { jobOptions } from '@utils/data/job/filterOptions.ts';
+import { jobOptions } from '@utils/data/job/filterOptions';
 import { useRegionsQuery } from '@hook/common/useRegionsQuery';
 import { useFilterStore } from '@store/filterStore';
 import { ReactTagManager } from 'react-gtm-ts';

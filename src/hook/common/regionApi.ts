@@ -1,6 +1,6 @@
 import api from '@hook/api';
 import { cityOptions, districtMap } from '@utils/data/job/filterOptions';
-import { ParsedRegionData, Region } from '@type/filter/region.ts';
+import { ParsedRegionData, Region } from '@type/filter/region';
 
 export const fetchRegions = async (): Promise<ParsedRegionData> => {
   try {
