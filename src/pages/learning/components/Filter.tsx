@@ -1,17 +1,11 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import DropDown from '@common/DropDown';
 import ResetButton from '@common/ResetButton';
-import {
-  jobOptions,
-  districtMap as defaultDistrictMap,
-  cityOptions as defaultCityOptions,
-  trainingOptions,
-  fetchRegions,
-  ParsedRegionData,
-} from '@utils/data/job/filterOptions.ts';
+import { jobOptions, trainingOptions } from '@utils/data/job/filterOptions.ts';
 import { useAcademyFilterStore } from '@store/academyFilterStore.ts';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useLocation } from 'react-router-dom';
+import { useRegionsQuery } from '@hook/common/useRegionsQuery';
 
 type Tag = {
   label: string;
@@ -22,24 +16,13 @@ const Filter = () => {
   const { job, location, trainingCourse, setSelection, removeTag, reset } =
     useAcademyFilterStore();
 
-  const [regionData, setRegionData] = useState<ParsedRegionData>({
-    cityOptions: defaultCityOptions,
-    districtMap: defaultDistrictMap,
-    regionList: [],
-  });
+  const { data: regionData } = useRegionsQuery();
   const locations = useLocation();
   const [locStep, setLocStep] = useState<'city' | 'district'>('city');
   const [tempCity, setTempCity] = useState('');
 
   const selectedCity = location.split(' ')[0] || '';
   const selectedDistrict = location.split(' ')[1] || '';
-
-  useEffect(() => {
-    (async () => {
-      const data = await fetchRegions();
-      setRegionData(data);
-    })();
-  }, []);
 
   const tags = useMemo<Tag[]>(() => {
     const t: Tag[] = [];
@@ -115,8 +98,8 @@ const Filter = () => {
             placeholder="거주지 선택"
             options={
               locStep === 'city'
-                ? regionData.cityOptions
-                : regionData.districtMap[tempCity] || []
+                ? regionData?.cityOptions || []
+                : regionData?.districtMap[tempCity] || []
             }
             value={locStep === 'city' ? selectedCity : selectedDistrict}
             onSelect={(v) => {
