@@ -40,7 +40,7 @@ const LearningPage = () => {
     return () => {
       window.removeEventListener('focus', handleReturn);
     };
-  }, []);
+  }, [location.pathname]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
