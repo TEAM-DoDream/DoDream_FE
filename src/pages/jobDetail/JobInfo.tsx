@@ -7,12 +7,10 @@ import LoadingSpinner from '@common/LoadingSpinner';
 import CostIcon from '@assets/icons/cost.svg?react';
 import CertificationIcon from '@assets/icons/certification.svg?react';
 import CalendarIcon from '@assets/icons/calendar.svg?react';
-// import Button from '@common/Button';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
-import ProfileCard from './components/ProfileCard';
+// import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
-// import { useAddJobMutation } from '@hook/useAddJobMutation';
 
 const JobInfo = () => {
   const navigate = useNavigate();
@@ -23,21 +21,8 @@ const JobInfo = () => {
     error,
   } = useJobDetailQuery(Number(jobId));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const addJobMutation = useAddJobMutation();
 
   const isLoggedIn = !!localStorage.getItem('accessToken');
-
-  // const handleAddJob = () => {
-  //   if (!jobId) return;
-  //   addJobMutation.mutate(Number(jobId), {
-  //     onSuccess: () => {
-  //       setIsModalOpen(true);
-  //     },
-  //     onError: () => {
-  //       alert('이미 담은 직업입니다.');
-  //     },
-  //   });
-  // };
 
   if (isLoading)
     return (
@@ -56,13 +41,13 @@ const JobInfo = () => {
             onClick={() => navigate('/jobfound')}
           />
 
-          <div className="mt-[30px] flex h-[288px] w-[712px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] pb-[30px] pt-10">
+          <div className="mt-[30px] flex h-auto w-[712px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] pb-[30px] pt-10">
             <div className="text-gray-900 font-T01-B">{jobDetail?.jobName}</div>
             <div className="mb-[30px] mt-[14px] text-gray-600 font-B01-M">
               {jobDetail?.jobDescription}
             </div>
 
-            <Divider className="mb-[30px]" />
+            <Divider className="mb-[30px] bg-gray-200" />
 
             <div className="flex flex-nowrap gap-[53px]">
               <div className="flex min-w-[176px] flex-row gap-[18px]">
@@ -110,37 +95,27 @@ const JobInfo = () => {
                 </div>
               </div>
             </div>
+            <WorkStrong
+              physical={jobDetail?.strong.physical || ''}
+              stress={jobDetail?.strong.stress || ''}
+              relationship={jobDetail?.strong.relationship || ''}
+            />
           </div>
 
-          <WorkStrong
+          {/* <WorkStrong
             physical={jobDetail?.strong.physical || ''}
             stress={jobDetail?.strong.stress || ''}
             relationship={jobDetail?.strong.relationship || ''}
-          />
-
-          {/* <div className="mt-[30px]">
-            <Button
-              text={
-                isLoggedIn
-                  ? `${jobDetail?.jobName} 담기`
-                  : '로그인 후 이용 가능한 기능이에요'
-              }
-              color="primary"
-              type="button"
-              className="flex h-[60px] w-[712px] items-center justify-center rounded-2xl px-[60px] py-3 font-T05-SB"
-              onClick={handleAddJob}
-              disabled={!isLoggedIn}
-            />
-          </div> */}
+          /> */}
         </div>
 
-        <ProfileCard />
-      </div>
+        <JobView jobName={jobDetail?.jobName || ''} />
+        {isModalOpen && isLoggedIn && (
+          <AddJobModal onClose={() => setIsModalOpen(false)} />
+        )}
 
-      <JobView jobName={jobDetail?.jobName || ''} />
-      {isModalOpen && isLoggedIn && (
-        <AddJobModal onClose={() => setIsModalOpen(false)} />
-      )}
+        {/* <ProfileCard /> */}
+      </div>
     </div>
   );
 };
