@@ -6,6 +6,8 @@ import Cursor from '@assets/icons/cursor.svg?react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation';
+import Fire from '@assets/icons/fire.svg?react';
+import Reset from '@assets/icons/reset.svg?react';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -59,7 +61,24 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
           <div className="text-black font-T03-B">바로 할일 추가</div>
         </div>
 
-        <div className="mt-[30px] flex flex-col items-start">
+        <div className="mt-[22px] flex w-full flex-row items-center rounded-[8px] bg-gray-100 p-3">
+          <div className="flex flex-row items-center gap-[6px]">
+            <Fire />
+            <div className="text-gray-900 font-B03-SB"> 인기</div>
+          </div>
+
+          <div className="mx-[10px] h-4 w-[1px] bg-gray-400" />
+
+          <div className="text-gray-600 font-B03-M">
+            요양보호사 카페 주소 검색하고 가입하기
+          </div>
+
+          <div className="ml-[83px] cursor-pointer">
+            <Reset />
+          </div>
+        </div>
+
+        <div className="mt-[50px] flex flex-col items-start">
           {hasNoJob ? (
             <div className="flex w-full flex-col items-center justify-center">
               <div className="flex flex-row items-center gap-[31px] px-10 py-[7px]">
