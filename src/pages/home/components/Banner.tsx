@@ -4,6 +4,7 @@ import Arrow from '@assets/icons/arrow.svg?react';
 import Bell from '@assets/images/bell.webp';
 import { useNoBannerQuery } from '@hook/useHomeQuery';
 import { useNavigate } from 'react-router-dom';
+import Tag from '@common/Tag.tsx';
 
 interface BannerProps {
   goToOnboard?: boolean;
@@ -73,9 +74,7 @@ const Banner = ({ goToOnboard = false }: BannerProps) => {
                   key={job['job-name']}
                   className="flex flex-row items-center gap-4"
                 >
-                  <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                    {job['job-name']}
-                  </div>
+                  <Tag context={job['job-name']} />
                   <div className="text-gray-900 font-T05-SB">{job.count}건</div>
                 </div>
               ))}
