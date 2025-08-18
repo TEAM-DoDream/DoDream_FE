@@ -31,7 +31,7 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
   if (error) return <div>에러가 발생했어요.</div>;
 
   return (
-    <div className="mt-[66px] flex h-auto w-[444px] flex-col items-start rounded-[30px] bg-white p-[30px]">
+    <div className="mt-[66px] flex h-[748px] w-[444px] flex-col items-start rounded-[30px] bg-white p-[30px]">
       <div className="text-gray-900 font-T03-B">
         {' '}
         {jobName} <br /> 채용 정보

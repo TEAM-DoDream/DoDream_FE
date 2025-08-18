@@ -11,6 +11,7 @@ import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
 // import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
+import RecommendTodo from './components/RecommendTodo';
 
 const JobInfo = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const JobInfo = () => {
   return (
     <div className="flex flex-col bg-gray-50 px-[120px]">
       <div className="mt-10 flex w-full flex-row gap-10">
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start pb-[162px]">
           <Arrow
             className="h-9 w-9 rotate-180 cursor-pointer"
             onClick={() => navigate('/jobfound')}
@@ -101,12 +102,7 @@ const JobInfo = () => {
               relationship={jobDetail?.strong.relationship || ''}
             />
           </div>
-
-          {/* <WorkStrong
-            physical={jobDetail?.strong.physical || ''}
-            stress={jobDetail?.strong.stress || ''}
-            relationship={jobDetail?.strong.relationship || ''}
-          /> */}
+          <RecommendTodo />
         </div>
 
         <JobView jobName={jobDetail?.jobName || ''} />
