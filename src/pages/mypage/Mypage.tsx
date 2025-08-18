@@ -94,7 +94,7 @@ const Mypage = () => {
         <div className="mt-5 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
           <UpdateRegion regionName={InfoData?.regionName} />
 
-          <div className="flex gap-6">
+          <div className="mt-6 flex gap-6">
             <span className="text-gray-900 font-B01-B">생년월일</span>
             <span className="text-gray-500 font-B01-M">
               {InfoData?.birthDate}
