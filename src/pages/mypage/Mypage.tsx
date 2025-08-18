@@ -7,6 +7,7 @@ import Nickname from './components/Nickname';
 import UpdateRegion from './components/UpdateRegion';
 import ProfileImageUploader from './components/ProfileImageUploader';
 import { useNavigate } from 'react-router-dom';
+import Prepare from './components/Prepare';
 
 const Mypage = () => {
   const [passwordModal, setIsPasswordModal] = useState(false);
@@ -33,7 +34,34 @@ const Mypage = () => {
           />
         </div>
 
-        <div className="mt-10 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
+        <div className="mt-5 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
+          <div className="flex justify-between">
+            <div className="flex items-center gap-5">
+              <span className="text-gray-900 font-B01-B">담은 직업</span>
+              <div className="flex flex-row gap-4">
+                {InfoData?.job && (
+                  <span
+                    key={InfoData.job.jobId}
+                    className="rounded-full border border-purple-500 bg-purple-100 px-3 py-2 text-purple-500 font-B03-M"
+                  >
+                    {InfoData.job.jobName}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <button
+              className="flex items-center rounded-[10px] bg-purple-500 px-[10px] py-2 text-white font-B03-M"
+              onClick={() => navigate('/jobselect')}
+            >
+              변경
+            </button>
+          </div>
+
+          <Prepare />
+        </div>
+
+        <div className="mt-5 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
           <div className="flex gap-10">
             <span className="text-gray-900 font-B01-B">아이디</span>
             <span className="text-gray-500 font-B01-M">
@@ -66,31 +94,6 @@ const Mypage = () => {
             <span className="text-gray-500 font-B01-M">
               {InfoData?.birthDate}
             </span>
-          </div>
-        </div>
-
-        <div className="mt-5 flex w-full flex-col rounded-[20px] border border-gray-300 p-7">
-          <div className="flex justify-between">
-            <div className="flex items-center gap-5">
-              <span className="text-gray-900 font-B01-B">담은 직업</span>
-              <div className="flex flex-row gap-4">
-                {InfoData?.job && (
-                  <span
-                    key={InfoData.job.jobId}
-                    className="rounded-full border border-purple-500 bg-purple-100 px-3 py-2 text-purple-500 font-B03-M"
-                  >
-                    {InfoData.job.jobName}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <button
-              className="flex items-center rounded-[10px] bg-purple-500 px-[10px] py-2 text-white font-B03-M"
-              onClick={() => navigate('/jobselect')}
-            >
-              변경
-            </button>
           </div>
         </div>
 
