@@ -8,6 +8,7 @@ import UpdateRegion from './components/UpdateRegion';
 import ProfileImageUploader from './components/ProfileImageUploader';
 import { useNavigate } from 'react-router-dom';
 import Prepare from './components/Prepare';
+import PasswordIcon from '@assets/icons/passwordcircle.svg?react';
 
 const Mypage = () => {
   const [passwordModal, setIsPasswordModal] = useState(false);
@@ -68,10 +69,14 @@ const Mypage = () => {
               {InfoData?.loginId}
             </span>
           </div>
-          <div className="mt-6 flex justify-between">
-            <div className="space-x-6">
+          <div className="mt-6 flex items-start justify-between">
+            <div className="flex flex-row gap-6">
               <span className="text-gray-900 font-B01-B"> 비밀번호</span>
-              <span> **** </span>
+              <div className="flex items-center justify-center gap-1">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <PasswordIcon key={index} />
+                ))}
+              </div>
             </div>
 
             <button
