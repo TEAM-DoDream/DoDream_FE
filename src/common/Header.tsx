@@ -14,13 +14,18 @@ const NavItems = [
     label: '직업 정보',
     path: '/jobfound',
     match: (pathname: string) =>
-      (pathname.startsWith('/jobfound') && pathname !== '/jobsearch') ||
-      pathname.startsWith('/others'),
+      pathname.startsWith('/jobfound') && pathname !== '/jobsearch',
   },
   //배움터 찾기
   { label: '학원 정보', path: '/learning' },
   // (구)일자리 찾기
   { label: '채용 정보', path: '/jobsearch' },
+
+  {
+    label: '커뮤니티',
+    path: '/community',
+    match: (pathname: string) => pathname.startsWith('/others'),
+  },
 
   //마이드림
   {
