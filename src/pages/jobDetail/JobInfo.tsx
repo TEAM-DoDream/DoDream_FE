@@ -10,7 +10,7 @@ import CalendarIcon from '@assets/icons/calendar.svg?react';
 // import Button from '@common/Button';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
-import ProfileCard from './components/ProfileCard';
+// import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
 // import { useAddJobMutation } from '@hook/useAddJobMutation';
 
@@ -134,7 +134,7 @@ const JobInfo = () => {
           </div> */}
         </div>
 
-        <ProfileCard />
+        {/* <ProfileCard /> */}
       </div>
 
       <JobView jobName={jobDetail?.jobName || ''} />

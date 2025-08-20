@@ -6,6 +6,9 @@ import LoadingSpinner from '@common/LoadingSpinner';
 import OtherTodoCard from '@pages/otherTodoList/components/OtherTodoCard.tsx';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useEffect } from 'react';
+import ShowView from '@assets/icons/show_pw.svg?react';
+import ProfileCard from '@pages/jobDetail/components/ProfileCard';
+import Footer from '@common/Footer';
 
 const OtherTodoListPage = () => {
   const location = useLocation();
@@ -46,34 +49,52 @@ const OtherTodoListPage = () => {
 
   return (
     <>
-      <div className="flex w-full flex-row bg-gray-50 pl-[120px] pr-[220px]">
-        <div className="flex flex-row items-start gap-16 pb-20">
+      <div className="flex h-full w-full flex-row bg-gray-50 px-[120px]">
+        <div className="flex w-full flex-col items-start">
           <div className="mt-10 flex flex-row items-start">
             <button
-              className="ml-4 rounded-full p-2 hover:bg-gray-100"
+              className="rounded-full p-2 hover:bg-gray-100"
               onClick={() => navigate(-1)}
             >
               <BackIcon className="h-6 w-6 text-gray-500" />
             </button>
           </div>
 
-          <div className="mt-10 w-full">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <img
-                  src={eachTodos?.profileImage || BaseImg}
-                  alt="프로필"
-                  className="h-16 w-16 rounded-full object-cover"
-                />
-                <div className="flex flex-col">
-                  <span className="text-2xl text-gray-900 font-T02-B">
-                    {eachTodos?.memberNickname}
+          <div className="mt-[69px] w-full">
+            <div className="flex flex-row items-start gap-5">
+              <img
+                src={eachTodos?.profileImage || BaseImg}
+                alt="프로필"
+                className="h-20 w-20 rounded-full object-cover"
+              />
+
+              <div className="flex w-full flex-col">
+                <div className="flex flex-row items-center gap-[30px]">
+                  <span className="text-gray-900 font-T02-B">
+                    {eachTodos?.memberNickname}의 할일목록
                   </span>
+
+                  <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-B03-SB">
+                    {eachTodos?.jobName}
+                  </div>
+                </div>
+
+                <div className="mt-5 flex w-full flex-row items-center justify-between">
+                  <div className="text-gray-900 font-B02-M">
+                    {eachTodos?.regionName}
+                  </div>
+                  <div className="flex flex-row items-center gap-[6px]">
+                    <ShowView />
+                    <div className="text-gray-500 font-B03-M">
+                      {' '}
+                      조회수 {eachTodos?.totalView}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-[50px] flex w-[1000px] flex-col gap-6">
+            <div className="mt-20 flex w-full flex-col gap-6">
               {Array.isArray(eachTodos?.todos) && (
                 <OtherTodoCard
                   title="할 일 목록"
@@ -87,8 +108,15 @@ const OtherTodoListPage = () => {
               )}
             </div>
           </div>
+          {eachTodos?.jobId && (
+            <ProfileCard
+              jobId={Number(eachTodos.jobId)}
+              jobName={eachTodos.jobName}
+            />
+          )}
         </div>
       </div>
+      <Footer />
     </>
   );
 };

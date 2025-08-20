@@ -193,9 +193,11 @@ export const useJobOtherQuery = (jobId: number) => {
 export interface EachTodos {
   todoGroupId: number;
   memberNickname: string;
+  jobId: number;
   daysAgo: number;
   jobName: string;
   totalView: number;
+  regionName: string;
   profileImage: string;
   todos: [
     {
