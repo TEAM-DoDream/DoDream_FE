@@ -46,7 +46,7 @@ const Prepare = () => {
       {prepareStepModal && (
         <PrePareStepModal
           onClose={() => setIsPrePareStepModal(false)}
-          jobName={InfoData?.job.jobName}
+          jobName={InfoData?.job?.jobName}
         />
       )}
     </div>
