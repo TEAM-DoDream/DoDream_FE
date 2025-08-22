@@ -19,7 +19,10 @@
     <!-- Google Tag Manager (Head) -->
     <script>
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      window.dataLayer.push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js',
+      });
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];
         w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
@@ -32,6 +35,16 @@
       })(window, document, 'script', 'dataLayer', 'GTM-MFGTB43Q');
     </script>
     <!-- End Google Tag Manager -->
+
+    <!-- amplitude -->
+    <script src="https://cdn.amplitude.com/script/37df63a1c00e10371493a0382bcfd81.js"></script>
+    <script>
+      window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 }));
+      window.amplitude.init('37df63a1c00e10371493a0382bcfd81', {
+        fetchRemoteConfig: true,
+        autocapture: true,
+      });
+    </script>
   </head>
 
   <body>
@@ -41,7 +54,7 @@
         src="https://www.googletagmanager.com/ns.html?id=GTM-MFGTB43Q"
         height="0"
         width="0"
-        style="display:none;visibility:hidden"
+        style="display: none; visibility: hidden"
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
