@@ -1,11 +1,26 @@
-import Seed from '@assets/icons/seed.svg?react';
 import PrePareStepModal from '@common/modal/PrePareStepModal';
 import { useGetInfo } from '@hook/mypage/useMypageQuery';
 import { useState } from 'react';
+import SeedIcon from '@assets/icons/seed.svg?react';
+import SproutIcon from '@assets/icons/sprout.svg?react';
+import TreeIcon from '@assets/icons/tree.svg?react';
+
+const ICONS: Record<
+  string,
+  React.ComponentType<React.SVGProps<SVGSVGElement>>
+> = {
+  씨앗: SeedIcon,
+  새싹: SproutIcon,
+  꿈나무: TreeIcon,
+};
 
 const Prepare = () => {
   const [prepareStepModal, setIsPrePareStepModal] = useState(false);
   const { data: InfoData } = useGetInfo();
+  const normalize = (s?: string | null) => s?.trim().replace(/단계$/, '');
+  const levelKey = normalize(InfoData?.level);
+
+  const LevelIcon = levelKey && ICONS[levelKey] ? ICONS[levelKey] : null;
 
   return (
     <div className="mt-[22px] flex justify-between">
@@ -17,7 +32,7 @@ const Prepare = () => {
               {' '}
               {InfoData?.level} 단계
             </div>
-            <Seed className="h-5 w-5" />
+            {LevelIcon && <LevelIcon className="h-5 w-5" />}
           </div>
         </div>
       </div>
