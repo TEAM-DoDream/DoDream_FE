@@ -24,7 +24,8 @@ const NavItems = [
   {
     label: '커뮤니티',
     path: '/community',
-    match: (pathname: string) => pathname.startsWith('/others'),
+    match: (pathname: string) =>
+      pathname.startsWith('/others') || pathname.startsWith('/community'),
   },
 
   //마이드림
