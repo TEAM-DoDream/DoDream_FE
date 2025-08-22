@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@hook/api.ts';
 
 type LevelCode = 'SEED' | 'SPROUT' | 'TREE';
@@ -6,6 +6,8 @@ type LevelCode = 'SEED' | 'SPROUT' | 'TREE';
 interface PostLevel {
   level: LevelCode;
 }
+
+export const MYPAGE_QUERYKEY = ['Mypage'];
 
 const Level = async (level: PostLevel) => {
   const token = localStorage.getItem('accessToken');
@@ -27,7 +29,12 @@ const Level = async (level: PostLevel) => {
 };
 
 export const useLevelMutation = () => {
+  const client = useQueryClient();
+
   return useMutation({
     mutationFn: Level,
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: MYPAGE_QUERYKEY });
+    },
   });
 };

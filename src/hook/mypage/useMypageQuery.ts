@@ -14,6 +14,9 @@ export interface GetInfoProps {
   };
   level: string;
 }
+
+export const MYPAGE_QUERYKEY = ['Mypage'] as const;
+
 const Mypage = async () => {
   try {
     const token = localStorage.getItem('accessToken');
