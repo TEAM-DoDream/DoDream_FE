@@ -1,10 +1,11 @@
 import DropDownIcon from '@assets/icons/drop_down.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
 import Bookmark from '@assets/icons/bookmark.svg?react';
+import CommunityRightSide from './components/CommunityRightSide';
 
 const Community = () => {
   return (
-    <div className="flex h-full w-full flex-row bg-gray-50 px-[120px]">
+    <div className="flex h-full w-full flex-row gap-[22px] bg-gray-50 px-[120px]">
       <div className="mt-[95px] flex-col items-start">
         <div className="flex w-[384px] flex-col items-start rounded-[20px] bg-white p-[30px]">
           <div className="flex flex-row items-center gap-[18px]">
@@ -60,6 +61,7 @@ const Community = () => {
           </div>
         </div>
       </div>
+      <CommunityRightSide />
     </div>
   );
 };
