@@ -44,13 +44,7 @@ const Home = () => {
         </div>
       )}
 
-      {!isLoggedIn ? (
-        <Banner />
-      ) : hasNoJob ? (
-        <Banner goToOnboard />
-      ) : (
-        <LoginBanner />
-      )}
+      {!isLoggedIn ? <Banner /> : hasNoJob ? <Banner /> : <LoginBanner />}
 
       <div className="px-[120px] py-20">
         <HomeDreamer />
