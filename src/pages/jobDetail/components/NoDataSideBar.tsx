@@ -1,8 +1,8 @@
 import Warning from '@assets/images/warning.webp';
 const NoDataSideBar = () => {
   return (
-    <div className="mt-[66px] flex h-[752px] w-[444px] flex-col items-start rounded-[30px] bg-white p-[30px]">
-      <div className="flex h-[552px] w-full flex-col items-center justify-center rounded-[30px] bg-white py-10">
+    <div className="mt-[110px] flex w-full flex-col items-start justify-center">
+      <div className="flex w-full flex-col items-center justify-center py-10">
         <div className="text-center text-gray-900 font-T03-B">
           {' '}
           아직 함께 준비하는 <br />

@@ -33,6 +33,7 @@ import InputVerification from '@pages/inputVerification/InputVerificationPage.ts
 import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
 import ChangePwdPage from '@pages/pwdFind/ChangePwdPage.tsx';
 import JobSelect from '@pages/jobSelect/JobSelect';
+import Community from '@pages/community/Community';
 
 function PageViewTracker() {
   const { pathname, search } = useLocation();
@@ -99,6 +100,7 @@ const Router = () => {
             </Route>
           </Route>
           <Route path="/mypage" element={<Mypage />} />
+          <Route path="/community" element={<Community />} />
         </Route>
       </Routes>
     </BrowserRouter>

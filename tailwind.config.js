@@ -19,6 +19,7 @@ export default {
         'purple-700': '#4F469C',
 
         /** Gray **/
+        'gray-50': '#F7F7F7',
         'gray-100': '#F2F3F6',
         'gray-200': '#E8E9ED',
         'gray-300': '#C6C8CE',
