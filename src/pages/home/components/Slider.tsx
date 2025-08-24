@@ -1,12 +1,17 @@
 import BaseImage from '@assets/images/profile.png';
 import Tag from '@common/Tag.tsx';
 
-const Slider = () => {
+interface SliderProps {
+  text: string;
+  user: string;
+  tags: string[];
+}
+
+const Slider = ({ text, user, tags }: SliderProps) => {
   return (
-    <div className="flex min-h-[108px] w-[664px] flex-col gap-[30px] rounded-[30px] bg-gray-50 p-[30px]">
-      <p className="text-lg font-semibold leading-snug text-gray-900">
-        ‘한국보건의료인국가시험원' 홈페이지 방문하여 자격요건, 시험 일정
-        확인하기
+    <div className="flex h-full w-full flex-col gap-[10px] rounded-[30px] bg-gray-50 p-[30px]">
+      <p className="line-clamp-2 min-h-[3.5rem] text-lg font-semibold leading-relaxed text-gray-900">
+        {text}
       </p>
 
       <div className="flex items-center gap-3">
@@ -15,11 +20,12 @@ const Slider = () => {
           alt="프로필이미지"
           className="h-10 w-10 rounded-full"
         />
-        <span className="text-gray-900 font-B03-M">{'금서짱'}</span>
+        <span className="text-gray-900 font-B03-M">{user}</span>
         <div className="flex flex-col">
           <div className="flex gap-2">
-            <Tag context={'요양보호사'} fontClass={'font-B03-M'} />
-            <Tag context={'새싹 단계인 사람'} fontClass={'font-B03-M'} />
+            {tags.map((tag, index) => (
+              <Tag key={index} context={tag} fontClass={'font-B03-M'} />
+            ))}
           </div>
         </div>
       </div>
