@@ -12,7 +12,11 @@ export interface GetInfoProps {
     jobId: number;
     jobName: string;
   };
+  level: string;
 }
+
+export const MYPAGE_QUERYKEY = ['Mypage'] as const;
+
 const Mypage = async () => {
   try {
     const token = localStorage.getItem('accessToken');
@@ -26,7 +30,6 @@ const Mypage = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     return response.data.data;
   } catch (error) {
     console.error('내 계정 정보를 불러오는 것에 실패했습니다.', error);

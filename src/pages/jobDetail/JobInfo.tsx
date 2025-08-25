@@ -10,6 +10,7 @@ import CalendarIcon from '@assets/icons/calendar.svg?react';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
 // import ProfileCard from './components/ProfileCard';
+// import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
 import RecommendTodo from './components/RecommendTodo';
 
