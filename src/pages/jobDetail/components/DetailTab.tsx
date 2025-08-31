@@ -1,28 +1,71 @@
 import { useState } from 'react';
+import {
+  useJobTodoCategory,
+  JobTodoCategoryProps,
+} from '@hook/jobinfo/useJobTodoCategory';
 import ReadyContent from './TabContent/ReadyContent';
+import SproutContent from './TabContent/SproutContent';
+import TreeContents from './TabContent/TreeContents';
+
+type TabKey = 'ready' | 'start' | 'challenge';
 
 type Tab = {
-  key: 'ready' | 'start' | 'challenge';
+  key: TabKey;
   label: string;
-  content: React.ReactNode;
 };
 
 const tabs: Tab[] = [
-  {
-    key: 'ready',
-    label: '씨앗 단계',
-    content: <ReadyContent />,
-  },
-  { key: 'start', label: '새싹 단계', content: <div>새싹 단계 내용</div> },
-  {
-    key: 'challenge',
-    label: '꿈나무 단계',
-    content: <div>꿈나무 단계 내용</div>,
-  },
+  { key: 'ready', label: '씨앗 단계' },
+  { key: 'start', label: '새싹 단계' },
+  { key: 'challenge', label: '꿈나무 단계' },
 ];
 
-const DetailTab = () => {
-  const [active, setActive] = useState<Tab['key']>('ready');
+const category: Record<TabKey, string> = {
+  ready: 'SEED',
+  start: 'SPROUT',
+  challenge: 'TREE',
+};
+
+const DetailTab = ({ jobId }: { jobId: number }) => {
+  const [active, setActive] = useState<TabKey>('ready');
+
+  const { data, isLoading, isError, error } = useJobTodoCategory(
+    Number(jobId),
+    category[active]
+  );
+
+  const renderContent = () => {
+    if (!jobId) return;
+    if (isLoading) return <p className="text-gray-500">불러오는 중…</p>;
+    if (isError)
+      return <p className="text-red-500">{(error as Error)?.message}</p>;
+
+    switch (active) {
+      case 'ready':
+        return (
+          <ReadyContent
+            jobId={Number(jobId)}
+            data={data as JobTodoCategoryProps}
+          />
+        );
+      case 'start':
+        return (
+          <SproutContent
+            jobId={Number(jobId)}
+            data={data as JobTodoCategoryProps}
+          />
+        );
+      case 'challenge':
+        return (
+          <TreeContents
+            jobId={Number(jobId)}
+            data={data as JobTodoCategoryProps}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="mt-[34px] w-full">
@@ -45,7 +88,6 @@ const DetailTab = () => {
               ].join(' ')}
             >
               {t.label}
-
               <span
                 aria-hidden
                 className={[
@@ -58,7 +100,7 @@ const DetailTab = () => {
         })}
       </div>
 
-      <div className="pt-6">{tabs.find((t) => t.key === active)?.content}</div>
+      <div className="pt-6">{renderContent()}</div>
     </div>
   );
 };

@@ -9,8 +9,6 @@ import CertificationIcon from '@assets/icons/certification.svg?react';
 import CalendarIcon from '@assets/icons/calendar.svg?react';
 import { useState } from 'react';
 import AddJobModal from '@common/modal/AddJobModal';
-// import ProfileCard from './components/ProfileCard';
-// import ProfileCard from './components/ProfileCard';
 import WorkStrong from './components/WorkStrong';
 import RecommendTodo from './components/RecommendTodo';
 
@@ -103,15 +101,13 @@ const JobInfo = () => {
               relationship={jobDetail?.strong.relationship || ''}
             />
           </div>
-          <RecommendTodo />
+          <RecommendTodo jobId={Number(jobId)} />
         </div>
 
         <JobView jobName={jobDetail?.jobName || ''} />
         {isModalOpen && isLoggedIn && (
           <AddJobModal onClose={() => setIsModalOpen(false)} />
         )}
-
-        {/* <ProfileCard /> */}
       </div>
     </div>
   );

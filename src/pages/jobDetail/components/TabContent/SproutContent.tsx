@@ -1,36 +1,36 @@
 import { JobTodoCategoryProps } from '@hook/jobinfo/useJobTodoCategory';
 
-interface ReadyContentProps {
+interface SproutContentProps {
   jobId: number;
   data?: JobTodoCategoryProps;
 }
 
-const ReadyContent = ({ jobId, data }: ReadyContentProps) => {
-  const seedData = data?.jobTodos ?? [];
+const SproutContent = ({ jobId, data }: SproutContentProps) => {
+  const sproutData = data?.jobTodos ?? [];
 
-  if (!seedData.length) {
+  if (!sproutData.length) {
     return (
-      <p className="text-center text-gray-500">
-        씨앗 단계에 등록된 할 일이 없습니다.
+      <p className="text-center text-gray-700">
+        새싹 단계에 등록된 할 일이 없습니다.
       </p>
     );
   }
 
   return (
     <div className="gap-10 space-y-5">
-      {seedData.map((seed) => (
+      {sproutData.map((sprout) => (
         <div
-          key={seed.JobTodoId}
-          className="flex w-full items-center justify-between"
+          key={sprout.JobTodoId}
+          className="flex items-center justify-between"
         >
           <div className="max-w-[516px] truncate text-gray-500 font-B01-M">
-            {seed.title}
+            {sprout.title}
           </div>
 
           <button
             className="flex h-[34px] w-[96px] items-center justify-center rounded-[10px] bg-purple-500 p-2 text-purple-100 font-B03-SB hover:bg-purple-600"
             onClick={() => {
-              console.log('할일 추가:', jobId, seed.JobTodoId);
+              console.log('Sprout 할일 추가:', jobId, sprout.JobTodoId);
             }}
           >
             내 할일에 추가
@@ -41,4 +41,4 @@ const ReadyContent = ({ jobId, data }: ReadyContentProps) => {
   );
 };
 
-export default ReadyContent;
+export default SproutContent;
