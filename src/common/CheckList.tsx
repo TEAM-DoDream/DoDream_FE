@@ -74,6 +74,17 @@ const CheckList = ({
     if (!trimmedText) return;
 
     if (isAddingNew) {
+      // Amplitude 이벤트 - 할일 추가 시도 (inpage)
+      if (window.amplitude) {
+        window.amplitude.track('todo_create', {
+          source_method: 'inpage',
+          source_page: window.location.pathname,
+          todo_length: trimmedText.length,
+          timestamp: new Date().toISOString(),
+        });
+        console.log('Amplitude event sent: todo_create_attempt (inpage)');
+      }
+      
       mutate(
         { todoTitle: trimmedText },
         {
