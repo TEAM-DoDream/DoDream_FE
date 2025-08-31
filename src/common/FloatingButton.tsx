@@ -20,8 +20,8 @@ const FloatingButton = () => {
 
   const handleFloatingButtonClick = () => {
     // Amplitude 이벤트 - 플로팅 버튼 클릭
-    if (window.amplitude) {
-      window.amplitude.track('todo_create', {
+    if (typeof window !== 'undefined' && 'amplitude' in window && window.amplitude) {
+      (window as any).amplitude.track('todo_create', {
         source_method: 'floating',
         source_page: window.location.pathname,
         timestamp: new Date().toISOString(),
