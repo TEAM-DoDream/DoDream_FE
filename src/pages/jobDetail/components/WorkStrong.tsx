@@ -18,9 +18,9 @@ const WorkStrong = ({ physical, stress, relationship }: JobIntensityProps) => {
     setVisibleTooltip((prev) => (prev === key ? null : key));
   };
   return (
-    <div className="mt-5 flex w-[712px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] pb-[30px] pt-10">
-      <div className="text-gray-900 font-T03-B"> 업무 강도 </div>
-      <Divider className="my-[30px]" />
+    <div className="mt-[60px] w-full">
+      <div className="text-gray-900 font-T05-SB"> 업무 강도 </div>
+      <Divider className="my-[30px] bg-gray-200" />
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-row items-center gap-[56px]">
