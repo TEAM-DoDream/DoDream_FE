@@ -159,7 +159,7 @@ const Signup2 = () => {
         <Controller
           name="date"
           control={control}
-          render={({ field: { onChange, value, ...rest } }) => {
+          render={({ field: { onChange, ...rest } }) => {
             const handleInputChange = (
               e: React.ChangeEvent<HTMLInputElement>
             ) => {

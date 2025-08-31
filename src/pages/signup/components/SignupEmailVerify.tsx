@@ -84,6 +84,7 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
       setErrorMessage('');
       setSuccessMessage('');
     } catch (error) {
+      console.error('인증번호 재전송에 실패했습니다:', error);
       setErrorMessage('인증번호 재전송에 실패했습니다. 다시 시도해주세요.');
     }
   };
