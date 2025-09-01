@@ -34,12 +34,23 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
   const handleSubmit = () => {
     if (!isLoggedIn || !taskText.trim() || hasNoJob) return;
 
+    // Amplitude 이벤트 - 할일 추가 시도
+    if (window.amplitude) {
+      window.amplitude.track('todo_create', {
+        source_method: 'floating',
+        source_page: location.pathname,
+        todo_length: taskText.trim().length,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: todo_create_attempt');
+    }
+
     mutate(
       {
         todoTitle: taskText,
       },
       {
-        onSuccess: () => {
+        onSuccess: () => { 
           setTaskText('');
           onAddTask();
           onClose();

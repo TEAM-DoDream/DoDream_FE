@@ -34,6 +34,7 @@ const OnBoardingPage = () => {
 
   useEffect(() => {
     return () => {
+      // GTM 이벤트 - 온보딩 종료
       ReactTagManager.action({
         event: 'onboarding_exit',
         category: '온보딩',
@@ -41,10 +42,12 @@ const OnBoardingPage = () => {
         step: stepRef.current + 1,
         question: questionRef.current + 1,
       });
+
     };
   }, []);
 
   const handleSubmit = () => {
+    // GTM 이벤트 - 온보딩 완료
     ReactTagManager.action({
       event: 'onboarding_complete',
       category: '온보딩',
@@ -52,6 +55,19 @@ const OnBoardingPage = () => {
       step: curStep + 1,
       question: curQuestionIndex + 1,
     });
+    
+    // Amplitude 이벤트 - 온보딩 완료
+    if (window.amplitude) {
+      window.amplitude.track('job_onboarding_complete', {
+        source_page: window.location.pathname,
+        step: curStep + 1,
+        question: curQuestionIndex + 1,
+        total_steps: stepQuestions.length,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: job_onboarding_complete');
+    }
+    
     mutate(buildPayload());
   };
 
