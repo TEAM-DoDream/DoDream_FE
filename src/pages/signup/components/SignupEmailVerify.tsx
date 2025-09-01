@@ -65,6 +65,16 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (successMessage === '올바른 인증번호입니다.') {
+      // Amplitude 이벤트 전송
+      if (window.amplitude) {
+        window.amplitude.track('email_verify_submit', {
+          email: email,
+          verification_status: 'success',
+          timestamp: new Date().toISOString(),
+        });
+        console.log('Amplitude event sent: email_verify_submit');
+      }
+      
       onNext();
     }
     setField('email', email);
@@ -83,7 +93,16 @@ const SignupEmailVerify = ({ onNext, email }: SignupEmailVerifyProps) => {
       setVerifyNum('');
       setErrorMessage('');
       setSuccessMessage('');
-    } catch (error) {
+      
+      // Amplitude 이벤트 전송 - 인증번호 재전송
+      if (window.amplitude) {
+        window.amplitude.track('email_verify_resend', {
+          email: email,
+          timestamp: new Date().toISOString(),
+        });
+        console.log('Amplitude event sent: email_verify_resend');
+      }
+    } catch {
       setErrorMessage('인증번호 재전송에 실패했습니다. 다시 시도해주세요.');
     }
   };

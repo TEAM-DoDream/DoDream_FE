@@ -55,6 +55,7 @@ const JobSelect = () => {
     if (isFirstJobModal && pendingJob) {
       saveJobMutation.mutate(pendingJob.id, {
         onSuccess: () => {
+          // GTM 이벤트
           ReactTagManager.action({
             event: 'job_select',
             job_id: pendingJob.id,
@@ -62,6 +63,19 @@ const JobSelect = () => {
             clickText: '직업 담기',
             source_page: location.pathname,
           });
+          
+          // Amplitude 이벤트 - 직업 담기
+          if (window.amplitude) {
+            window.amplitude.track('job_select', {
+              method: 'job_add',
+              job_id: pendingJob.id,
+              job_name: pendingJob.name,
+              source_page: location.pathname,
+              timestamp: new Date().toISOString(),
+            });
+            console.log('Amplitude event sent: job_select (job_add)');
+          }
+          
           setSelectedJob({ id: pendingJob.id, name: pendingJob.name });
           setHasEverSelectedJob(true);
           queryClient.invalidateQueries({ queryKey: ['mypageInfo'] });
@@ -79,6 +93,30 @@ const JobSelect = () => {
   const handleSaveButton = () => {
     setIsFirstJobModal(false);
     setOpenModal(true);
+  };
+
+  const handleJobRecommendClick = () => {
+    // Amplitude 이벤트 - 직업 추천 받기 (job_select)
+    if (window.amplitude) {
+      window.amplitude.track('job_select', {
+        method: 'job_recommend',
+        source_page: location.pathname,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: job_select (job_recommend)');
+    }
+    
+    // Amplitude 이벤트 - 온보딩 시작
+    if (window.amplitude) {
+      window.amplitude.track('job_onboarding_start', {
+        source_page: location.pathname,
+        referrer: document.referrer,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: job_onboarding_start');
+    }
+    
+    navigate('/onboard');
   };
 
   return (
@@ -177,7 +215,7 @@ const JobSelect = () => {
           color="primary"
           type="button"
           className="h-[71px] w-[196px] items-center justify-center font-T04-B"
-          onClick={() => navigate('/onboard')}
+          onClick={handleJobRecommendClick}
         />
       </div>
 

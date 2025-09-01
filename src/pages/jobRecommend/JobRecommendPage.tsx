@@ -69,6 +69,16 @@ const JobRecommendPage = () => {
       source_page: location.pathname,
     });
 
+    // Amplitude 이벤트 - 온보딩 결과에서 직업 담기
+    if (window.amplitude) {
+      window.amplitude.track('job_onboarding_select', {
+        job_id: jobId,
+        source_page: location.pathname,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: job_onboarding_select');
+    }
+
     addJob(jobId, {
       onSuccess: () => {
         setIsErrorToast(false);

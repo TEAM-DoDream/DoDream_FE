@@ -16,6 +16,16 @@ const LoginForm = () => {
   });
   const { mutate } = useLoginMutation();
   const onSubmit = (formData: LoginFormValues) => {
+    if (window.amplitude) {
+      window.amplitude.track('click_login', {
+        login_method: 'email',
+        has_id: !!formData.id,
+        has_password: !!formData.password,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: click_login'); // 콘솔에서 전송 확인용
+    }
+
     mutate({
       loginId: formData.id,
       password: formData.password,

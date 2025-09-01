@@ -18,6 +18,13 @@ const LoginPage = () => {
     setTimeout(() => {
       navigate('/signup');
     }, 200);
+    if (window.amplitude) {
+      window.amplitude.track('signup_start', {
+        source_page: location.pathname,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: signup_start'); // 콘솔에서 전송 확인용
+    }
   };
 
   return (
