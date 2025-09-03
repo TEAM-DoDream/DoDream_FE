@@ -1,7 +1,7 @@
 import Arrow from '@assets/icons/arrow.svg?react';
 import DetailTab from './DetailTab';
 
-const RecommendTodo = () => {
+const RecommendTodo = ({ jobId }: { jobId: number }) => {
   return (
     <div className="mt-6 flex w-[712px] flex-col items-start rounded-[30px] border border-gray-300 bg-white px-[30px] py-10">
       <div className="flex w-full flex-row items-center justify-between">
@@ -12,7 +12,7 @@ const RecommendTodo = () => {
         </div>
       </div>
 
-      <DetailTab />
+      <DetailTab jobId={jobId} />
     </div>
   );
 };

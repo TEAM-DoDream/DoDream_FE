@@ -1,16 +1,16 @@
-import ToastModal from '@common/modal/ToastModal';
 import { JobTodoCategoryProps } from '@hook/jobinfo/useJobTodoCategory';
-import Info from '@assets/icons/info.svg?react';
 import { useState } from 'react';
+import ToastModal from '@common/modal/ToastModal';
+import Info from '@assets/icons/info.svg?react';
 import { useAddMyTodoMutation } from '@hook/jobinfo/useAddMyTodoMutation.ts';
 
-interface ReadyContentProps {
+interface SproutContentProps {
   jobId: number;
   data?: JobTodoCategoryProps;
 }
 
-const ReadyContent = ({ data }: ReadyContentProps) => {
-  const seedData = data?.jobTodos ?? [];
+const SproutContent = ({ data }: SproutContentProps) => {
+  const sproutData = data?.jobTodos ?? [];
 
   const { mutate, isPending } = useAddMyTodoMutation();
   const [clickedId, setClickedId] = useState<number | null>(null);
@@ -31,27 +31,27 @@ const ReadyContent = ({ data }: ReadyContentProps) => {
     });
   };
 
-  if (!seedData.length) {
+  if (!sproutData.length) {
     return (
-      <p className="text-center text-gray-500">
-        씨앗 단계에 등록된 할 일이 없습니다.
+      <p className="text-center text-gray-700">
+        새싹 단계에 등록된 할 일이 없습니다.
       </p>
     );
   }
 
   return (
     <div className="gap-10 space-y-5">
-      {seedData.map((seed) => {
-        const isLoading = isPending && clickedId === seed.JobTodoId;
-        const isCompleted = completedId.has(seed.JobTodoId);
+      {sproutData.map((sprout) => {
+        const isLoading = isPending && clickedId === sprout.JobTodoId;
+        const isCompleted = completedId.has(sprout.JobTodoId);
 
         return (
           <div
-            key={seed.JobTodoId}
-            className="flex w-full items-center justify-between"
+            key={sprout.JobTodoId}
+            className="flex items-center justify-between"
           >
             <div className="max-w-[516px] truncate text-gray-500 font-B01-M">
-              {seed.title}
+              {sprout.title}
             </div>
 
             <button
@@ -63,7 +63,7 @@ const ReadyContent = ({ data }: ReadyContentProps) => {
                     : 'bg-purple-500 text-purple-100 hover:bg-purple-600'
               }`}
               disabled={isLoading || isCompleted}
-              onClick={() => handleAdd(seed.JobTodoId)}
+              onClick={() => handleAdd(sprout.JobTodoId)}
             >
               {isCompleted
                 ? '할일 추가 완료'
@@ -88,4 +88,4 @@ const ReadyContent = ({ data }: ReadyContentProps) => {
   );
 };
 
-export default ReadyContent;
+export default SproutContent;

@@ -1,16 +1,16 @@
-import ToastModal from '@common/modal/ToastModal';
 import { JobTodoCategoryProps } from '@hook/jobinfo/useJobTodoCategory';
-import Info from '@assets/icons/info.svg?react';
 import { useState } from 'react';
+import ToastModal from '@common/modal/ToastModal';
+import Info from '@assets/icons/info.svg?react';
 import { useAddMyTodoMutation } from '@hook/jobinfo/useAddMyTodoMutation.ts';
 
-interface ReadyContentProps {
+interface TreeContentsProps {
   jobId: number;
   data?: JobTodoCategoryProps;
 }
 
-const ReadyContent = ({ data }: ReadyContentProps) => {
-  const seedData = data?.jobTodos ?? [];
+const TreeContents = ({ data }: TreeContentsProps) => {
+  const treeData = data?.jobTodos ?? [];
 
   const { mutate, isPending } = useAddMyTodoMutation();
   const [clickedId, setClickedId] = useState<number | null>(null);
@@ -31,27 +31,27 @@ const ReadyContent = ({ data }: ReadyContentProps) => {
     });
   };
 
-  if (!seedData.length) {
+  if (!treeData.length) {
     return (
-      <p className="text-center text-gray-500">
-        씨앗 단계에 등록된 할 일이 없습니다.
+      <p className="text-center text-gray-700">
+        꿈나무 단계에 등록된 할 일이 없습니다.
       </p>
     );
   }
 
   return (
     <div className="gap-10 space-y-5">
-      {seedData.map((seed) => {
-        const isLoading = isPending && clickedId === seed.JobTodoId;
-        const isCompleted = completedId.has(seed.JobTodoId);
+      {treeData.map((tree) => {
+        const isLoading = isPending && clickedId === tree.JobTodoId;
+        const isCompleted = completedId.has(tree.JobTodoId);
 
         return (
           <div
-            key={seed.JobTodoId}
-            className="flex w-full items-center justify-between"
+            key={tree.JobTodoId}
+            className="flex items-center justify-between"
           >
             <div className="max-w-[516px] truncate text-gray-500 font-B01-M">
-              {seed.title}
+              {tree.title}
             </div>
 
             <button
@@ -63,7 +63,7 @@ const ReadyContent = ({ data }: ReadyContentProps) => {
                     : 'bg-purple-500 text-purple-100 hover:bg-purple-600'
               }`}
               disabled={isLoading || isCompleted}
-              onClick={() => handleAdd(seed.JobTodoId)}
+              onClick={() => handleAdd(tree.JobTodoId)}
             >
               {isCompleted
                 ? '할일 추가 완료'
@@ -88,4 +88,4 @@ const ReadyContent = ({ data }: ReadyContentProps) => {
   );
 };
 
-export default ReadyContent;
+export default TreeContents;

@@ -50,7 +50,8 @@ const SingupAgree = ({ onNext, setEmail }: SignupProps) => {
       });
       setEmail(data.email);
       onNext();
-    } catch (err) {
+    } catch (error) {
+      console.error('이미 가입된 이메일 주소입니다.', error);
       alert('이미 가입된 이메일 주소입니다.');
     }
   };
