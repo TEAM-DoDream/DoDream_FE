@@ -5,6 +5,7 @@ import { useUserStore } from '@store/useUserStore';
 import { useNavigate } from 'react-router-dom';
 import { useFilterStore } from '@store/filterStore';
 import SliderContainer from '@pages/home/components/SliderContainer.tsx';
+import { useGetInfo } from '@hook/mypage/useMypageQuery';
 
 const LoginBanner = () => {
   const { data: jobList } = useBannerQuery();
@@ -12,13 +13,22 @@ const LoginBanner = () => {
   const navigate = useNavigate();
   const setSelection = useFilterStore((s) => s.setSelection);
   const nickname = localStorage.getItem('nickname');
+  const { data: myInfo } = useGetInfo();
+
+  const levelLabel = (() => {
+    const level = myInfo?.level?.trim();
+    if (!level) return null;
+    const normalized = level.replace(/\s*단계\s*$/u, '');
+    return normalized.length > 0 ? normalized : null;
+  })();
   return (
     <div className="flex h-[489px] w-full items-center justify-center gap-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
       <div className="mt-[10px]">
         <div className="pb-[10px] pt-[33px] text-purple-700 font-T02-B">
           안녕하세요,
           <br />
-          {'[새싹]'} {nickname}님
+          {levelLabel ? `[${levelLabel}] ` : ''}
+          {nickname}님
         </div>
         <SliderContainer />
       </div>
