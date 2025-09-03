@@ -9,7 +9,7 @@ interface SliderProps {
 
 const Slider = ({ text, user, tags }: SliderProps) => {
   return (
-    <div className="flex h-full w-full flex-col gap-[10px] rounded-[30px] bg-gray-50 p-[30px]">
+    <div className="flex h-full w-[664px] min-w-[600px] flex-col gap-[10px] rounded-[30px] bg-gray-50 p-[30px]">
       <p className="line-clamp-2 min-h-[3.5rem] text-lg font-semibold leading-relaxed text-gray-900">
         {text}
       </p>

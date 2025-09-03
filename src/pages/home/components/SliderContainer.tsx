@@ -1,26 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import Slider from './Slider';
-
-const sliderData = [
-  {
-    id: 1,
-    text: '‘한국보건의료인국가시험원 홈페이지 방문하여 자격요건, 시험 일정 확인하기 확인하 확인하 확인하 확인하 확인하 확인하',
-    user: '금서짱',
-    tags: ['요양보호사', '새싹 단계인 사람'],
-  },
-  {
-    id: 2,
-    text: '컴퓨터활용능력 1급 실기 시험 접수하기',
-    user: '개발왕',
-    tags: ['컴활', '자격증 준비'],
-  },
-  {
-    id: 3,
-    text: 'React Query 마스터를 위한 공식 문서 정독',
-    user: '리액트꿈나무',
-    tags: ['프론트엔드', '스터디'],
-  },
-];
+import { usePopularQuery } from '@hook/home/usePopularQuery';
 
 const SLIDER_HEIGHT = 168;
 const GAP = 20;
@@ -29,14 +9,24 @@ const TRANSITION_DURATION = 500;
 const VIEWPORT_HEIGHT = SLIDER_HEIGHT * 2 + GAP;
 
 const SliderContainer = () => {
+  const { data: popularTodos } = usePopularQuery();
+
   const extendedSliderData = useMemo(() => {
-    if (sliderData.length === 0) return [];
+    if (!popularTodos || popularTodos.length === 0) return [];
+
+    const transformedData = popularTodos.map((todo) => ({
+      id: todo.todoId,
+      text: todo.title,
+      user: todo.memberNickname,
+      tags: [todo.jobName, todo.memberLevel || '레벨 없음'],
+    }));
+
     const firstClone = {
-      ...sliderData[0],
-      id: `clone-first-${sliderData[0].id}`,
+      ...transformedData[0],
+      id: `clone-first-${transformedData[0].id}`,
     };
-    return [...sliderData, firstClone];
-  }, []);
+    return [...transformedData, firstClone];
+  }, [popularTodos]);
 
   const [activeIndex, setActiveIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
@@ -49,13 +39,15 @@ const SliderContainer = () => {
   };
 
   useEffect(() => {
-    startInterval();
+    if (extendedSliderData.length > 0) {
+      startInterval();
+    }
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [extendedSliderData.length]);
 
   useEffect(() => {
     if (activeIndex === extendedSliderData.length) {
@@ -84,7 +76,7 @@ const SliderContainer = () => {
   };
 
   return (
-    <div className="relative w-full max-w-[664px]">
+    <div className="relative w-full max-w-[900px]">
       <style>
         {`
         .slider-viewport {
@@ -136,7 +128,12 @@ const SliderContainer = () => {
           {extendedSliderData.map((data) => (
             <div
               key={data.id}
-              style={{ height: `${SLIDER_HEIGHT}px`, flexShrink: 0 }}
+              style={{
+                height: `${SLIDER_HEIGHT}px`,
+                flexShrink: 0,
+                width: '100%',
+              }}
+              className="w-full"
             >
               <Slider {...data} />
             </div>
