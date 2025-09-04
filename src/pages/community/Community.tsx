@@ -1,17 +1,21 @@
-import DropDownIcon from '@assets/icons/drop_down.svg?react';
+//  import DropDownIcon from '@assets/icons/drop_down.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
 import Bookmark from '@assets/icons/bookmark.svg?react';
 import CommunityRightSide from './components/CommunityRightSide';
-
+import CommunityDropdown from './components/CommunityDropdown';
+import jobs from '@utils/data/community/jobs';
 const Community = () => {
   return (
     <div className="flex h-full w-full flex-row gap-[22px] bg-gray-50 px-[120px]">
       <div className="mt-[95px] flex-col items-start">
         <div className="flex w-[384px] flex-col items-start rounded-[20px] bg-white p-[30px]">
-          <div className="flex flex-row items-center gap-[18px]">
-            <div className="text-purple-500 font-T02-B"> 요양보호사 </div>
-            <DropDownIcon className="h-[30px] w-[30px] cursor-pointer text-[#A1A6B5]" />
-          </div>
+          <CommunityDropdown
+            options={jobs}
+            value={jobs[0]}
+            onSelect={(value) => {
+              console.log(value);
+            }}
+          />
 
           <div className="text-black font-T02-B"> 꿈꾸는 드리머</div>
 
