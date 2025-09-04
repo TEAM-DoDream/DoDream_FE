@@ -3,8 +3,13 @@ import Arrow from '@assets/icons/arrow.svg?react';
 import Bookmark from '@assets/icons/bookmark.svg?react';
 import CommunityRightSide from './components/CommunityRightSide';
 import CommunityDropdown from './components/CommunityDropdown';
+import { useGetHotPopularQuery } from '@hook/community/query/useGetHotPopularQuery';
 import jobs from '@utils/data/community/jobs';
+import { useCommunityStore } from '@store/useCommunityStore';
+
 const Community = () => {
+  const { selectedJobName } = useCommunityStore();
+  const { data: popularTodos = [] } = useGetHotPopularQuery();
   return (
     <div className="flex h-full w-full flex-row gap-[22px] bg-gray-50 px-[120px]">
       <div className="mt-[95px] flex-col items-start">
@@ -26,31 +31,36 @@ const Community = () => {
         </div>
 
         <div className="mb-[102px] mt-[22px] flex w-[384px] flex-col items-start rounded-[20px] bg-white px-[30px] pb-[30px] pt-10">
-          <div className="text-black font-T04-B"> 요양보호사 HOT 할 일</div>
+          <div className="text-black font-T04-B">
+            {' '}
+            {selectedJobName} HOT 할 일
+          </div>
           <div className="mt-[37px] flex w-full flex-col items-start">
-            {[1, 2, 3, 4, 5].map((num) => (
+            {popularTodos.map((item, idx) => (
               <div
-                key={num}
+                key={item.id}
                 className="flex w-full flex-row items-start justify-between py-4"
               >
                 <div className="flex flex-row items-center gap-[15px]">
-                  <div className="text-purple-500 font-T05-SB">{num}</div>
+                  <div className="text-purple-500 font-T05-SB">{idx + 1}</div>
                   <div className="flex flex-row items-center gap-[15px]">
                     <img
-                      src="이미지"
+                      src={item.imageUrl}
                       alt="프로필이미지"
                       className="h-[30px] w-[30px] rounded-full bg-gray-50"
                     />
 
                     <div className="flex flex-col">
-                      <div className="flex flex-row items-center gap-[10px]">
-                        <div className="text-black font-B01-SB">
-                          할일 내용내용
+                      <div className="flex w-full flex-row items-start justify-between gap-[10px]">
+                        <div className="flex-1 break-words text-black font-B01-SB">
+                          {item.description}
                         </div>
-                        <div className="text-gray-500 font-C01-R">2분 전</div>
+                        <div className="mr-2 shrink-0 whitespace-nowrap text-gray-500 font-C01-R">
+                          {item.dDay}
+                        </div>
                       </div>
                       <div className="mt-1 text-gray-500 font-C01-R">
-                        해바라기엄마
+                        {item.name}
                       </div>
                     </div>
                   </div>
@@ -58,7 +68,7 @@ const Community = () => {
 
                 <div className="flex flex-row items-center gap-[6px] text-purple-500">
                   <Bookmark />
-                  <span className="font-B03-SB">11</span>
+                  <span className="font-B03-SB">{item.saveCount}</span>
                 </div>
               </div>
             ))}

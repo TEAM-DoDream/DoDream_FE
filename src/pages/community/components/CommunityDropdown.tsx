@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useDropdown } from '@hook/useDropdown';
 import { useEffect, useState } from 'react';
 import { useGetCommunityQuery } from '@hook/community/query/useGetCommunityQuery';
+import { useCommunityStore } from '@store/useCommunityStore';
 
 export interface CommunityDropdownProps<T extends string = string> {
   options: T[];
@@ -24,6 +25,7 @@ export default function CommunityDropdown<T extends string = string>({
   const [userSelected, setUserSelected] = useState<boolean>(false);
   const [initializedFromApi, setInitializedFromApi] = useState<boolean>(false);
   const { data: communityData } = useGetCommunityQuery();
+  const { setSelectedJobName } = useCommunityStore();
 
   useEffect(() => {
     if (!initializedFromApi) return; // API 초기 반영 전에는 옵션/외부값으로 덮어쓰지 않음
@@ -51,9 +53,10 @@ export default function CommunityDropdown<T extends string = string>({
     // 최초 1회: API 값으로 초기화하고 이후에는 사용자의 선택/외부값을 우선
     if (!initializedFromApi && apiDefault) {
       setSelected(apiDefault);
+      setSelectedJobName(String(apiDefault));
       setInitializedFromApi(true);
     }
-  }, [communityData, initializedFromApi]);
+  }, [communityData, initializedFromApi, setSelectedJobName]);
 
   const label = (selected || placeholder) as string;
   const shouldScroll = options.length > 8;
@@ -84,6 +87,7 @@ export default function CommunityDropdown<T extends string = string>({
               onClick={() => {
                 setSelected(opt);
                 setUserSelected(true);
+                setSelectedJobName(String(opt));
                 onSelect(opt);
                 toggle();
               }}
