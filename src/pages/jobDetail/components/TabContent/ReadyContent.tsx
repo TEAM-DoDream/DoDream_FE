@@ -1,0 +1,91 @@
+import ToastModal from '@common/modal/ToastModal';
+import { JobTodoCategoryProps } from '@hook/jobinfo/useJobTodoCategory';
+import Info from '@assets/icons/info.svg?react';
+import { useState } from 'react';
+import { useAddMyTodoMutation } from '@hook/jobinfo/useAddMyTodoMutation.ts';
+
+interface ReadyContentProps {
+  jobId: number;
+  data?: JobTodoCategoryProps;
+}
+
+const ReadyContent = ({ data }: ReadyContentProps) => {
+  const seedData = data?.jobTodos ?? [];
+
+  const { mutate, isPending } = useAddMyTodoMutation();
+  const [clickedId, setClickedId] = useState<number | null>(null);
+  const [completedId, setCompletedId] = useState<Set<number>>(new Set());
+  const [showToast, setShowToast] = useState(false);
+
+  const handleAdd = (jobTodoId: number) => {
+    if (completedId.has(jobTodoId)) return;
+
+    setClickedId(jobTodoId);
+    mutate(jobTodoId, {
+      onSuccess: () => {
+        setCompletedId((prev) => new Set(prev).add(jobTodoId));
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000);
+      },
+      onSettled: () => setClickedId(null),
+    });
+  };
+
+  if (!seedData.length) {
+    return (
+      <p className="text-center text-gray-500">
+        씨앗 단계에 등록된 할 일이 없습니다.
+      </p>
+    );
+  }
+
+  return (
+    <div className="gap-10 space-y-5">
+      {seedData.map((seed) => {
+        const isLoading = isPending && clickedId === seed.JobTodoId;
+        const isCompleted = completedId.has(seed.JobTodoId);
+
+        return (
+          <div
+            key={seed.JobTodoId}
+            className="flex w-full items-center justify-between"
+          >
+            <div className="max-w-[516px] truncate text-gray-500 font-B01-M">
+              {seed.title}
+            </div>
+
+            <button
+              className={`flex h-[34px] w-[120px] items-center justify-center rounded-[10px] p-2 font-B03-SB ${
+                isCompleted
+                  ? 'cursor-default bg-gray-200 text-gray-600'
+                  : isLoading
+                    ? 'bg-gray-300 text-gray-600'
+                    : 'bg-purple-500 text-purple-100 hover:bg-purple-600'
+              }`}
+              disabled={isLoading || isCompleted}
+              onClick={() => handleAdd(seed.JobTodoId)}
+            >
+              {isCompleted
+                ? '할일 추가 완료'
+                : isLoading
+                  ? '할일 추가 중'
+                  : '내 할일에 추가'}
+            </button>
+          </div>
+        );
+      })}
+
+      {showToast && (
+        <div className="fixed top-[130px] z-50 flex w-full justify-center">
+          <ToastModal
+            icon={<Info className="h-6 w-6 text-white" />}
+            text="내 할일 목록에 추가 되었습니다"
+            width="w-[350px]"
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ReadyContent;

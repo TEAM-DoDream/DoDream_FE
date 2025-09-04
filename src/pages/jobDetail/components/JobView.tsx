@@ -1,4 +1,3 @@
-import Arrow from '@assets/icons/arrow.svg?react';
 import {
   JobViewRequest,
   useJobViewQuery,
@@ -7,6 +6,7 @@ import {
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useState } from 'react';
 import SelectModal from '@common/modal/SelectModal';
+import Button from '@common/Button';
 import { useFilterStore } from '@store/filterStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,28 +31,19 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
   if (error) return <div>에러가 발생했어요.</div>;
 
   return (
-    <div className="mb-[75px] mt-[50px] flex w-full flex-col items-start gap-[50px]">
-      <div className="flex w-full flex-row items-center justify-between">
-        <div className="text-gray-900 font-T02-B"> {jobName} 채용 정보</div>
-        <div
-          className="flex cursor-pointer flex-row items-center"
-          onClick={() => {
-            setSelection('job', jobName);
-            navigate('/jobsearch');
-          }}
-        >
-          <div className="text-gray-500 font-B02-SB"> 더 보러가기 </div>
-          <Arrow className="h-9 w-9" />
-        </div>
+    <div className="mt-[66px] flex h-[748px] w-[444px] flex-col items-start rounded-[30px] bg-white p-[30px]">
+      <div className="text-gray-900 font-T03-B">
+        {' '}
+        {jobName} <br /> 채용 정보
       </div>
 
-      <div className="grid grid-cols-3 gap-5">
+      <div className="mt-[30px] flex w-full flex-col gap-5">
         {jobView && jobView.length > 0 ? (
-          jobView.slice(0, 3).map((view) => (
+          jobView.slice(0, 2).map((view) => (
             <div
               key={view.id}
               onClick={() => setSelectedItem(view)}
-              className="flex h-auto w-full cursor-pointer flex-col items-start rounded-[30px] border-2 border-gray-200 p-[30px] hover:shadow-shadow2"
+              className="flex w-full cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 bg-white p-[30px] hover:bg-gray-100"
             >
               <div className="self-end rounded-[10px] bg-purple-100 px-[10px] py-2 text-purple-500 font-B01-B">
                 {view.deadline}
@@ -76,6 +67,17 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
           onClose={() => setSelectedItem(null)}
         />
       )}
+
+      <Button
+        text="더 보러가기"
+        color="secondary"
+        type="button"
+        className="mt-10 flex w-full items-center justify-center rounded-2xl border border-purple-500 py-4 font-T05-SB hover:bg-purple-150"
+        onClick={() => {
+          setSelection('job', jobName);
+          navigate('/jobsearch');
+        }}
+      />
     </div>
   );
 };

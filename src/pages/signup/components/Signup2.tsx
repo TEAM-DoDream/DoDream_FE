@@ -55,6 +55,21 @@ const Signup2 = () => {
       setDuplicateSuccess(false);
       return;
     }
+    
+    // Amplitude 이벤트 전송 - 회원가입 완료
+    if (window.amplitude) {
+      window.amplitude.track('signup_success', {
+        email: email,
+        login_id: loginId,
+        nickname: data.nickname,
+        gender: selectedGender ?? gender,
+        birth_date: data.date,
+        region_code: regionCode,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: signup_success');
+    }
+    
     const requestData = {
       loginId,
       password,
@@ -159,7 +174,7 @@ const Signup2 = () => {
         <Controller
           name="date"
           control={control}
-          render={({ field: { onChange, value, ...rest } }) => {
+          render={({ field: { onChange, ...rest } }) => {
             const handleInputChange = (
               e: React.ChangeEvent<HTMLInputElement>
             ) => {
