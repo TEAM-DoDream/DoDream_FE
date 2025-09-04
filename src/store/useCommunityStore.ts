@@ -2,10 +2,13 @@ import { create } from 'zustand';
 
 interface CommunityStore {
   selectedJobName: string;
-  setSelectedJobName: (jobName: string) => void;
+  selectedJobId: number | null;
+  setSelectedJob: (job: { name: string; id: number | null }) => void;
 }
 
 export const useCommunityStore = create<CommunityStore>((set) => ({
   selectedJobName: '',
-  setSelectedJobName: (jobName: string) => set({ selectedJobName: jobName }),
+  selectedJobId: null,
+  setSelectedJob: ({ name, id }) =>
+    set({ selectedJobName: name, selectedJobId: id }),
 }));

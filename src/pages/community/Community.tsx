@@ -4,10 +4,12 @@ import Bookmark from '@assets/icons/bookmark.svg?react';
 import CommunityRightSide from './components/CommunityRightSide';
 import CommunityDropdown from './components/CommunityDropdown';
 import { useGetHotPopularQuery } from '@hook/community/query/useGetHotPopularQuery';
-import jobs from '@utils/data/community/jobs';
+import jobNames, { findJobIdByName } from '@utils/data/community/jobs';
 import { useCommunityStore } from '@store/useCommunityStore';
+import { useNavigate } from 'react-router-dom';
 
 const Community = () => {
+  const navigate = useNavigate();
   const { selectedJobName } = useCommunityStore();
   const { data: popularTodos = [] } = useGetHotPopularQuery();
   return (
@@ -15,8 +17,8 @@ const Community = () => {
       <div className="mt-[95px] flex-col items-start">
         <div className="flex w-[384px] flex-col items-start rounded-[20px] bg-white p-[30px]">
           <CommunityDropdown
-            options={jobs}
-            value={jobs[0]}
+            options={jobNames}
+            value={jobNames[0]}
             onSelect={(value) => {
               console.log(value);
             }}
@@ -24,7 +26,14 @@ const Community = () => {
 
           <div className="text-black font-T02-B"> 꿈꾸는 드리머</div>
 
-          <div className="mt-[30px] flex w-full flex-row items-center justify-end text-gray-500 font-B02-SB">
+          <div
+            className="mt-[30px] flex w-full flex-row items-center justify-end text-gray-500 font-B02-SB"
+            onClick={() => {
+              // 하드코딩 매핑된 jobId 사용
+              const id = findJobIdByName(selectedJobName);
+              navigate(`/others/${id ?? 1}`);
+            }}
+          >
             전체보기
             <Arrow />
           </div>
