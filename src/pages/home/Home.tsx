@@ -8,14 +8,18 @@ import LoginBanner from './components/LoginBanner';
 import ToastModal from '@common/modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 import { useMdTodoQuery } from '@hook/todo/useMdTodoQuery';
+import { useGetInfo } from '@hook/mypage/useMypageQuery';
+import PrePareStepModal from '@common/modal/PrePareStepModal';
 
 const Home = () => {
   const isLoggedIn = !!localStorage.getItem('accessToken');
   const location = useLocation();
   const navigate = useNavigate();
   const [toast, setToast] = useState<string | null>(null);
+  const [prepareOpen, setPrepareOpen] = useState(false);
 
   const { data, isLoading } = useMdTodoQuery();
+  const { data: myInfo } = useGetInfo();
 
   const hasNoJob =
     isLoggedIn &&
@@ -36,6 +40,17 @@ const Home = () => {
     }
   }, [location.state, location.pathname, navigate]);
 
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (!myInfo) return;
+    const hasLevel = Boolean(
+      myInfo.level && String(myInfo.level).trim().length > 0
+    );
+    if (!hasLevel) {
+      setPrepareOpen(true);
+    }
+  }, [isLoggedIn, myInfo]);
+
   return (
     <div>
       {toast && (
@@ -44,13 +59,14 @@ const Home = () => {
         </div>
       )}
 
-      {!isLoggedIn ? (
-        <Banner />
-      ) : hasNoJob ? (
-        <Banner goToOnboard />
-      ) : (
-        <LoginBanner />
+      {prepareOpen && (
+        <PrePareStepModal
+          onClose={() => setPrepareOpen(false)}
+          jobName={myInfo?.job?.jobName}
+        />
       )}
+
+      {!isLoggedIn ? <Banner /> : hasNoJob ? <Banner /> : <LoginBanner />}
 
       <div className="px-[120px] py-20">
         <HomeDreamer />

@@ -1,50 +1,23 @@
-import { HomeCard } from './HomeImage';
-import MyDreamArrow from '@assets/icons/myDreamarrow.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
 import Bell from '@assets/images/bell.webp';
 import { useNoBannerQuery } from '@hook/useHomeQuery';
 import { useNavigate } from 'react-router-dom';
+import Tag from '@common/Tag.tsx';
+import SliderContainer from './SliderContainer';
 
-interface BannerProps {
-  goToOnboard?: boolean;
-}
-
-const Banner = ({ goToOnboard = false }: BannerProps) => {
+const Banner = () => {
   const { data: jobList } = useNoBannerQuery();
   const navigate = useNavigate();
-
-  const handleClick = () => {
-    if (goToOnboard) {
-      navigate('/jobselect');
-    } else {
-      navigate('/login');
-    }
-  };
 
   return (
     <div className="flex h-[489px] w-full flex-row items-center justify-center space-x-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
       <div className="relative flex flex-row gap-6">
-        <HomeCard />
-
-        <div
-          className="absolute right-0 flex cursor-pointer items-center rounded-full bg-white py-[6px] pl-4 pr-1"
-          onClick={handleClick}
-        >
-          <div className="text-gray-500 font-B02-SB">직업 담으러 가기</div>
-          <MyDreamArrow />
-        </div>
-
-        <div className="absolute left-[30px] top-10 flex flex-col">
-          <span className="text-white font-B02-M">
-            {' '}
-            나에게 딱 맞는 직업은 뭘까?
-          </span>
-          <div className="mt-[10px]">
-            <span className="text-white font-T01-B">
-              인생 2막의 시작은 <br />
-              두드림과 함께 하세요!
-            </span>
+        <div className="mt-[10px]">
+          <div className="pb-[10px] pt-[33px] text-purple-700 font-T02-B">
+            인생 2막의 시작은 <br />
+            두드림과 함께 하세요!
           </div>
+          <SliderContainer />
         </div>
       </div>
 
@@ -73,9 +46,7 @@ const Banner = ({ goToOnboard = false }: BannerProps) => {
                   key={job['job-name']}
                   className="flex flex-row items-center gap-4"
                 >
-                  <div className="flex items-center justify-center rounded-[10px] bg-purple-100 p-2 text-purple-500 font-T05-SB">
-                    {job['job-name']}
-                  </div>
+                  <Tag context={job['job-name']} />
                   <div className="text-gray-900 font-T05-SB">{job.count}건</div>
                 </div>
               ))}

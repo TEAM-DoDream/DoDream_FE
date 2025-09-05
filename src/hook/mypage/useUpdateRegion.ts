@@ -10,6 +10,7 @@ export const useUpdateRegionMutation = () => {
       api.put('/v1/member/region', payload),
     onSuccess: (response) => {
       if (response.data.success) {
+        alert('거주지가 성공적으로 변경되었습니다.');
       } else {
         alert('거주지 변경에 실패했습니다.');
       }

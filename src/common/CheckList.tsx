@@ -10,6 +10,8 @@ import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation.ts';
 import Plus from '@assets/icons/plus.svg?react';
+import AddIcon from '@assets/icons/AddIcon.svg?react';
+import BookMarkIcon from '@assets/icons/bookmark.svg?react';
 import { useUpdateTodoMutation } from '@hook/todo/useUpdateTodoMutation.ts';
 
 type ChecklistItem = string | { id?: number; text: string };
@@ -72,6 +74,17 @@ const CheckList = ({
     if (!trimmedText) return;
 
     if (isAddingNew) {
+      // Amplitude 이벤트 - 할일 추가 시도 (inpage)
+      if (window.amplitude) {
+        window.amplitude.track('todo_create', {
+          source_method: 'inpage',
+          source_page: window.location.pathname,
+          todo_length: trimmedText.length,
+          timestamp: new Date().toISOString(),
+        });
+        console.log('Amplitude event sent: todo_create_attempt (inpage)');
+      }
+      
       mutate(
         { todoTitle: trimmedText },
         {
@@ -222,7 +235,7 @@ const CheckList = ({
 
             <div className="ml-auto flex min-w-fit items-center gap-[5px]">
               {isMyToPage && (
-                <div className="flex flex-row gap-[5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <div className="flex flex-row gap-[5px]">
                   {isEditing ? (
                     <>
                       <button
@@ -250,6 +263,14 @@ const CheckList = ({
                     </>
                   ) : (
                     <>
+                      <div className="mr-3 flex items-center gap-1 text-gray-500">
+                        <AddIcon className="h-[18px] w-[18px]" />
+                        <span className="text-sm font-B03-SB">3</span>
+                      </div>
+                      <div className="mr-3 flex items-center gap-1 text-gray-500">
+                        <BookMarkIcon className="h-[18px] w-[18px]" />
+                        <span className="text-sm font-B03-SB">999</span>
+                      </div>
                       <button
                         onClick={() => handleEdit(idx)}
                         className="flex items-center gap-[6px] rounded-[10px] bg-gray-100 px-3 py-2 text-gray-500 font-B03-SB"

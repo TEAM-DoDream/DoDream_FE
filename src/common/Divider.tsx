@@ -3,7 +3,7 @@ interface DividerProps {
 }
 
 const Divider = ({ className }: DividerProps) => {
-  return <div className={`h-px w-full bg-gray-300 ${className ?? ''}`} />;
+  return <div className={`h-px w-full ${className ?? ''}`} />;
 };
 
 export default Divider;

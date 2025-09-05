@@ -38,8 +38,11 @@ const Mypage = async () => {
 };
 
 export const useGetInfo = () => {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
   return useQuery<GetInfoProps>({
     queryKey: ['Mypage'],
     queryFn: () => Mypage(),
+    enabled: !!token,
   });
 };

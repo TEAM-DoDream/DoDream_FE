@@ -8,6 +8,10 @@ import { ReactTagManager } from 'react-gtm-ts';
 import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation';
 import Fire from '@assets/icons/fire.svg?react';
 import Reset from '@assets/icons/reset.svg?react';
+import {
+  useFloatingPopular,
+  useNoLoginFloatingPopular,
+} from '@hook/floating/useFloatingPopular';
 
 interface FloatingModalProps {
   onClose: () => void;
@@ -22,6 +26,27 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
 
   const { mutate } = useAddTodoMutation();
   const { data: hasJob, isLoading } = useMdTodoQuery();
+  const {
+    data: hot,
+    isLoading: loadingLogin,
+    refetch: refetchLogin,
+  } = useFloatingPopular({
+    enabled: isLoggedIn,
+    queryKey: [],
+  });
+
+  const {
+    data: hotGuest,
+    isLoading: loadingGuest,
+    refetch: refetchGuest,
+  } = useNoLoginFloatingPopular({
+    enabled: !isLoggedIn,
+    queryKey: [],
+  });
+
+  const hotList = isLoggedIn ? hot : hotGuest;
+  const isHotLoading = isLoggedIn ? loadingLogin : loadingGuest;
+  const refreshHot = isLoggedIn ? refetchLogin : refetchGuest;
 
   const hasNoJob =
     isLoggedIn &&
@@ -33,6 +58,17 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
 
   const handleSubmit = () => {
     if (!isLoggedIn || !taskText.trim() || hasNoJob) return;
+
+    // Amplitude 이벤트 - 할일 추가 시도
+    if (window.amplitude) {
+      window.amplitude.track('todo_create', {
+        source_method: 'floating',
+        source_page: location.pathname,
+        todo_length: taskText.trim().length,
+        timestamp: new Date().toISOString(),
+      });
+      console.log('Amplitude event sent: todo_create_attempt');
+    }
 
     mutate(
       {
@@ -61,20 +97,29 @@ const FloatingModal = ({ onClose, onAddTask }: FloatingModalProps) => {
           <div className="text-black font-T03-B">바로 할일 추가</div>
         </div>
 
-        <div className="mt-[22px] flex w-full flex-row items-center rounded-[8px] bg-gray-100 p-3">
-          <div className="flex flex-row items-center gap-[6px]">
-            <Fire />
-            <div className="text-gray-900 font-B03-SB"> 인기</div>
-          </div>
+        <div className="mt-[22px] w-full rounded-[8px] bg-gray-100 p-3">
+          <div className="flex items-center">
+            <div className="flex shrink-0 items-center gap-[6px]">
+              <Fire />
+              <span className="text-gray-900 font-B03-SB">인기</span>
+            </div>
 
-          <div className="mx-[10px] h-4 w-[1px] bg-gray-400" />
+            <div className="mx-[10px] h-4 w-[1px] shrink-0 bg-gray-400" />
 
-          <div className="text-gray-600 font-B03-M">
-            요양보호사 카페 주소 검색하고 가입하기
-          </div>
+            <div className="min-w-0 flex-1">
+              <span className="block truncate text-gray-600 font-B03-M">
+                {isHotLoading
+                  ? '인기 목록을 불러오는 중입니다...'
+                  : (hotList?.title ?? '인기데이터가 없습니다')}
+              </span>
+            </div>
 
-          <div className="ml-[83px] cursor-pointer">
-            <Reset />
+            <div
+              className="shrink-0 cursor-pointer"
+              onClick={() => refreshHot()}
+            >
+              <Reset />
+            </div>
           </div>
         </div>
 
