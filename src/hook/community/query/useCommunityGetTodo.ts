@@ -19,7 +19,7 @@ export interface CommunityGetTodoResponse {
   first: boolean;
   last: boolean;
   empty: boolean;
-  numberOfElements: string;
+  numberOfElements: number;
   pageable: {
     pageNumber: number;
   };
