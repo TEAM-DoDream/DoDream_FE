@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import DropDownIcon from '@assets/icons/drop_down.svg?react';
 import CommunityContents from './CommunityContents';
-
 import { useCommunityStore } from '@store/useCommunityStore';
 import { useCommunityGetTodo } from '@hook/community/query/useCommunityGetTodo';
 import LoadingSpinner from '@common/LoadingSpinner';
+import { useInfiniteScroll } from '@hook/community/useInfinityScroll';
 
 type Level = '전체' | '씨앗' | '새싹' | '꿈나무';
 type Sort = '최신순' | '인기순';
@@ -17,7 +17,6 @@ const levels: { value: Level; label: string; api: string }[] = [
 ];
 
 const sortOptions: Sort[] = ['최신순', '인기순'];
-
 const toApiLevel = (v: Level) => levels.find((l) => l.value === v)?.api ?? '';
 
 const CommunityRightSide = () => {
@@ -27,15 +26,25 @@ const CommunityRightSide = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [sort, setSort] = useState<Sort>('최신순');
 
-  const page = 1;
   const size = 10;
 
-  const { data, isLoading, isError } = useCommunityGetTodo({
-    jobName: selectedJobName,
-    level: toApiLevel(active),
-    sort,
-    page,
-    size,
+  const { data, isLoading, isError, isFetching, fetchNextPage, hasNextPage } =
+    useCommunityGetTodo({
+      jobName: selectedJobName,
+      level: toApiLevel(active),
+      sort,
+      size,
+    });
+
+  const items = useMemo(
+    () => data?.pages.flatMap((p) => p.content) ?? [],
+    [data]
+  );
+
+  const Observer = useInfiniteScroll<HTMLDivElement>({
+    onIntersect: () => fetchNextPage(),
+    enabled: !!hasNextPage && !isFetching && !isLoading && !isError,
+    rootMargin: '200px',
   });
 
   const handleSelect = (option: Sort) => {
@@ -94,19 +103,21 @@ const CommunityRightSide = () => {
         </div>
       </div>
 
-      {isLoading && (
+      {isLoading && isFetching && items.length > 0 && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <LoadingSpinner />
         </div>
       )}
       {isError && <p className="mt-6 text-red-500">에러가 발생했습니다</p>}
 
-      {data && (
-        <CommunityContents
-          items={data.content}
-          activeLevel={active}
-          sort={sort}
-        />
+      {items.length > 0 && (
+        <CommunityContents items={items} activeLevel={active} sort={sort} />
+      )}
+
+      <div ref={Observer} className="h-10" />
+
+      {!hasNextPage && items.length > 0 && (
+        <p className="text-center text-gray-500"> 마지막 할 일 입니다.</p>
       )}
     </div>
   );

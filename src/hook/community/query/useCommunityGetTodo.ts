@@ -1,5 +1,5 @@
 import api from '@hook/api';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 export interface CommunityItem {
   id: number;
@@ -16,22 +16,30 @@ export interface CommunityGetTodoResponse {
   content: CommunityItem[];
   number: number;
   size: number;
-  numberOfElements: number;
-  sort: { empty: boolean; sorted: boolean; unsorted: boolean }[];
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+  numberOfElements: string;
+  pageable: {
+    pageNumber: number;
+  };
+  sort: { empty: boolean; sorted: boolean; unsorted: boolean };
 }
 
-type Params = {
+type BaseParams = {
   jobName: string;
   level: string;
   sort: string;
-  page: number;
   size: number;
 };
 
-const CommunityGetTodo = async (
-  params: Params
-): Promise<CommunityGetTodoResponse> => {
-  const { jobName, level, sort, page, size } = params;
+const fetchCommunityPage = async ({
+  jobName,
+  level,
+  sort,
+  page,
+  size,
+}: BaseParams & { page: number }): Promise<CommunityGetTodoResponse> => {
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
@@ -39,23 +47,33 @@ const CommunityGetTodo = async (
     params: { jobName, level, sort, page, size },
     ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
   });
-  console.log(res.data.data.content);
   const result = res.data?.data;
+
   return {
     content: result.content,
     number: result.number,
     size: result.size,
+    first: result.first,
+    last: result.last,
+    empty: result.empty,
     numberOfElements: result.numberOfElements,
+    pageable: { pageNumber: result.pageable?.pageNumber ?? page },
     sort: result.sort,
   };
 };
 
-export const useCommunityGetTodo = (params: Params) => {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+export const useCommunityGetTodo = (params: BaseParams) => {
+  return useInfiniteQuery({
+    queryKey: ['CommunityGetTodo', params],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) =>
+      fetchCommunityPage({ ...params, page: pageParam as number }),
 
-  return useQuery({
-    queryKey: ['CommunityGetTodo', params, !!token],
-    queryFn: () => CommunityGetTodo(params),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.last) return undefined;
+      return lastPage.number + 1;
+    },
+
+    retry: 0,
   });
 };
