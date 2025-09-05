@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import Bookmark from '@assets/icons/bookmark.svg?react';
 import LoadingSpinner from '@common/LoadingSpinner';
+import { useCommunityAddTodoMutation } from '@hook/community/useCommunityAddTodoMutation';
+import { useDeleteCommunityTodosMutation } from '@hook/community/useDeleteCommunityTodos';
 
 type CommunityItem = {
   id: number;
@@ -27,6 +29,8 @@ const CommunityContents = ({
   sort = '최신순',
 }: Props) => {
   const [added, setAdded] = useState<Record<number, boolean>>({});
+  const addTodoMutation = useCommunityAddTodoMutation();
+  const deleteTodoMutation = useDeleteCommunityTodosMutation();
 
   const filtered = useMemo(() => {
     if (!items) return [];
@@ -40,8 +44,33 @@ const CommunityContents = ({
     return base;
   }, [filtered, sort]);
 
-  const toggleAdd = (id: number) =>
-    setAdded((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleAdd = (id: number, isAdded: boolean) => {
+    if (isAdded) {
+      deleteTodoMutation.mutate(
+        { id },
+        {
+          onSuccess: () => {
+            setAdded((prev) => ({ ...prev, [id]: false }));
+          },
+          onError: () => {
+            alert('추가 취소에 실패했어요.');
+          },
+        }
+      );
+    } else {
+      addTodoMutation.mutate(
+        { id },
+        {
+          onSuccess: () => {
+            setAdded((prev) => ({ ...prev, [id]: true }));
+          },
+          onError: () => {
+            alert('내 할일 추가에 실패했어요.');
+          },
+        }
+      );
+    }
+  };
 
   if (!items) {
     return (
@@ -62,8 +91,8 @@ const CommunityContents = ({
   return (
     <div className="mt-7 flex flex-col">
       {sorted.map((post) => {
-        const isAddedLocal = !!added[post.id];
-        const isAdded = isAddedLocal || post.isSaved;
+        const isAdded =
+          typeof added[post.id] === 'boolean' ? added[post.id] : post.isSaved;
         const tag = normalizeLevel(post.level);
 
         return (
@@ -88,23 +117,17 @@ const CommunityContents = ({
                 </span>
               </div>
 
-              {isAdded ? (
-                <button
-                  type="button"
-                  onClick={() => toggleAdd(post.id)}
-                  className="p-2 text-purple-500 font-B03-SB"
-                >
-                  추가 취소하기
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => toggleAdd(post.id)}
-                  className="flex items-center justify-center rounded-[10px] bg-purple-500 p-2 text-purple-50 font-B03-SB"
-                >
-                  내 할일에 추가
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => toggleAdd(post.id, isAdded)}
+                className={
+                  isAdded
+                    ? 'p-2 text-purple-500 font-B03-SB'
+                    : 'flex items-center justify-center rounded-[10px] bg-purple-500 p-2 text-purple-50 font-B03-SB'
+                }
+              >
+                {isAdded ? '추가 취소하기' : '내 할일에 추가'}
+              </button>
             </div>
 
             <div

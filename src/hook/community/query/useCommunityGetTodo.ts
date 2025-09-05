@@ -39,7 +39,7 @@ const CommunityGetTodo = async (
     params: { jobName, level, sort, page, size },
     ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
   });
-
+  console.log(res.data.data.content);
   const result = res.data?.data;
   return {
     content: result.content,
