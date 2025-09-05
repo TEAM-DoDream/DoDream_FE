@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ScrapEmptyState = ({ type, onNavigate }: Props) => (
-  <div className="flex min-h-[500px] flex-col items-center justify-center space-y-4">
+  <div className="flex flex-col items-center justify-center space-y-4">
     <img src={WarningImg} alt="스크랩 비어 있음" className="h-32 w-32" />
     <h2 className="text-gray-900 font-T02-B">
       스크랩한 {type === 'job' ? '채용' : '학원'} 정보가 아직 없어요!

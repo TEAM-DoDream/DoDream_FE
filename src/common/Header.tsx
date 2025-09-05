@@ -29,11 +29,15 @@ const NavItems = [
       pathname.startsWith('/others') || pathname.startsWith('/community'),
   },
 
+  {
+    label: '스크랩',
+    path: '/mytodo/scrap',
+  },
+
   //마이드림
   {
     label: '나의 할일',
     path: '/mytodo/list',
-    match: (pathname: string) => pathname.startsWith('/mytodo'),
   },
 ];
 
