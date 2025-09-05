@@ -1,53 +1,70 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Bookmark from '@assets/icons/bookmark.svg?react';
+import LoadingSpinner from '@common/LoadingSpinner';
 
-type Post = {
+type CommunityItem = {
   id: number;
-  author: string;
-  tag: '씨앗' | '새싹' | '꿈나무' | string;
-  content: string;
-  time: string;
-  comments: number;
+  name: string;
+  level: string;
+  imageUrl?: string;
+  dDay?: string;
+  description: string;
+  saveCount: number;
+  isSaved: boolean;
 };
 
-const CommunityContents = () => {
-  const posts: Post[] = [
-    {
-      id: 1,
-      author: '해바라기 엄마',
-      tag: '씨앗',
-      content: '할일 내용내용',
-      time: '2분 전',
-      comments: 11,
-    },
-    {
-      id: 2,
-      author: '해바라기 엄마',
-      tag: '새싹',
-      content:
-        '안녕안녕안녕하세요 이거의 내용은 어떻게 길어지냐면요 좀만 더 힘을 내 이렇게 길어져요 날 따라해 봐요 이렇게',
-      time: '2분 전',
-      comments: 12,
-    },
-    {
-      id: 3,
-      author: '해바라기 엄마',
-      tag: '씨앗',
-      content: '할일 내용내용',
-      time: '2분 전',
-      comments: 13,
-    },
-  ];
+type Props = {
+  items: CommunityItem[] | undefined;
+  activeLevel?: '전체' | '씨앗' | '새싹' | '꿈나무';
+  sort?: '최신순' | '인기순';
+};
 
+const normalizeLevel = (s: string) => s.replace(' 단계', '');
+
+const CommunityContents = ({
+  items,
+  activeLevel = '전체',
+  sort = '최신순',
+}: Props) => {
   const [added, setAdded] = useState<Record<number, boolean>>({});
+
+  const filtered = useMemo(() => {
+    if (!items) return [];
+    if (activeLevel === '전체') return items;
+    return items.filter((x) => normalizeLevel(x.level) === activeLevel);
+  }, [items, activeLevel]);
+
+  const sorted = useMemo(() => {
+    const base = [...filtered];
+    if (sort === '인기순') base.sort((a, b) => b.saveCount - a.saveCount);
+    return base;
+  }, [filtered, sort]);
 
   const toggleAdd = (id: number) =>
     setAdded((prev) => ({ ...prev, [id]: !prev[id] }));
 
+  if (!items) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (sorted.length === 0) {
+    return (
+      <div className="mt-7 flex items-center justify-center text-gray-500 font-B02-M">
+        조건에 맞는 투두가 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="mt-7 flex flex-col">
-      {posts.map((post) => {
-        const isAdded = !!added[post.id];
+      {sorted.map((post) => {
+        const isAddedLocal = !!added[post.id];
+        const isAdded = isAddedLocal || post.isSaved;
+        const tag = normalizeLevel(post.level);
 
         return (
           <div
@@ -56,16 +73,24 @@ const CommunityContents = () => {
           >
             <div className="flex flex-row items-center justify-between">
               <div className="flex items-center gap-[9px]">
-                <div className="h-[30px] w-[30px] rounded-full bg-gray-200" />
-                <span className="text-gray-600 font-B02-M">{post.author}</span>
+                {post.imageUrl ? (
+                  <img
+                    src={post.imageUrl}
+                    alt={post.name}
+                    className="h-[30px] w-[30px] rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="h-[30px] w-[30px] rounded-full bg-gray-200" />
+                )}
+                <span className="text-gray-600 font-B02-M">{post.name}</span>
                 <span className="rounded-lg bg-purple-100 p-[6px] text-purple-500 font-C01-R">
-                  {' '}
-                  {post.tag} 단계
+                  {tag}
                 </span>
               </div>
 
               {isAdded ? (
                 <button
+                  type="button"
                   onClick={() => toggleAdd(post.id)}
                   className="p-2 text-purple-500 font-B03-SB"
                 >
@@ -73,6 +98,7 @@ const CommunityContents = () => {
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={() => toggleAdd(post.id)}
                   className="flex items-center justify-center rounded-[10px] bg-purple-500 p-2 text-purple-50 font-B03-SB"
                 >
@@ -82,21 +108,27 @@ const CommunityContents = () => {
             </div>
 
             <div
-              className={`mt-[22px] ${isAdded ? 'ml-10 rounded-[14px] bg-purple-100 px-4 py-5' : 'pl-10'}`}
+              className={`mt-[22px] ${
+                isAdded
+                  ? 'ml-10 rounded-[14px] bg-purple-100 px-4 py-5'
+                  : 'pl-10'
+              }`}
             >
               <span className="break-words text-black font-B01-SB">
-                {post.content}
+                {post.description}
               </span>
-              <span className="ml-[10px] whitespace-nowrap text-gray-500 font-C01-R">
-                {post.time}
-              </span>
+              {post.dDay && (
+                <span className="ml-[10px] whitespace-nowrap text-gray-500 font-C01-R">
+                  {post.dDay}
+                </span>
+              )}
             </div>
 
             <div className="mt-4 flex flex-row items-center pl-10">
               <div className="flex items-center gap-[6px]">
                 <Bookmark />
                 <div className="text-purple-600 font-B03-SB">
-                  {post.comments}
+                  {post.saveCount}
                 </div>
               </div>
             </div>
