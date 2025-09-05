@@ -3,6 +3,8 @@ import Bookmark from '@assets/icons/bookmark.svg?react';
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useCommunityAddTodoMutation } from '@hook/community/useCommunityAddTodoMutation';
 import { useDeleteCommunityTodosMutation } from '@hook/community/useDeleteCommunityTodos';
+import ToastModal from '@common/modal/ToastModal';
+import Info from '@assets/icons/info.svg?react';
 
 type CommunityItem = {
   id: number;
@@ -31,6 +33,8 @@ const CommunityContents = ({
   const [added, setAdded] = useState<Record<number, boolean>>({});
   const addTodoMutation = useCommunityAddTodoMutation();
   const deleteTodoMutation = useDeleteCommunityTodosMutation();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const filtered = useMemo(() => {
     if (!items) return [];
@@ -51,6 +55,9 @@ const CommunityContents = ({
         {
           onSuccess: () => {
             setAdded((prev) => ({ ...prev, [id]: false }));
+            setToastMessage('할일이 취소되었습니다.');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 2500);
           },
           onError: () => {
             alert('추가 취소에 실패했어요.');
@@ -62,7 +69,12 @@ const CommunityContents = ({
         { id },
         {
           onSuccess: () => {
+            setShowToast(true);
             setAdded((prev) => ({ ...prev, [id]: true }));
+            setToastMessage('할일이 추가되었습니다.');
+            setTimeout(() => {
+              setShowToast(false);
+            }, 2500);
           },
           onError: () => {
             alert('내 할일 추가에 실패했어요.');
@@ -158,6 +170,16 @@ const CommunityContents = ({
           </div>
         );
       })}
+
+      {showToast && (
+        <div className="fixed top-[100px] z-50 items-center">
+          <ToastModal
+            icon={<Info className="h-[26px] w-[26px] text-white" />}
+            text={toastMessage}
+            width="w-[274px]"
+          />
+        </div>
+      )}
     </div>
   );
 };
