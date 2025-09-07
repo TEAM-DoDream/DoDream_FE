@@ -8,17 +8,77 @@ import { useRecruitQuery } from '@hook/useHomeQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useFilterStore } from '@store/filterStore';
 import { useNavigate } from 'react-router-dom';
+import CardDetail from '@pages/jobSearch/components/CardDetail';
+import { RecruitItem } from '@validation/recruit/recruitSchema';
+
+interface RecruitData {
+  id: number;
+  title: string;
+  companyName: string;
+  jobName: string;
+  postDate: string;
+  count: number | string;
+  url: string;
+  active: number;
+  locationName?: string | null;
+  jobTypeName?: string;
+  experienceLevel?: string;
+  requiredEducationLevel?: string;
+  closeType?: string;
+  salary?: string;
+  postTimestamp?: string;
+  'expiration-timestamp'?: string;
+  'expiration-date'?: string;
+  deadline?: string;
+}
 
 const HomeRecruit = () => {
   const regionName = useUserStore((state) => state.regionName);
   const setSelection = useFilterStore((state) => state.setSelection);
   const [likedItems, setLikedItems] = useState<{ [key: number]: boolean }>({});
+  const [selectedCard, setSelectedCard] = useState<RecruitItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const toggleLike = (id: number) => {
     setLikedItems((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
   };
+
+  const convertToRecruitItem = (data: RecruitData): RecruitItem => {
+    return {
+      url: data.url || '',
+      active: data.active || 1,
+      title: data.title || '',
+      jobName: data.jobName || '',
+      companyName: data.companyName || '',
+      locationName: data.locationName || null,
+      jobTypeName: data.jobTypeName || '',
+      experienceLevel: data.experienceLevel || '',
+      requiredEducationLevel: data.requiredEducationLevel || '',
+      closeType: data.closeType || '',
+      salary: data.salary || '',
+      id: String(data.id),
+      postTimestamp: data.postTimestamp || '',
+      postDate: data.postDate || '',
+      'expiration-timestamp': data['expiration-timestamp'] || '',
+      'expiration-date': data['expiration-date'] || '',
+      deadline: data.deadline || '',
+      count:
+        typeof data.count === 'string' ? parseInt(data.count) : data.count || 0,
+    };
+  };
+
+  const handleCardClick = (data: RecruitData) => {
+    console.log('Card clicked:', data);
+    const recruitItem = convertToRecruitItem(data);
+    console.log('Converted item:', recruitItem);
+    setSelectedCard(recruitItem);
+    setIsModalOpen(true);
+    console.log('Modal should open');
+  };
+
   const isLoggedIn = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
@@ -63,10 +123,14 @@ const HomeRecruit = () => {
             <div
               key={data.id}
               className="flex min-h-[312px] w-[384px] cursor-pointer flex-col items-start rounded-[30px] border-[1.2px] border-gray-300 p-[30px] hover:shadow-shadow2"
+              onClick={() => handleCardClick(data)}
             >
               <div
                 className="flex w-full flex-col items-end"
-                onClick={() => toggleLike(data.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(data.id);
+                }}
               >
                 {likedItems[data.id] ? <FullLike /> : <Like />}
               </div>
@@ -92,6 +156,18 @@ const HomeRecruit = () => {
             </div>
           ))}
       </div>
+
+      {isModalOpen && selectedCard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <CardDetail
+            item={selectedCard}
+            onClose={() => {
+              console.log('Closing modal');
+              setIsModalOpen(false);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

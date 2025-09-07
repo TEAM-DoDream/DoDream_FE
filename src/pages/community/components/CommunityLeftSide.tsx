@@ -5,6 +5,7 @@ import { useGetHotPopularQuery } from '@hook/community/query/useGetHotPopularQue
 import Bookmark from '@assets/icons/bookmark.svg?react';
 import Arrow from '@assets/icons/arrow.svg?react';
 import jobNames, { findJobIdByName } from '@utils/data/community/jobs';
+import BaseImage from '@assets/images/profile.png';
 
 const CommunityLeftSide = () => {
   const navigate = useNavigate();
@@ -27,7 +28,6 @@ const CommunityLeftSide = () => {
         <div
           className="mt-[30px] flex w-full cursor-pointer flex-row items-center justify-end text-gray-500 font-B02-SB"
           onClick={() => {
-            // 하드코딩 매핑된 jobId 사용
             const id = findJobIdByName(selectedJobName);
             navigate(`/others/${id ?? 1}`);
           }}
@@ -46,23 +46,24 @@ const CommunityLeftSide = () => {
           {popularTodos.map((item, idx) => (
             <div
               key={item.id}
-              className="flex w-full flex-row items-start justify-between py-4"
+              className="flex w-full cursor-pointer flex-row items-start justify-between py-4"
+              onClick={() => navigate(`/otherslist/${item.id}`)}
             >
               <div className="flex flex-row items-center gap-[15px]">
                 <div className="text-purple-500 font-T05-SB">{idx + 1}</div>
                 <div className="flex flex-row items-center gap-[15px]">
                   <img
-                    src={item.imageUrl}
+                    src={item.imageUrl || BaseImage}
                     alt="프로필이미지"
                     className="h-[30px] w-[30px] rounded-full bg-gray-50"
                   />
 
                   <div className="flex flex-col">
                     <div className="flex w-full flex-row items-start justify-between gap-[10px]">
-                      <div className="flex-1 break-words text-black font-B01-SB">
+                      <div className="w-[170px] min-w-0 flex-1 truncate text-black font-B01-SB">
                         {item.description}
                       </div>
-                      <div className="mr-2 shrink-0 whitespace-nowrap text-gray-500 font-C01-R">
+                      <div className="shrink-0 whitespace-nowrap text-gray-500 font-C01-R">
                         {item.dDay}
                       </div>
                     </div>

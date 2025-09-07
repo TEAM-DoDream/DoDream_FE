@@ -5,6 +5,7 @@ import { useCommunityAddTodoMutation } from '@hook/community/useCommunityAddTodo
 import { useDeleteCommunityTodosMutation } from '@hook/community/useDeleteCommunityTodos';
 import ToastModal from '@common/modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
+import { trackTodoImport } from '@utils/amplitude';
 
 type CommunityItem = {
   id: number;
@@ -48,7 +49,7 @@ const CommunityContents = ({
     return base;
   }, [filtered, sort]);
 
-  const toggleAdd = (id: number, isAdded: boolean) => {
+  const toggleAdd = (id: number, isAdded: boolean, todoTitle: string) => {
     if (isAdded) {
       deleteTodoMutation.mutate(
         { id },
@@ -65,6 +66,7 @@ const CommunityContents = ({
         }
       );
     } else {
+      trackTodoImport(todoTitle); // Amplitude 이벤트 트래킹
       addTodoMutation.mutate(
         { id },
         {
@@ -131,7 +133,7 @@ const CommunityContents = ({
 
               <button
                 type="button"
-                onClick={() => toggleAdd(post.id, isAdded)}
+                onClick={() => toggleAdd(post.id, isAdded, post.description)}
                 className={
                   isAdded
                     ? 'p-2 text-purple-500 font-B03-SB'

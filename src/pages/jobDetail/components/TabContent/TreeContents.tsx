@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ToastModal from '@common/modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
 import { useAddMyTodoMutation } from '@hook/jobinfo/useAddMyTodoMutation.ts';
+import { trackTodoImport } from '@utils/amplitude';
 
 interface TreeContentsProps {
   jobId: number;
@@ -17,10 +18,11 @@ const TreeContents = ({ data }: TreeContentsProps) => {
   const [completedId, setCompletedId] = useState<Set<number>>(new Set());
   const [showToast, setShowToast] = useState(false);
 
-  const handleAdd = (jobTodoId: number) => {
+  const handleAdd = (jobTodoId: number, title: string) => {
     if (completedId.has(jobTodoId)) return;
 
     setClickedId(jobTodoId);
+    trackTodoImport(title); // Amplitude 이벤트 트래킹
     mutate(jobTodoId, {
       onSuccess: () => {
         setCompletedId((prev) => new Set(prev).add(jobTodoId));
@@ -63,7 +65,7 @@ const TreeContents = ({ data }: TreeContentsProps) => {
                     : 'bg-purple-500 text-purple-100 hover:bg-purple-600'
               }`}
               disabled={isLoading || isCompleted}
-              onClick={() => handleAdd(tree.JobTodoId)}
+              onClick={() => handleAdd(tree.JobTodoId, tree.title)}
             >
               {isCompleted
                 ? '할일 추가 완료'
