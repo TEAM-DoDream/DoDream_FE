@@ -19,7 +19,7 @@ const OtherTodoListPage = () => {
       clickText: '타인의 할 일 페이지 진입 시',
       source_page: location.pathname,
     });
-  }, []);
+  }, [location.pathname]);
   const navigate = useNavigate();
   const { todoGroupId } = useParams<{ todoGroupId: string }>();
   const {
@@ -103,6 +103,8 @@ const OtherTodoListPage = () => {
                     title: todo.title,
                     completed: todo.completed,
                     isPublic: todo.isPublic,
+                    saveCount: todo.saveCount,
+                    isSaved: todo.isSaved,
                   }))}
                 />
               )}

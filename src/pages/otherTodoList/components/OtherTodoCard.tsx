@@ -107,7 +107,7 @@ const OtherTodoCard = ({ todos }: TodoCardProps) => {
           const isAdded =
             typeof added[item.todoId] === 'boolean'
               ? added[item.todoId]
-              : item.isSaved || false;
+              : (item.isSaved ?? false);
 
           return (
             <li
