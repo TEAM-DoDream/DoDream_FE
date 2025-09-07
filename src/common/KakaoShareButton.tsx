@@ -7,6 +7,34 @@ type KakaoShareButtonProps = {
   offsetBottomPx?: number;
 };
 
+// Kakao SDK 로더
+const loadKakao = (key: string) =>
+  new Promise<void>((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any;
+    if (w.Kakao) {
+      if (!w.Kakao.isInitialized()) w.Kakao.init(key);
+      resolve();
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.6/kakao.min.js';
+    s.integrity =
+      'sha384-WAtVcQYcmTO/N+C1N+1m6Gp8qxh+3NlnP7X1U7qP6P5dQY/MsRBNTh+e1ahJrkEm';
+    s.crossOrigin = 'anonymous';
+    s.onload = () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).Kakao.init(key);
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+
 // 328 width container 기준: 좌우 padding 18px, 상하 18px, 세로 여백 90px
 const KakaoShareButton = ({
   onClick,
@@ -26,7 +54,66 @@ const KakaoShareButton = ({
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={async () => {
+        if (onClick) return onClick();
+        const jsKey = import.meta.env.VITE_KAKAO_JS_KEY as string;
+        if (!jsKey) {
+          console.warn('VITE_KAKAO_JS_KEY is not set.');
+          return;
+        }
+        await loadKakao(jsKey);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Kakao = (window as any).Kakao;
+        const templateId = Number(import.meta.env.VITE_KAKAO_TEMPLATE_ID);
+        const shareUrl = 'https://www.dodream.site/';
+        try {
+          if (templateId) {
+            Kakao.Share.sendCustom({
+              templateId,
+              templateArgs: { url: shareUrl },
+            });
+          } else {
+            Kakao.Share.sendDefault({
+              objectType: 'feed',
+              content: {
+                title: '두드림 – 내게 딱 맞는 직업 찾기',
+                description: '직업/학원/구직 정보를 한 곳에서!',
+                imageUrl: 'https://www.dodream.site/og-image.png',
+                link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+              },
+              buttons: [
+                {
+                  title: '두드림 열기',
+                  link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+                },
+              ],
+            });
+          }
+        } catch (e) {
+          console.error('Kakao share failed', e);
+          // Fallback: Web Share API or clipboard copy
+          try {
+            if (navigator.share) {
+              await navigator.share({
+                title: '두드림 – 내게 딱 맞는 직업 찾기',
+                text: '직업/학원/구직 정보를 한 곳에서!',
+                url: shareUrl,
+              });
+              return;
+            }
+          } catch {
+            // ignore and continue to clipboard
+          }
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            alert(
+              '카카오 공유가 불가능하여 링크를 클립보드에 복사했습니다. 붙여넣기로 공유해 주세요.'
+            );
+          } catch (err) {
+            console.error('Clipboard write failed', err);
+          }
+        }
+      }}
       className={`${layout} ${styles} ${className ?? ''}`}
       style={fixed ? { bottom: bottomWithSafeArea } : undefined}
     >
