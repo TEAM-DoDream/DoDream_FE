@@ -47,7 +47,7 @@ const CommunityLeftSide = () => {
             <div
               key={item.id}
               className="flex w-full cursor-pointer flex-row items-start justify-between py-4"
-              onClick={() => navigate(`/otherslist/${item.id}`)}
+              onClick={() => navigate(`/otherslist/${item.todoGroupId}`)}
             >
               <div className="flex flex-row items-center gap-[15px]">
                 <div className="text-purple-500 font-T05-SB">{idx + 1}</div>
