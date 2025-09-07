@@ -43,7 +43,7 @@ const CommunityLeftSide = () => {
           {selectedJobName} HOT 할 일
         </div>
         <div className="mt-[37px] flex w-full flex-col items-start">
-          {popularTodos.map((item, idx) => (
+          {popularTodos.slice(0, 3).map((item, idx) => (
             <div
               key={item.id}
               className="flex w-full cursor-pointer flex-row items-start justify-between py-4"
