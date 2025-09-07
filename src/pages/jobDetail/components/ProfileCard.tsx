@@ -9,12 +9,13 @@ import Arrow from '@assets/icons/arrow.svg?react';
 
 type ProfileCardProps = {
   jobId: number;
+  todoGroupId: number;
   jobName?: string;
 };
 
-const ProfileCard = ({ jobId, jobName }: ProfileCardProps) => {
+const ProfileCard = ({ jobId, jobName, todoGroupId }: ProfileCardProps) => {
   const navigate = useNavigate();
-  const { data: DreamerList, isLoading } = useJobOtherQuery(jobId);
+  const { data: DreamerList, isLoading } = useJobOtherQuery(todoGroupId);
 
   if (isLoading) return <LoadingSpinner />;
   if (!DreamerList || DreamerList.length === 0)

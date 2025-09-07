@@ -167,10 +167,10 @@ export interface JobOtherList {
   ];
 }
 
-const jobOtherDreamer = async (jobId: number) => {
+const jobOtherDreamer = async (todoGroupId: number) => {
   try {
     const token = localStorage.getItem('accessToken');
-    const response = await api.get(`/v1/todo/other/simple/${jobId}`, {
+    const response = await api.get(`/v1/todo/other/simple/${todoGroupId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -182,10 +182,10 @@ const jobOtherDreamer = async (jobId: number) => {
   }
 };
 
-export const useJobOtherQuery = (jobId: number) => {
+export const useJobOtherQuery = (todoGroupId: number) => {
   return useQuery<JobOtherList[]>({
-    queryKey: ['jobOtherDreamer', jobId],
-    queryFn: () => jobOtherDreamer(jobId),
+    queryKey: ['jobOtherDreamer', todoGroupId],
+    queryFn: () => jobOtherDreamer(todoGroupId),
   });
 };
 

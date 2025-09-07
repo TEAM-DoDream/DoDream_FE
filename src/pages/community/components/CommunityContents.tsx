@@ -24,7 +24,7 @@ type Props = {
   sort?: '최신순' | '인기순';
 };
 
-const normalizeLevel = (s: string) => s.replace(' 단계', '');
+const normalizeLevel = (s: string) => s?.replace(' 단계', '');
 
 const CommunityContents = ({
   items,
