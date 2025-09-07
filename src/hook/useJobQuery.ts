@@ -236,5 +236,8 @@ export const useEachTodosQuery = (todoGroupId: number) => {
   return useQuery<EachTodos>({
     queryKey: ['EachTodos', todoGroupId],
     queryFn: () => EachTodos(todoGroupId),
+    retry: false, // 404 등 에러시 불필요한 재시도 방지 (체감 속도 향상)
+    refetchOnWindowFocus: false,
+    staleTime: 60 * 1000,
   });
 };
