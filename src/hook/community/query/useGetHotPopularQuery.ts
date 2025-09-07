@@ -11,6 +11,7 @@ export interface HotPopularItem {
   description: string;
   saveCount: number;
   isSaved: boolean;
+  todoGroupId: number;
 }
 
 interface HotPopularApiResponse {
@@ -29,7 +30,6 @@ export const useGetHotPopularQuery = () => {
       const res = await api.get('/v1/community/todos/popular', {
         params: { jobName: selectedJobName },
       });
-      console.log(res.data);
       const body = res.data as HotPopularApiResponse;
       return Array.isArray(body?.data) ? body.data : [];
     },

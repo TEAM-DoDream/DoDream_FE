@@ -10,7 +10,6 @@ import { useDeleteTodoMutation } from '@hook/todo/useDeleteTodoMutation';
 import { ReactTagManager } from 'react-gtm-ts';
 import { useAddTodoMutation } from '@hook/todo/useAddTodoMutation.ts';
 import Plus from '@assets/icons/plus.svg?react';
-import AddIcon from '@assets/icons/AddIcon.svg?react';
 import BookMarkIcon from '@assets/icons/bookmark.svg?react';
 import { useUpdateTodoMutation } from '@hook/todo/useUpdateTodoMutation.ts';
 
@@ -84,7 +83,7 @@ const CheckList = ({
         });
         console.log('Amplitude event sent: todo_create_attempt (inpage)');
       }
-      
+
       mutate(
         { todoTitle: trimmedText },
         {
@@ -263,10 +262,6 @@ const CheckList = ({
                     </>
                   ) : (
                     <>
-                      <div className="mr-3 flex items-center gap-1 text-gray-500">
-                        <AddIcon className="h-[18px] w-[18px]" />
-                        <span className="text-sm font-B03-SB">3</span>
-                      </div>
                       <div className="mr-3 flex items-center gap-1 text-gray-500">
                         <BookMarkIcon className="h-[18px] w-[18px]" />
                         <span className="text-sm font-B03-SB">999</span>

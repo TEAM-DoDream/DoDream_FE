@@ -55,6 +55,7 @@ interface RecruitProps {
   active: number;
   jobName: string;
   postDate: string;
+  url: string;
 }
 const NewRecruit = async (pageNum: number, postDate: string) => {
   const token = localStorage.getItem('accessToken');
