@@ -84,7 +84,7 @@ const CheckList = ({
         });
         console.log('Amplitude event sent: todo_create_attempt (inpage)');
       }
-      
+
       mutate(
         { todoTitle: trimmedText },
         {
@@ -300,7 +300,7 @@ const CheckList = ({
             icon={<Info className="h-6 w-6 text-white" />}
             text="할일 목록 1개가 삭제되었습니다"
             onUndo={handleUndo}
-            width="w-[469px]"
+            width="w-[350px]"
           />
         </div>
       )}
