@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const PopularTodoSchema = z.object({
   todoId: z.number(),
   title: z.string(),
-  profileImage: z.string().url(),
+  profileImage: z.string().url().nullable(),
   memberNickname: z.string(),
   memberLevel: z.string().nullable(),
   jobName: z.string(),
