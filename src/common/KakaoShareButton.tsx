@@ -65,7 +65,7 @@ const KakaoShareButton = ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const Kakao = (window as any).Kakao;
         const templateId = Number(import.meta.env.VITE_KAKAO_TEMPLATE_ID);
-        const shareUrl = 'https://www.dodream.site/landing';
+        const shareUrl = 'https://www.dodream.site/';
         try {
           if (templateId) {
             Kakao.Share.sendCustom({
