@@ -14,16 +14,7 @@ export interface JobTodoCategoryProps {
 
 const JobTodoCategory = async (id: number, todoCategory: string) => {
   try {
-    const token = localStorage.getItem('accessToken');
-
-    if (!token) {
-      throw new Error('인증 토큰이 없습니다');
-    }
-
     const response = await api.get('/v1/job/todo', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       params: {
         id,
         todoCategory,
