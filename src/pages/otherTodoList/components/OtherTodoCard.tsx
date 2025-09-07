@@ -8,6 +8,7 @@ import { useCommunityAddTodoMutation } from '@hook/community/useCommunityAddTodo
 import { useDeleteCommunityTodosMutation } from '@hook/community/useDeleteCommunityTodos';
 import ToastModal from '@common/modal/ToastModal';
 import Info from '@assets/icons/info.svg?react';
+import { trackTodoImport } from '@utils/amplitude';
 
 interface TodoItem {
   todoId: number;
@@ -33,7 +34,7 @@ const OtherTodoCard = ({ todos }: TodoCardProps) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  const toggleAdd = (id: number, isAdded: boolean) => {
+  const toggleAdd = (id: number, isAdded: boolean, todoTitle: string) => {
     if (isAdded) {
       deleteTodoMutation.mutate(
         { id },
@@ -50,6 +51,7 @@ const OtherTodoCard = ({ todos }: TodoCardProps) => {
         }
       );
     } else {
+      trackTodoImport(todoTitle); // Amplitude 이벤트 트래킹
       addTodoMutation.mutate(
         { id },
         {
@@ -144,7 +146,7 @@ const OtherTodoCard = ({ todos }: TodoCardProps) => {
 
                 <button
                   type="button"
-                  onClick={() => toggleAdd(item.todoId, isAdded)}
+                  onClick={() => toggleAdd(item.todoId, isAdded, item.title)}
                   className={
                     isAdded
                       ? 'p-2 text-purple-500 font-B03-SB'
