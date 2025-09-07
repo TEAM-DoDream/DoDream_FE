@@ -40,7 +40,7 @@ const HomeDreamer = () => {
         <div className="text-gray-900 font-T02-B">{title}</div>
         <div
           className="flex cursor-pointer flex-row items-center text-gray-500 font-B02-SB"
-          onClick={() => navigate('/jobfound')}
+          onClick={() => navigate('/community')}
         >
           더 보러가기
           <Arrow />
