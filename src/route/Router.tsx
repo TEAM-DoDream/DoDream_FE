@@ -11,6 +11,7 @@ import LoginPage from '@pages/login/LoginPage';
 import SignupFunnel from '@pages/signup/SignupFunnel';
 import HideLayout from '@outlet/HideLayout';
 import ShowLayout from '@outlet/ShowLayout';
+import BlankLayout from '@outlet/BlankLayout';
 import OnBoardingPage from '@pages/onboard/OnBoardingPage.tsx';
 import Home from '@pages/home/Home';
 import JobRecommendPage from '@pages/jobRecommend/JobRecommendPage.tsx';
@@ -34,6 +35,7 @@ import FindIdDisplayPage from '@pages/idFind/FindIdDisplayPage.tsx';
 import ChangePwdPage from '@pages/pwdFind/ChangePwdPage.tsx';
 import JobSelect from '@pages/jobSelect/JobSelect';
 import Community from '@pages/community/Community';
+import LandingPage from '@pages/landing/LandingPage.tsx';
 
 function PageViewTracker() {
   const { pathname, search } = useLocation();
@@ -101,6 +103,9 @@ const Router = () => {
           </Route>
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/community" element={<Community />} />
+        </Route>
+        <Route element={<BlankLayout />}>
+          <Route path="/landing" element={<LandingPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
