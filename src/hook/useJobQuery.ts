@@ -206,6 +206,8 @@ export interface EachTodos {
       completed: boolean;
       isMemoExist: boolean;
       isPublic: boolean;
+      saveCount?: number;
+      isSaved?: boolean;
     },
   ];
 }

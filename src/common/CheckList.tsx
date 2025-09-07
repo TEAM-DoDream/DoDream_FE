@@ -13,7 +13,7 @@ import Plus from '@assets/icons/plus.svg?react';
 import BookMarkIcon from '@assets/icons/bookmark.svg?react';
 import { useUpdateTodoMutation } from '@hook/todo/useUpdateTodoMutation.ts';
 
-type ChecklistItem = string | { id?: number; text: string };
+type ChecklistItem = string | { id?: number; text: string; saveCount?: number };
 
 interface CheckListProps {
   lists: ChecklistItem[];
@@ -21,6 +21,7 @@ interface CheckListProps {
   className?: string;
   onChange?: (checkedIds: number[]) => void;
   showAddButton?: boolean;
+  saveCount?: number;
 }
 
 const CheckList = ({
@@ -34,7 +35,7 @@ const CheckList = ({
   const isMyToPage = location.pathname.startsWith('/mytodo/list');
   const { mutate: updateTodo } = useUpdateTodoMutation();
   const normalized = lists.map((item) =>
-    typeof item === 'string' ? { text: item } : item
+    typeof item === 'string' ? { text: item, saveCount: 0 } : item
   );
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -264,7 +265,9 @@ const CheckList = ({
                     <>
                       <div className="mr-3 flex items-center gap-1 text-gray-500">
                         <BookMarkIcon className="h-[18px] w-[18px]" />
-                        <span className="text-sm font-B03-SB">999</span>
+                        <span className="text-sm font-B03-SB">
+                          {item.saveCount ?? 0}
+                        </span>
                       </div>
                       <button
                         onClick={() => handleEdit(idx)}
