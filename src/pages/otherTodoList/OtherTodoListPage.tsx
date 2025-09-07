@@ -111,6 +111,7 @@ const OtherTodoListPage = () => {
           {eachTodos?.jobId && (
             <ProfileCard
               jobId={Number(eachTodos.jobId)}
+              todoGroupId={eachTodos.todoGroupId}
               jobName={eachTodos.jobName}
             />
           )}
