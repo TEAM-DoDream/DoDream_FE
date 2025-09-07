@@ -28,6 +28,13 @@ const OtherTodoListPage = () => {
     isError,
   } = useEachTodosQuery(Number(todoGroupId));
 
+  // 404 등 조회 에러 발생 시 내 할일로 리다이렉트
+  useEffect(() => {
+    if (isError) {
+      navigate('/mytodo/list', { replace: true });
+    }
+  }, [isError, navigate]);
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -36,9 +43,7 @@ const OtherTodoListPage = () => {
     );
   }
 
-  if (isError) {
-    return <div>에러가 발생했습니다.</div>;
-  }
+  // isError 시에는 상단 useEffect에서 리다이렉트 처리
 
   if (!eachTodos)
     return (
