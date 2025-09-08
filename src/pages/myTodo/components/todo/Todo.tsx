@@ -30,13 +30,14 @@ const Todo = () => {
   }, [todoData]);
 
   useEffect(() => {
+    console.log(todoData);
     ReactTagManager.action({
       event: 'my_todo_page',
       category: '할 일 목록',
       clickText: '[나의 할일] 페이지 클릭 시 (진입)',
       source_page: location.pathname,
     });
-  }, []);
+  }, [location.pathname, todoData]);
 
   const handleCheckChange = (newIds: number[]) => {
     const added = newIds.filter((id) => !checkedIds.includes(id));
@@ -113,6 +114,9 @@ const Todo = () => {
           onChange={handleCheckChange}
           className="flex w-full flex-col items-center gap-8 py-4"
           showAddButton={true}
+          saveCount={todoData?.todos.map((todo) =>
+            todo.saveCount == null ? undefined : todo.saveCount
+          )}
         />
       </div>
     </div>
