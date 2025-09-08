@@ -4,6 +4,8 @@ export const TodoSchema = z.object({
   todoId: z.number(),
   title: z.string(),
   completed: z.boolean(),
+  saveCount: z.number().nullable(),
+  isSaved: z.boolean().nullable(),
 });
 
 export const TodoDataSchema = z.object({
