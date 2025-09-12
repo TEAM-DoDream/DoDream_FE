@@ -8,7 +8,7 @@ import { useState } from 'react';
 import SelectModal from '@common/modal/SelectModal';
 import Button from '@common/Button';
 import { useFilterStore } from '@store/filterStore';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 interface JobViewComponentProps {
   jobName: string;
@@ -20,7 +20,7 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
   const query = isLoggedIn ? useJobViewQuery : useNoJobViewQuery;
   const { data: jobView, isLoading, error } = query(jobName);
   const setSelection = useFilterStore((state) => state.setSelection);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   if (isLoading)
     return (
@@ -75,7 +75,7 @@ const JobView = ({ jobName }: JobViewComponentProps) => {
         className="mt-10 flex w-full items-center justify-center rounded-2xl border border-purple-500 py-4 font-T05-SB hover:bg-purple-150"
         onClick={() => {
           setSelection('job', jobName);
-          navigate('/jobsearch');
+          // navigate('/jobsearch');
         }}
       />
     </div>

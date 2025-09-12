@@ -1,13 +1,13 @@
 import Arrow from '@assets/icons/arrow.svg?react';
 import Bell from '@assets/images/bell.webp';
 import { useNoBannerQuery } from '@hook/useHomeQuery';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import Tag from '@common/Tag.tsx';
 import SliderContainer from './SliderContainer';
 
 const Banner = () => {
   const { data: jobList } = useNoBannerQuery();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div className="flex h-[489px] w-full flex-row items-center justify-center space-x-5 bg-purple-150 px-[120px] pb-[50px] pt-[60px]">
@@ -26,7 +26,7 @@ const Banner = () => {
           <img src={Bell} alt="Bell" className="h-[60px] w-[60px]" />
           <div
             className="flex cursor-pointer flex-row items-center"
-            onClick={() => navigate('/jobsearch')}
+            // onClick={() => navigate('/jobsearch')}
           >
             <div className="text-gray-500 font-B02-SB"> 채용 정보 보기 </div>
             <Arrow />

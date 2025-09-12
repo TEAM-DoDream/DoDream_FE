@@ -1,17 +1,17 @@
-import Arrow from '@assets/icons/arrow.svg?react';
+// import Arrow from '@assets/icons/arrow.svg?react';
 import Bell from '@assets/images/bell.webp';
 import { useBannerQuery } from '@hook/useHomeQuery';
 import { useUserStore } from '@store/useUserStore';
-import { useNavigate } from 'react-router-dom';
-import { useFilterStore } from '@store/filterStore';
+// import { useNavigate } from 'react-router-dom';
+// import { useFilterStore } from '@store/filterStore';
 import SliderContainer from '@pages/home/components/SliderContainer.tsx';
 import { useGetInfo } from '@hook/mypage/useMypageQuery';
 
 const LoginBanner = () => {
   const { data: jobList } = useBannerQuery();
   const regionName = useUserStore((s) => s.regionName);
-  const navigate = useNavigate();
-  const setSelection = useFilterStore((s) => s.setSelection);
+  // const navigate = useNavigate();
+  // const setSelection = useFilterStore((s) => s.setSelection);
   const nickname = localStorage.getItem('nickname');
   const { data: myInfo } = useGetInfo();
 
@@ -35,7 +35,7 @@ const LoginBanner = () => {
       <div className="flex h-[379px] w-[480px] flex-col gap-5 rounded-[30px] border bg-white p-8">
         <div className="flex w-full items-center justify-between">
           <img src={Bell} alt="Bell" className="h-[60px] w-[60px]" />
-          <button
+          {/* <button
             className="flex items-center text-gray-500 font-B02-SB"
             onClick={() => {
               setSelection('location', regionName);
@@ -43,7 +43,7 @@ const LoginBanner = () => {
             }}
           >
             채용 정보 보기 <Arrow />
-          </button>
+          </button> */}
         </div>
 
         <span className="truncate text-gray-900 font-T01-B">
