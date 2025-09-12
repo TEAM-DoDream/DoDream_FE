@@ -101,9 +101,7 @@ const ScrapPage = () => {
           !error && (
             <ScrapEmptyState
               type={activeTab}
-              onNavigate={() =>
-                navigate(activeTab === 'job' ? '/jobsearch' : '/learning')
-              }
+              onNavigate={() => navigate('/learning')}
             />
           )
         )}

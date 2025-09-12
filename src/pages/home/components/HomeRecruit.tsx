@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { useRecruitQuery } from '@hook/useHomeQuery';
 import LoadingSpinner from '@common/LoadingSpinner';
 import { useFilterStore } from '@store/filterStore';
-import { useNavigate } from 'react-router-dom';
 import CardDetail from '@pages/jobSearch/components/CardDetail';
 import { RecruitItem } from '@validation/recruit/recruitSchema';
 
@@ -80,7 +79,7 @@ const HomeRecruit = () => {
   };
 
   const isLoggedIn = localStorage.getItem('accessToken');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     data: recruitData,
@@ -109,7 +108,7 @@ const HomeRecruit = () => {
           onClick={() => {
             setSelection('location', regionName);
             setSelection('job', '');
-            navigate('/jobsearch');
+            // navigate('/jobsearch');
           }}
         >
           더 보러가기
