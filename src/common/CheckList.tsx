@@ -21,7 +21,7 @@ interface CheckListProps {
   className?: string;
   onChange?: (checkedIds: number[]) => void;
   showAddButton?: boolean;
-  saveCount?: number;
+  saveCount?: (number | undefined)[];
 }
 
 const CheckList = ({
@@ -30,6 +30,7 @@ const CheckList = ({
   className = '',
   onChange,
   showAddButton,
+  saveCount,
 }: CheckListProps) => {
   const location = useLocation();
   const isMyToPage = location.pathname.startsWith('/mytodo/list');
@@ -266,7 +267,7 @@ const CheckList = ({
                       <div className="mr-3 flex items-center gap-1 text-gray-500">
                         <BookMarkIcon className="h-[18px] w-[18px]" />
                         <span className="text-sm font-B03-SB">
-                          {item.saveCount ?? 0}
+                          {saveCount?.[idx] ?? 0}
                         </span>
                       </div>
                       <button
